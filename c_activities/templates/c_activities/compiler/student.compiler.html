@@ -1,0 +1,160 @@
+{% extends 'a_classroom/base.html' %}
+{% block title %} student compiler html {% endblock %}
+{% block content %}
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div id="parent" class="flex flex-row w-full h-full bg-gray-100 border border-gray-500 border-solid rounded shadow-xl">
+    <div id="activity-details"></div>
+    <div hx-get="{% url 'a_classroom:view-activity' activity.activity_id %}?subject_id={{ subject_id }}&type=activity&action=activity_details" 
+         hx-target="#activity-details" hx-swap="innerHTML" hx-trigger="load"></div>
+
+    <div class="flex flex-col w-full h-full">
+        {% csrf_token %}
+        <input name="subject_id" value="{{ subject_id }}" type="hidden">
+        <input name="activity_id" value="{{ activity.activity_id }}" type="hidden">
+
+        <div class="h-[500px] w-full flex flex-row overflow-hidden">
+            <div class="w-auto overflow-hidden border-r border-gray-200">
+                <pre id="div-number" class="h-full pt-1 pr-2 overflow-y-scroll font-mono text-sm leading-5 text-right text-black bg-gray-200 scrollbar-hidden"></pre>
+            </div>
+            <textarea id="compiler"
+                name="compiler"
+                class="w-full h-full p-2 overflow-y-scroll font-mono text-sm leading-5 bg-gray-200 border resize-none scrollbar-hidden focus:ring focus:ring-black"
+                style="resize: none;"
+                {% if submission.status == "submitted" or submission.status == "returned" %}
+                    readonly
+                {% endif %}>
+                {% if submission %}
+                    {% if submission.status == "in_progress" %}
+                        {{ submission.saved_code }}
+                    {% elif submission.status == "submitted" or submission.status == "returned" %}
+                        {{ submission.submitted_code }}
+                    {% endif %}
+                {% endif %}
+            </textarea>
+        </div>
+
+        <div class="border border-solid flex flex-row h-[140px] w-full">
+            <div class="flex flex-row items-center justify-center w-full gap-4 p-4 bg-gray-300 border rounded">
+
+                {% if activity_submissions.0.status == "submitted" %}
+                    <form>
+                        {% csrf_token %}
+                        <input type="hidden" name="submission_id" value="{{ activity_submissions.0.id }}">
+                        <button name="action" value="unsubmit" 
+                                hx-post="{% url 'd_compiler:index' %}" 
+                                hx-include="#compiler, input[name='activity_id'], input[name='subject_id']"
+                                class="w-full sm:w-[150px] px-6 py-2 text-white bg-black hover:bg-gray-500 transition-colors rounded-lg shadow-md">
+                            Unsubmit
+                        </button>
+                    </form>
+                {% else %}
+                    {% if activity.type == "activity" %}
+                        <form>
+                            {% csrf_token %}
+                            <button name="action" value="turn_in"  
+                                    hx-post="{% url 'd_compiler:index' %}" 
+                                    hx-include="#compiler, input[name='activity_id'], input[name='subject_id']"
+                                    class="w-full sm:w-[150px] px-6 py-2 text-white bg-black hover:bg-gray-500 transition-colors rounded-lg shadow-md">
+                                Submit
+                            </button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+
+                {% if activity_submissions.0.status != "submitted" and activity_submissions.0.status != "returned" %}
+                    {% if activity.type == "activity" %}
+                        <form>
+                            {% csrf_token %}
+                            <button name="action" value="save_draft" 
+                                    hx-post="{% url 'd_compiler:index' %}" 
+                                    hx-include="#compiler, input[name='activity_id'], input[name='subject_id']"
+                                    class="w-full sm:w-[150px] px-6 py-2 text-white bg-black hover:bg-blue-700 transition-colors rounded-lg shadow-md">
+                                Save as Draft
+                            </button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+
+                {% if activity_submissions.0.status == "returned" and activity.type == "activity" %}
+                    <button class="w-full sm:w-[150px] px-6 py-2 text-white bg-black hover:bg-gray-500 transition-colors rounded-lg shadow-md cursor-not-allowed opacity-60" 
+                            disabled>
+                        Unsubmit
+                    </button>
+                {% endif %}
+
+                {% if activity.type == "quiz" %}
+                    <select name="language_id" id="language_id"
+                        class="w-full sm:w-[150px] px-6 py-2 text-white bg-black hover:bg-gray-500 transition-colors rounded-lg shadow-md"
+                        required>
+                        <option value="71">Python</option>
+                        <option value="62">Java</option>
+                    </select>
+
+                    <form>
+                        {% csrf_token %}
+                        <button name="action" value="run_code" 
+                                hx-post="{% url 'd_compiler:index' %}?type=quiz" 
+                                hx-include="#compiler, #language_id, input[name='activity_id'], input[name='subject_id']" 
+                                hx-target="#code-output" hx-swap="innerHTML"
+                                class="w-full sm:w-[150px] px-6 py-2 text-white bg-black hover:bg-gray-500 transition-colors rounded-lg shadow-md">
+                            Run Code
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <div id="code-output" class="border border-gray-300 bg-gray-100 p-4 text-sm font-mono whitespace-pre-wrap overflow-auto h-[200px]">
+        </div>
+    </div>
+</div>
+
+<style>
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;    
+}
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const compiler = document.getElementById("compiler");
+        const div = document.getElementById("div-number");
+
+        const updateLineNumbers = () => {
+            const lines = compiler.value.split("\n").length;
+            let lineNumbers = "";
+            for (let i = 1; i <= lines; i++) {
+                lineNumbers += `${i}\n`;
+            }
+            div.textContent = lineNumbers;
+        };
+
+        if (compiler && div) {
+            updateLineNumbers();
+
+            compiler.addEventListener("input", updateLineNumbers);
+
+            compiler.addEventListener("scroll", () => {
+                div.scrollTop = compiler.scrollTop;
+            });
+
+            compiler.addEventListener("keydown", (e) => {
+                if (e.key === "Tab") {
+                    e.preventDefault();
+                    const start = compiler.selectionStart;
+                    const end = compiler.selectionEnd;
+                    const indent = "    ";
+                    compiler.value = compiler.value.substring(0, start) + indent + compiler.value.substring(end);
+                    compiler.selectionStart = compiler.selectionEnd = start + indent.length;
+                    updateLineNumbers();
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

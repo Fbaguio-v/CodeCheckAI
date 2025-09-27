@@ -1,0 +1,11 @@
+<form method="POST" action="{% url 'c_activities:edit-activity' activity.activity_id %}">
+  {% csrf_token %}
+  <input class="border-2 border-solid" type="text" name="title" value="{{ activity.title }}" required>
+  <textarea class="border-2 border-solid" name="description" required>{{ activity.description }}</textarea>
+  <input class="border-2 border-solid" type="number" name="max_score" value="{{ activity.max_score }}" required>
+  {% if activity.type == "quiz" %}
+    <input class="border-2 border-solid" type="number" name="max_score" value="{{ activity.max_attempt }}" required>
+  {% endif %}
+  <input class="border-2 border-solid" type="datetime-local" name="due_at" value="{{ activity.due_at|date:'Y-m-d\TH:i' }}" required>
+  <button class="border-2 border-solid cursor-pointer" type="submit">Save</button>
+</form>

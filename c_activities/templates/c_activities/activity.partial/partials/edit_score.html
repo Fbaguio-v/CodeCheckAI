@@ -1,0 +1,36 @@
+<form 
+  class="w-full max-w-xs"
+  hx-post="{% url 'c_activities:edit-grade' submission.id %}?type=activity" 
+  hx-target="this"
+  hx-swap="outerHTML"
+>
+  {% csrf_token %}
+  
+  <input 
+    type="number" 
+    name="new_score" 
+    value="{{ submission.score }}"
+    class="border-2 border-solid rounded px-3 py-2 w-full mb-2"
+    required
+  >
+  
+  <div class="flex w-full space-x-2">
+    <button 
+      type="submit" 
+      name="action" 
+      value="confirm"
+      class="w-[50%] border-2 border-green-500 rounded py-2 text-green-700 hover:bg-green-500 cursor-pointer"
+    >
+      Confirm
+    </button>
+    
+    <button 
+      type="submit" 
+      name="action" 
+      value="cancel"
+      class="w-[50%] border-2 border-red-500 rounded py-2 text-red-700 hover:bg-red-500 cursor-pointer"
+    >
+      Cancel
+    </button>
+  </div>
+</form>

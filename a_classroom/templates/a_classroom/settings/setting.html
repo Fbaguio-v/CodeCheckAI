@@ -1,0 +1,63 @@
+{% extends 'a_classroom/base.html' %}
+{% load static tailwind_tags %}
+{% block title %} setting html {% endblock %}
+{% tailwind_css %}
+{% block content %}
+<div class="flex items-center justify-center w-full h-full">
+	<div id="parent-element" class="border border-solid border-gray-300 h-full w-[700px] gap-4 overflow-auto">
+		<div class="flex items-center justify-center text-white bg-gray-800">
+			<h2 class="p-4 text-3xl">Account Settings</h2>
+		</div>
+		<hr>
+
+		<div class="flex items-center justify-center">
+			<img src="{% if user_profile.image %}{{ user_profile.image.url }}{% else %}/media/mysite_images/default.jpg{% endif %}" 
+            alt="Profile Image" class="rounded-circle shadow-lg h-[150px] w-[150px] object-cover border-2 border-solid border-black rounded-full m-2">
+		</div>
+
+		<div class="flex flex-col items-center justify-center w-full pt-3">
+			<label for="id_first_name" class="mb-2 text-1xl">First Name</label>
+			<input class="border border-solid border-gray-300 h-full w-[50%] p-2 rounded bg-gray-100" type="text" id="id_first_name" value="{{ user_profile.user.first_name }}" readonly>
+		</div>
+
+		<div class="flex flex-col items-center justify-center w-full pt-3">
+			<label for="id_last_name" class="mb-2 text-1x1">Last Name</label>
+			<input class="border border-solid border-gray-300 h-full w-[50%] p-2 rounded bg-gray-100" type="text" id="id_last_name" value="{{ user_profile.user.last_name }}" readonly>
+		</div>
+
+		<div class="flex flex-col items-center justify-center w-full pt-3">
+			<label for="id_email" class="mb-2 text-1x1">Email Address</label>
+			<input class="border border-solid border-gray-300 h-full w-[50%] p-2 rounded bg-gray-100" type="text" id="id_email" value="{{ email }}" readonly>
+		</div>
+
+		<div class="flex items-center justify-center w-full pt-5">
+		<button
+			class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-black text-white cursor-pointer hover:bg-gray-500"
+			id="upload-profile"
+			hx-get="{% url 'b_enrollment:upload-profile' %}"
+			hx-trigger="click"
+			hx-target="#parent-element"
+			hx-swap="innerHTML">Upload Profile</button>
+		</div>
+
+		<div class="flex items-center justify-center w-full pt-3">
+		<button
+			class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-black text-white cursor-pointer hover:bg-gray-500"
+			id="edit-account"
+			hx-get="{% url 'a_classroom:edit-account' %}"
+			hx-trigger="click"
+			hx-target="#parent-element"
+			hx-swap="innerHTML">Edit Account</button>
+		</div>
+
+		<form action="{% url 'logout' %}" method="post" class="flex items-center justify-center w-full pt-3">
+		{% csrf_token %}
+		<button type="submit" 
+			class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-gray-500 text-black cursor-pointer hover:bg-gray-600">
+			Logout
+		</button>
+		</form>
+
+	</div>
+</div>
+{% endblock %}

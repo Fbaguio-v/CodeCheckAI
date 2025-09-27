@@ -1,0 +1,28 @@
+{% load static tailwind_tags %}
+{% tailwind_css %}
+<div class="h-full w-full">
+	<table class="table-fixed w-full border border-solid border-gray-300">
+		<thead class="bg-gray-800 text-white h-[60px] border border-solid border-gray-300">
+			<tr class="text-left">
+				<th class="px-4 py-2">Course Code</th>
+				<th class="px-4 py-2">Subject</th>
+				<th class="px-4 py-2">Instructor</th>
+				<th class="px-4 py-2">Action</th>
+			</tr>
+		</thead>
+		<tbody class="w-full">
+			{% for archived in archived_subjects %}
+				<tr class="h-[50px] border border-solid border-gray-300">
+					<td class="px-4 py-2">{{ archived.course_code }}</td>
+					<td class="px-4 py-2">{{ archived.name }}</td>
+					<td class="px-4 py-2">{{ archived.instructor.get_full_name }}</td>
+					<td class="px-4 py-2">Restore</td>
+				</tr>
+			{% empty %}
+				<tr>
+					<td colspan="4" class="text-center py-4">No archived subject available.</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>

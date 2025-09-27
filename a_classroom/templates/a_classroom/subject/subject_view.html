@@ -1,0 +1,40 @@
+{% extends 'a_classroom/base.html' %}
+{% load static tailwind_tags %}
+{% block title %} index html {% endblock %}
+{% tailwind_css %}
+{% block content %}
+    {% if subject %}
+        <nav class="sticky top-0 z-50 flex justify-between col-span-2 p-6 space-x-6 text-black bg-white border-t border-b border-gray-300 border-solid shadow-xl ">
+            <ul class="flex space-x-12 ">
+                <li>
+                    <a  class="relative pb-2 text-gray-500 transition-all duration-300 ease-in-out hover:text-blue-600 hover:after:w-full after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-blue-600 after:transition-all after:duration-300"
+                        id="subject"
+                        href="{% url 'a_classroom:v' subject.subject_id %}"
+                        hx-get="{% url 'a_classroom:v' subject.subject_id %}" 
+                        hx-target="#output" 
+                        hx-swap="innerHTML"
+                        hx-trigger="load delay:500ms">
+                        Subject
+                    </a>
+                </li>
+                <li>
+                    <a  class="relative pb-2 text-gray-500 transition-all duration-300 ease-in-out hover:text-blue-600 hover:after:w-full after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-blue-600 after:transition-all after:duration-300"
+                        id="students"
+                        href="{% url 'a_classroom:v' subject.subject_id %}"
+                        hx-get="{% url 'a_classroom:v' subject.subject_id %}"
+                        hx-target="#output"
+                        hx-swap="innerHTML"
+                        hx-trigger="click">
+                        People
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="overflow-auto">
+            <div id="output">
+                <p class="text-gray-500">Loading...</p>
+            </div>  
+        </div>       
+    {% endif %}
+{% endblock %}

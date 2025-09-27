@@ -1,0 +1,36 @@
+{% load static tailwind_tags %}
+{% tailwind_css %}
+<div class="h-full w-full">
+	<table class="table-fixed w-full border border-solid border-gray-300">
+		<thead class="bg-gray-800 text-white h-[60px] border border-solid border-gray-300">
+			<tr class="text-left">
+				<th class="px-4 py-2">Profile</th>
+				<th class="px-4 py-2">Full Name</th>
+				<th class="px-4 py-2">Email Address</th>
+				<th class="px-4 py-2">User Role</th>
+				<th class="px-4 py-2">User Status</th>
+			</tr>
+		</thead>
+		<tbody class="w-full">
+			{% for user in all_users %}
+				<tr class="h-[50px] border border-solid border-gray-300">
+					<td class="overflow-hidden"><img src="{% if user.userprofile.image %}{{ user.userprofile.image.url }}{% else %}/media/mysite_images/default.jpg{% endif %}"
+                    alt="Profile Image"
+                    class="flex rounded-circle shadow-lg h-[50px] w-[50px] object-cover border-2 border-solid border-blue-500 rounded-full m-2"></td>
+					<td class="px-4 py-2">{{ user.get_full_name }}</td>
+					<td class="px-4 py-2">{{ user.email }}</td>
+					<td class="px-4 py-2">{{ user.userprofile.role }}</td>
+					{% if user.is_active %}
+						<td>Active</td>
+					{% else %}
+						<td>Inactive</td>
+					{% endif %}
+				</tr>
+			{% empty %}
+				<tr>
+					<td colspan="4" class="text-center py-4">No user available.</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>

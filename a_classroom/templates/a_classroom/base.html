@@ -1,0 +1,113 @@
+{% load static %}
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} base html {% endblock %}</title>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    {% tailwind_css %}
+</head>
+<body>
+    {% if messages %}
+    <div id="message-container" class="fixed z-50 space-y-2 transform -translate-x-1/2 top-4 left-1/2">
+        {% for message in messages %}
+        <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative shadow-md w-[300px] text-center" role="alert">
+            <span class="block sm:inline">{{ message }}</span>
+            <button onclick="this.parentElement.remove()" class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                <svg class="w-6 h-6 text-blue-500 fill-current" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <title>Close</title>
+                    <path d="M14.348 5.652a1 1 0 10-1.414-1.414L10 7.172 7.066 4.238a1 1 0 00-1.414 1.414L8.586 10l-2.934 2.934a1 1 0 001.414 1.414L10 12.828l2.934 2.934a1 1 0 001.414-1.414L11.414 10l2.934-2.934z"/>
+                </svg>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div id="layout" class="grid grid-rows-[auto_1fr] min-h-screen max-h-screen font-normal
+        {% if request.user.is_authenticated and request.path != '/p/' %}
+            grid-cols-[200px_1fr]
+        {% else %}
+            grid-cols-1
+        {% endif %}
+    ">
+        <!-- Navbar -->
+        <nav class="flex flex-row items-center justify-between h-[75px] col-span-2 p-6 space-x-6 text-white bg-gray-800 shadow-xl">
+            <ul class="flex flex-row items-center space-x-12">
+                <li><a href="{% url 'a_classroom:index' %}"><img class="h-10" src="{% static 'mysite_images/logo.png' %}" alt="logo.png"></a></li>
+                {% if request.user.is_authenticated %}
+                    <li><a href="{% url 'a_classroom:index' %}" class="p-4 rounded-lg hover:bg-gray-500">Home</a></li>
+                    {% if request.user.userprofile.role == "Student" %}
+                        <li><a href="{% url 'd_compiler:index' %}" class="p-4 rounded-lg hover:bg-gray-500">Playground</a></li>
+                    {% endif %}
+                {% else %}
+                    <li><a href="{% url 'd_compiler:index' %}" class="p-4 rounded-lg hover:bg-gray-500">Playground</a></li>
+                {% endif %}
+            </ul>
+            <ul class="flex space-x-12">
+                {% if request.user.is_authenticated %}
+                    <li><a href="{% url 'a_classroom:setting' %}?from={{ request.path }}" class="p-4 rounded-lg hover:bg-gray-500">Settings</a></li>
+                {% else %}
+                    <li><a href="{% url 'register:register' %}" class="p-4 rounded-lg hover:bg-gray-500">Register</a></li>
+                    <li><a href="{% url 'register:login' %}" class="p-4 rounded-lg hover:bg-gray-500">Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        {% if request.user.is_authenticated and request.path != "/p/" %}
+            <aside id="sidebar" class="flex flex-col justify-between p-4 text-white bg-gray-100 border-2 shadow-xl relative">
+                <div
+                    id="subjects"
+                    hx-get="{% url 'a_classroom:index' %}" 
+                    hx-target="#subjects" 
+                    hx-swap="innerHTML"
+                    hx-trigger="load">
+                </div>
+            </aside>
+
+            <button id="toggle-sidebar" 
+                class="absolute top-[100px] left-[200px] z-50 px-2 py-1 bg-gray-300 text-black rounded-r hover:bg-gray-400 transition">
+                ☰
+            </button>
+        {% endif %}
+
+        <main id="main-content" class="p-8 overflow-auto">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+<script>
+    const toggleBtn = document.getElementById("toggle-sidebar");
+    const sidebar = document.getElementById("sidebar");
+    const layout = document.getElementById("layout");
+
+    function setSidebarState(isHidden) {
+        if (isHidden) {
+            sidebar.classList.add("hidden");
+            layout.classList.remove("grid-cols-[200px_1fr]");
+            layout.classList.add("grid-cols-1");
+        } else {
+            sidebar.classList.remove("hidden");
+            layout.classList.remove("grid-cols-1");
+            layout.classList.add("grid-cols-[200px_1fr]");
+        }
+    }
+
+    if (toggleBtn && sidebar && layout) {
+        const savedState = localStorage.getItem("sidebarHidden");
+        if (savedState !== null) {
+            setSidebarState(savedState === "true");
+        }
+
+        toggleBtn.addEventListener("click", () => {
+            const isHidden = sidebar.classList.toggle("hidden");
+            setSidebarState(isHidden);
+
+            localStorage.setItem("sidebarHidden", isHidden);
+        });
+    }
+</script>
+</body>
+</html>

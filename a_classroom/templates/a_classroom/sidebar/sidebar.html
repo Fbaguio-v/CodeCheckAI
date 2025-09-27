@@ -1,0 +1,65 @@
+{% load static tailwind_tags %}
+{% tailwind_css %}
+{% if request.user.is_authenticated %}
+    {% if request.user.userprofile.role == "Instructor" or request.user.userprofile.role == "Student" %}
+        {% if subjects %}
+            <ul class="space-y-2 overflow-auto text-center max-h-[550px] scrollbar-hide" id="subjects-ul">
+                {% for subject in subjects %}
+                    <a href="{% url 'a_classroom:v' subject.subject_id %}?from={{ request.path }}" class="flex flex-col justify-center p-2 text-black border-2 border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
+                        <li class="block w-full h-full">
+                            <h1 class="text-lg font-bold">{{ subject.course_code }}</h1>
+                            <p>{{ subject.section.name }}</p>
+                        </li>
+                    </a>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <h1 class="text-black">No Subject Available</h1>
+        {% endif %}
+
+        <div class="mt-4">
+            {% if request.user.is_authenticated %}
+                {% if request.user.userprofile.role == "Instructor" %}
+                    <a href="{% url 'a_classroom:create-subject' %}">
+                        <button class="p-4 text-black border-2 border-black rounded-lg bg--500 hover:bg-gray-300 cursor-pointer">
+                            Create Subject
+                        </button>
+                    </a>
+                {% elif request.user.userprofile.role == "Student" %}
+                    <button
+                    id="join-class"
+                    hx-get="{% url 'b_enrollment:join-a-class' %}"
+                    hx-trigger="click"
+                    hx-target="#main-content"
+                    hx-swap="innerHTML"
+                    class="p-4 text-black border-2 border-black rounded-lg bg--500 hover:bg-gray-300 cursor-pointer">
+                        Join Class
+                    </button>
+                {% endif %}
+            {% endif %}
+        </div>
+    {% elif request.user.userprofile.role == "Admin" %}
+            <ul class="space-y-2 overflow-auto text-center h-[500px] scrollbar-hide">
+                <a href="{% url 'a_classroom:get-users' %}?from={{ request.path }}" class="flex justify-center p-2 text-black border-2 border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
+                    <li class="block w-full h-full">
+                        Users
+                    </li>
+                </a>
+                <a href="{% url 'a_classroom:pending-users' %}?from={{ request.path }}" class="flex justify-center p-2 text-black border-2 border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
+                    <li class="block w-full h-full">
+                        Pendings
+                    </li>
+                </a>
+                <a href="{% url 'a_classroom:get-subjects' %}?from={{ request.path }}" class="flex justify-center p-2 text-black border-2 border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
+                    <li class="block w-full h-full">
+                        Subjects
+                    </li>
+                </a>
+                <a href="{% url 'a_classroom:archived-subjects' %}?from={{ request.path }}" class="flex justify-center p-2 text-black border-2 border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
+                    <li class="block w-full h-full">
+                        Archived
+                    </li>
+                </a>
+            </ul>
+    {% endif %}
+{% endif %}

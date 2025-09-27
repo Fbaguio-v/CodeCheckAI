@@ -1,0 +1,56 @@
+{% extends 'a_classroom/base.html' %}
+{% block title %} index html {% endblock %}
+{% block content %}
+<div class="grid grid-rows-[60px_1fr] grid-cols-3 h-screen font-mono text-base box-border border-4 p-10 gap-4">
+    <nav class="col-span-3 flex justify-between items-center border-2 p-2">
+        <ul class="flex gap-4">
+            <li>Left Item 1</li>
+            <li>Left Item 2</li>
+            <li>Left Item 3</li>
+        </ul>
+        <ul class="flex gap-4">
+            <li>Right Item 1</li>
+            <li>Right Item 2</li>
+        </ul>
+    </nav>
+
+    <aside class="border-2 p-4 flex justify-center">
+        <ul class="flex flex-col gap-2">
+            <li>Side Item 1</li>
+            <li>Side Item 2</li>
+            <li>Side Item 3</li>
+        </ul>
+    </aside>
+
+    <main class="col-span-2 border-2 p-4 overflow-auto grid grid-rows-[60px_1fr] grid-cols-3 p-5 gap-3 h-full">
+        <div class="border-2 border-solid p-5 col-span-3">
+            <ul class="flex gap-5">
+                <li>Item 1</li>
+                <li>Item 2</li>
+                <li>Item 3</li>
+            </ul>
+        </div>
+        <div class="border-2 border-solid p-5 col-span-3 flex flex-col justify-end items-start">
+            <ul>
+                <li>Item 1</li>
+                <li>Item 2</li>
+                <li>Item 3</li>
+            </ul>
+        </div>
+        <div class="border-2 border-solid p-5 col-span-2 flex justify-center">
+            <ul class="">
+                <li>Item 1</li>
+                <li>Item 2</li>
+                <li>Item 3</li>
+            </ul>
+        </div>
+        <div class="border-2 border-solid p-5 h-50 flex justify-center">
+            <ul class="">
+                <li>Item 1</li>
+                <li>Item 2</li>
+                <li>Item 3</li>
+            </ul>
+        </div>
+    </main>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'a_classroom/base.html' %}
+{% block title %} admin html {% endblock %}
+{% block content %}
+<div id="output" class="h-full w-full overflow-auto">
+	<div
+	id="all-user"
+	hx-get="{% url 'a_classroom:get-users' %}"
+	hx-target="#output"
+	hx-swap="innerHTML"
+	hx-trigger="load delay:500ms">
+	</div>
+	
+	<p class="text-gray-500">Loading...</p>
+</div>
+{% endblock %}

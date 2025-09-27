@@ -1,0 +1,94 @@
+{% extends 'a_classroom/base.html' %}
+{% block title %} student compiler html {% endblock %}
+{% block content %}
+<script src="https://cdn.tailwindcss.com"></script>
+    <div id="parent" class="flex flex-row w-full h-full border border-gray-300 border-solid">
+        <div class="flex flex-col w-full h-full">
+                {% csrf_token %}
+        <div class="flex h-[650px] w-full rounded-lg overflow-hidden shadow-md border border-gray-100 ">
+                    <div class="px-2 py-2 overflow-y-auto font-mono text-sm text-right text-gray-200 bg-gray-100">
+                        <pre id="div-number" class="h-full pt-1 pr-2 overflow-y-scroll font-mono text-sm leading-5 text-right text-gray-600 scrollbar-hidden"></pre>
+                     </div>
+                    <textarea id="compiler"
+                        name="compiler"
+                        class="w-full h-full p-4 overflow-y-scroll font-mono text-sm leading-5 text-gray-600 bg-gray-200 resize-none scrollbar-hidden focus:ring-2 focus:ring-black"
+                        style="resize: none;">
+                    </textarea>
+        </div>
+
+        <div class="border border-solid flex flex-row h-[150px] border-gray-200 shadow-xl rounded w-full">
+            <div class="flex flex-col items-center justify-center w-full h-full gap-4">
+                    <select name="language_id"
+                        id="language_id"
+                        class="w-full sm:w-[150px] px-6 py-2 text-black bg-gray-200  transition-colors border-grey-900 rounded-lg shadow-xl focus:outline-none focus:ring-2 focus:ring-black"
+                        required>
+                        <option value="71">Python</option>
+                        <option value="62">Java</option>
+                    </select>
+                        <form>
+                            {% csrf_token %}
+                            <button name="action" 
+                value="run_code" 
+                hx-post="{% url 'd_compiler:index' %}?type=playground" 
+                hx-include="#compiler, #language_id" 
+                hx-target="#code-output"    
+                hx-swap="innerHTML" 
+                class="w-full px-6 py-2 text-white transition-colors bg-black rounded-lg shadow-md hover:bg-gray-500">Run Code</button>
+                        </form>
+                    </div>
+                </div>
+       </div>
+                <div id="code-output" class="border border-solid rounded border-gray-300 h-full w-[800px]"></div>
+                    <!-- Judge0 output will go here -->
+         </div>
+
+    <style> 
+        .scrollbar-hidden::webkit-scrollbar{
+            display: none;
+        }
+            .scrollbar-hidden{
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const compiler = document.getElementById("compiler");
+            const div = document.getElementById("div-number");
+            const updateLineNumbers = () => {
+                const lines = compiler.value.split("\n").length;
+                let lineNumbers = "";
+                for (let i = 1; i <= lines; i++) {
+                    lineNumbers += `${i}\n`;
+                }
+                div.textContent = lineNumbers;
+            };
+
+            updateLineNumbers();
+
+            compiler.addEventListener("input", updateLineNumbers);
+
+            compiler.addEventListener("scroll", () => {
+                div.scrollTop = compiler.scrollTop;
+            });
+
+            compiler.addEventListener("keydown", (e) => {
+                if (e.key === "Tab") {
+                    e.preventDefault();
+
+                    const start = compiler.selectionStart;
+                    const end = compiler.selectionEnd;
+                    const indent = "    ";
+
+                    compiler.value =
+                        compiler.value.substring(0, start) + indent + compiler.value.substring(end);
+
+                    // Move the cursor after the inserted indent
+                    compiler.selectionStart = compiler.selectionEnd = start + indent.length;
+
+                    updateLineNumbers();
+                }
+            });
+        });
+    </script>
+{% endblock %}
