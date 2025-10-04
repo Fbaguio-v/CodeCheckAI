@@ -135,7 +135,7 @@ DATABASES = {
         'NAME': 'codecheckai_db',
         'USER' : 'tuna',
         'PASSWORD' : 'Instantdeath0022!',
-        'HOST' : 'codecheck_host',
+        'HOST' : 'localhost',
         'PORT' : '3306',
     }
 }
