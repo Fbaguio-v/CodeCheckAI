@@ -133,9 +133,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'codecheckai_db',
-        'USER' : 'root',
-        'PASSWORD' : 'adminpass',
-        'HOST' : 'localhost',
+        'USER' : 'tuna',
+        'PASSWORD' : 'Instantdeath0022!',
+        'HOST' : 'codecheck_host',
         'PORT' : '3306',
     }
 }
