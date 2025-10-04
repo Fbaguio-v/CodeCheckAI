@@ -1,7 +1,7 @@
 {% extends 'a_classroom/base.html' %}
 {% load static tailwind_tags %}
-{% block title %} index html {% endblock %}
 {% tailwind_css %}
+{% block title %} {{ subject.course_code }} {% endblock %}
 {% block content %}
     {% if subject %}
         <nav class="sticky top-0 z-50 flex justify-between col-span-2 p-6 space-x-6 text-black bg-white border-t border-b border-gray-300 border-solid shadow-xl ">

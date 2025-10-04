@@ -11,10 +11,16 @@ class RegisterForm(UserCreationForm):
             "placeholder": "Email Address..."
         })
     )
+    
+    agree_terms = forms.BooleanField(
+        required=True,
+        error_messages={'required': 'You must agree to the Terms and Conditions and Privacy Policy'},
+        widget=forms.CheckboxInput(attrs={'class': 'mr-2'})
+    )
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "email", "password1", "password2"]
+        fields = ["first_name", "last_name", "email", "password1", "password2", "agree_terms"]
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -24,14 +30,13 @@ class RegisterForm(UserCreationForm):
         self.fields["password2"].widget.attrs.update({
             "placeholder": "Confirm Password"
         })
-        self.fields["first_name"].widget.attrs.update({"placeholder" : "First Name"})
-        self.fields["last_name"].widget.attrs.update({"placeholder" : "Last Name"})
+        self.fields["first_name"].widget.attrs.update({"placeholder": "First Name"})
+        self.fields["last_name"].widget.attrs.update({"placeholder": "Last Name"})
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("Email is already in use.")
-
         return email
     
     def save(self, commit=True):

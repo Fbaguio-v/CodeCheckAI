@@ -1,65 +1,86 @@
 {% load static tailwind_tags %}
 {% tailwind_css %}
+
 {% if request.user.is_authenticated %}
     {% if request.user.userprofile.role == "Instructor" or request.user.userprofile.role == "Student" %}
         {% if subjects %}
-            <ul class="space-y-2 overflow-auto text-center max-h-[550px] scrollbar-hide" id="subjects-ul">
-                {% for subject in subjects %}
-                    <a href="{% url 'a_classroom:v' subject.subject_id %}?from={{ request.path }}" class="flex flex-col justify-center p-2 text-black border-2 border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
-                        <li class="block w-full h-full">
-                            <h1 class="text-lg font-bold">{{ subject.course_code }}</h1>
-                            <p>{{ subject.section.name }}</p>
+            <!-- Responsive Scrollable Subjects -->
+            <div class="flex-1 overflow-y-auto scrollbar-hidden 
+                        max-h-[500px] sm:max-h-[600px] md:max-h-[700px] lg:max-h-[750px] 
+                        px-2 sm:px-3 md:px-4">
+                <ul class="space-y-2 text-center" id="subjects-ul">
+                    {% for subject in subjects %}
+                        <li class="block w-full">
+                            <a href="{% url 'a_classroom:v' subject.subject_id %}?from={{ request.path }}"
+                               class="flex flex-col justify-center p-2 text-black border-2 border-black rounded-lg sm:p-3 md:p-4 hover:shadow-lg hover:bg-gray-300">
+                                <h1 class="text-base font-bold lowercase sm:text-lg md:text-xl first-letter:uppercase">
+                                    {{ subject.course_code }}
+                                </h1>
+                                <p class="text-sm sm:text-base md:text-lg">{{ subject.section.name }}</p>
+                            </a>
                         </li>
-                    </a>
-                {% endfor %}
-            </ul>
+                    {% endfor %}
+                </ul>
+            </div>
         {% else %}
-            <h1 class="text-black">No Subject Available</h1>
+            <h1 class="text-sm text-center text-black sm:text-base md:text-lg">No subjects available</h1>
         {% endif %}
 
-        <div class="mt-4">
-            {% if request.user.is_authenticated %}
-                {% if request.user.userprofile.role == "Instructor" %}
-                    <a href="{% url 'a_classroom:create-subject' %}">
-                        <button class="p-4 text-black border-2 border-black rounded-lg bg--500 hover:bg-gray-300 cursor-pointer">
-                            Create Subject
-                        </button>
-                    </a>
-                {% elif request.user.userprofile.role == "Student" %}
-                    <button
-                    id="join-class"
-                    hx-get="{% url 'b_enrollment:join-a-class' %}"
-                    hx-trigger="click"
-                    hx-target="#main-content"
-                    hx-swap="innerHTML"
-                    class="p-4 text-black border-2 border-black rounded-lg bg--500 hover:bg-gray-300 cursor-pointer">
-                        Join Class
+        <!-- Instructor / Student Buttons 
+        <div class="flex justify-center w-full mt-4">
+            {% if request.user.userprofile.role == "Instructor" %}
+                <a href="{% url 'a_classroom:create-subject' %}">
+                    <button class="w-full sm:w-[70%] md:w-[60%] lg:w-[50%] 
+                                   p-2 sm:p-3 md:p-4 
+                                   text-sm sm:text-base md:text-lg 
+                                   text-black border-2 border-black rounded-lg 
+                                   cursor-pointer hover:bg-gray-300">
+                        Create Subject
                     </button>
-                {% endif %}
+                </a>
+            {% elif request.user.userprofile.role == "Student" %}
+                <button id="join-class"
+                        hx-get="{% url 'b_enrollment:join-a-class' %}"
+                        hx-trigger="click"
+                        hx-target="#main-content"
+                        hx-swap="innerHTML"
+                        class="w-full sm:w-[70%] md:w-[60%] lg:w-[50%] 
+                               p-2 sm:p-3 md:p-4 
+                               text-sm sm:text-base md:text-lg 
+                               text-black bg-gray-200 border-2 border-black rounded-lg 
+                               cursor-pointer hover:bg-gray-300">
+                    Join Class
+                </button>
             {% endif %}
-        </div>
+        </div>-->
+
     {% elif request.user.userprofile.role == "Admin" %}
-            <ul class="space-y-2 overflow-auto text-center h-[500px] scrollbar-hide">
-                <a href="{% url 'a_classroom:get-users' %}?from={{ request.path }}" class="flex justify-center p-2 text-black border-2 border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
-                    <li class="block w-full h-full">
-                        Users
-                    </li>
-                </a>
-                <a href="{% url 'a_classroom:pending-users' %}?from={{ request.path }}" class="flex justify-center p-2 text-black border-2 border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
-                    <li class="block w-full h-full">
-                        Pendings
-                    </li>
-                </a>
-                <a href="{% url 'a_classroom:get-subjects' %}?from={{ request.path }}" class="flex justify-center p-2 text-black border-2 border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
-                    <li class="block w-full h-full">
-                        Subjects
-                    </li>
-                </a>
-                <a href="{% url 'a_classroom:archived-subjects' %}?from={{ request.path }}" class="flex justify-center p-2 text-black border-2 border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
-                    <li class="block w-full h-full">
-                        Archived
-                    </li>
-                </a>
-            </ul>
+        <!-- Responsive Admin Menu -->
+        <ul class="space-y-2 overflow-auto text-center 
+                   max-h-[400px] sm:max-h-[500px] md:max-h-[600px] lg:max-h-[700px] 
+                   px-2 sm:px-3 md:px-4 scrollbar-hidden">
+            <a href="{% url 'a_classroom:get-users' %}?from={{ request.path }}"
+               class="flex justify-center p-2 text-sm text-black border-2 border-black rounded-lg sm:p-3 md:p-4 sm:text-base md:text-lg hover:shadow-lg hover:bg-gray-300">
+                <li class="block w-full">Users</li>
+            </a>
+            <a href="{% url 'a_classroom:pending-users' %}?from={{ request.path }}"
+               class="flex justify-center p-2 text-sm text-black border-2 border-black rounded-lg sm:p-3 md:p-4 sm:text-base md:text-lg hover:shadow-lg hover:bg-gray-300">
+                <li class="block w-full">Pendings</li>
+            </a>
+            <a href="{% url 'a_classroom:get-subjects' %}?from={{ request.path }}"
+               class="flex justify-center p-2 text-sm text-black border-2 border-black rounded-lg sm:p-3 md:p-4 sm:text-base md:text-lg hover:shadow-lg hover:bg-gray-300">
+                <li class="block w-full">Subjects</li>
+            </a>
+        </ul>
     {% endif %}
 {% endif %}
+
+<style> 
+    .scrollbar-hidden::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hidden {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>

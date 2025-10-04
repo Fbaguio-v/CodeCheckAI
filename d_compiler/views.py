@@ -3,11 +3,13 @@ from django.views import View
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from django.conf import settings
-from c_activities.views import evaluate_student_code_with_gemini, evaluate_student_code_with_openai, get_activity_examples, get_activity_criterias
+from c_activities.views import evaluate_student_code_with_openai, get_activity_examples, get_activity_criterias
 from c_activities.models import Activity, ActivitySubmission, ActivityExample
 from a_classroom.models import Subject
 from a_classroom.views import select_subject_by_id, select_activity_by_id, get_student_submission_by_id, get_submission_by_id
 from django.utils import timezone
+from django_user_agents.utils import get_user_agent
+from django.contrib import messages
 import concurrent.futures
 import requests
 import json
@@ -18,6 +20,9 @@ import re
         
 class CompilerView(View):
     def get(self, request):
+        user_agent = get_user_agent(request)
+        if user_agent.is_mobile or user_agent.is_tablet:
+            messages.warning(request, "This platform is optimized for desktop and laptop computers. Please use a PC or laptop for the best coding experience.")
         return render(request, 'd_compiler/playground.html')
 
     def post(self, request):
@@ -40,50 +45,27 @@ class CompilerView(View):
 
         match action_type:
             case "turn_in":
-                if code.strip() == "":
+                if not code or code.strip() == "":
+                    messages.error(request, "Cannot submit empty code.")
                     response = HttpResponse()
                     response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
                     return response
 
                 submission = get_student_submission_by_id(student, activity)
-                if not submission:
+                
+                if submission and submission.status == "submitted":
+                    messages.error(request, "You have already submitted this activity.")
                     response = HttpResponse()
                     response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
                     return response
-
-                if submission and submission.status == "submitted":
-                    return HttpResponse("You have already submitted this activity.", status=400)
 
                 instruction = activity.description
                 examples = get_activity_examples(activity)
                 criterias = get_activity_criterias(activity)
 
-                evaluator_used = "Gemini"
-                evaluate = None
-                try:
-                    with concurrent.futures.ThreadPoolExecutor() as executor:
-                        future = executor.submit(
-                            evaluate_student_code_with_gemini,
-                            code, instruction, examples, criterias, activity.max_score
-                        )
-                        evaluate = future.result(timeout=20)
-                except concurrent.futures.TimeoutError:
-                    print("Gemini evaluation timed out, falling back to OpenAI")
-                    evaluator_used = "OpenAI"
-                except Exception as e:
-                    print(f"Gemini Error : {e}, falling back to OpenAI")
-                    evaluator_used = "OpenAI"
-
-
-                if not evaluate:
-                    evaluate = evaluate_student_code_with_openai(code, instruction, examples, criterias, activity.max_score)
-                    evaluator_used = "OpenAI"
-                if "<grading>" not in evaluate:
-                    return HttpResponse("Invalid response from evaluator", status=500)
-
+                evaluate = evaluate_student_code_with_openai(code, instruction, examples, criterias, activity.max_score)
 
                 parts = evaluate.split("<grading>")
-
                 raw_grading = parts[0]
                 match = re.search(r"(\d+(?:\.\d+)?)", raw_grading)
                 score = float(match.group(1)) if match else 0
@@ -95,8 +77,8 @@ class CompilerView(View):
                     submission.feedback = feedback
                     submission.score = score
                     submission.status = "submitted"
-                    submission.evaluator = evaluator_used
-                    submission.save(update_fields=["submitted_code", "submitted_at", "feedback", "score", "status", "evaluator"])
+                    submission.evaluator = "OpenAI"
+                    submission.save()
                 else:
                     submission = ActivitySubmission.objects.create(
                         student=student,
@@ -106,7 +88,7 @@ class CompilerView(View):
                         feedback=feedback,
                         score=score,
                         status="submitted",
-                        evaluator=evaluator_used
+                        evaluator="OpenAI"
                     )
 
                 response = HttpResponse()
@@ -114,27 +96,36 @@ class CompilerView(View):
                 return response
             case "save_draft":
                 existing = get_student_submission_by_id(student, activity)
-                if not existing:
-                    return redirect("a_classroom:index")
+                
                 if existing and existing.status == "submitted":
-                    return HttpResponse("You have already submitted this activity.", status=400)
-
-                submission = ActivitySubmission.objects.update_or_create(
-                    student = student,
-                    activity = activity,
+                    messages.error(request, "You have already submitted this activity.")
+                    response = HttpResponse()
+                    response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
+                    return response
+                
+                submission, created = ActivitySubmission.objects.update_or_create(
+                    student=student,
+                    activity=activity,
                     defaults={
                         "saved_code": code,
                         "status": "in_progress"
                     }			
                 )
-
+                
+                if created:
+                    messages.success(request, "Draft saved successfully!")
+                else:
+                    messages.success(request, "Draft updated successfully!")
+                
                 response = HttpResponse()
                 response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
                 return response
             case "unsubmit":
                 submission = get_submission_by_id(submission_id)
                 if not submission:
-                    return redirect("a_classroom:index")
+                    response = HttpResponse()
+                    response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
+                    return response
 
                 if submission.submitted_code:
                     submission.saved_code = submission.submitted_code
@@ -238,11 +229,12 @@ class CompilerView(View):
                             {feedback_section}
                             """
                         else:
-                            feedback_match = re.search(r"(Feedback:[\s\S]*?)(?=\nEvaluation:|$)", ai_feedback)
-                            feedback_section = feedback_match.group(1).strip() if feedback_match else ""
-
-                            feedback_section = re.sub(r"- Output correct:.*\n?", "", feedback_section).strip()
-
+                            feedback_section = ai_feedback
+                            
+                            feedback_section = re.sub(r'Grading:\s*\d+\s*', '', feedback_section)
+                            feedback_section = re.sub(r'Insight:\s*', '', feedback_section)
+                            feedback_section = feedback_section.strip()
+                            
                             output = f"""
                             Program Output:
                             {stdout or stderr or compile_output or message or status_description}

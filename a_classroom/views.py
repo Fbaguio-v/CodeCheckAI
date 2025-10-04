@@ -111,7 +111,6 @@ def user_settings(request):
     user_profile = select_user_related(request.user)
     if not user_profile:
         return redirect("a_classoom:index")
-
     email = request.user.email
     return render(request, 'a_classroom/settings/setting.html', {"user_profile" : user_profile, "email" : email})
 

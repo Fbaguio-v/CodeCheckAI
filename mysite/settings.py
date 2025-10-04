@@ -17,7 +17,6 @@ import os
 load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,7 +31,7 @@ SECRET_KEY = 'django-insecure-pa=l1i$)u)wlx((%8pj41-*uc$)%z$knwmu5$s8w+n09mz+&yg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['192.168.100.17', '127.0.0.1', 'localhost', '*', '3.27.158.135'] # also allow the domain here
+ALLOWED_HOSTS = ['172.28.212.223','3.27.158.135'] # also allow the domain here
 
 SITE_ID = 1
 
@@ -40,6 +39,7 @@ SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
+    'django_user_agents',
     'tailwind',
     'theme',
     'django_browser_reload',
@@ -84,6 +84,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware',
     # below is the middleware from register app
     'register.middleware.NoCacheMiddleware',
     'register.middleware.RedirectAuthenticatedUserMiddleware',

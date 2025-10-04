@@ -1,7 +1,7 @@
 {% extends 'a_classroom/base.html' %}
 {% load static tailwind_tags %}
-{% block title %} setting html {% endblock %}
 {% tailwind_css %}
+{% block title %} Settings {% endblock %}
 {% block content %}
 <div class="flex items-center justify-center w-full h-full">
 	<div id="parent-element" class="border border-solid border-gray-300 h-full w-[700px] gap-4 overflow-auto">
@@ -11,7 +11,7 @@
 		<hr>
 
 		<div class="flex items-center justify-center">
-			<img src="{% if user_profile.image %}{{ user_profile.image.url }}{% else %}/media/mysite_images/default.jpg{% endif %}" 
+			<img src="{{ user_profile.get_image_url }}" 
             alt="Profile Image" class="rounded-circle shadow-lg h-[150px] w-[150px] object-cover border-2 border-solid border-black rounded-full m-2">
 		</div>
 

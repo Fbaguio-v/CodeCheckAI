@@ -14,7 +14,7 @@
 		<tbody class="w-full">
 			{% for user in all_users %}
 				<tr class="h-[50px] border border-solid border-gray-300">
-					<td class="overflow-hidden"><img src="{% if user.userprofile.image %}{{ user.userprofile.image.url }}{% else %}/media/mysite_images/default.jpg{% endif %}"
+					<td class="overflow-hidden"><img src="{{ user.userprofile.get_image_url }}"
                     alt="Profile Image"
                     class="flex rounded-circle shadow-lg h-[50px] w-[50px] object-cover border-2 border-solid border-blue-500 rounded-full m-2"></td>
 					<td class="px-4 py-2">{{ user.get_full_name }}</td>

@@ -5,7 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} base html {% endblock %}</title>
+    <title>{% block title %} CodeCheckAI {% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'mysite_images/logo.png' %}">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     {% tailwind_css %}
 </head>
@@ -31,33 +32,45 @@
             grid-cols-[200px_1fr]
         {% else %}
             grid-cols-1
-        {% endif %}
-    ">
-        <!-- Navbar -->
-        <nav class="flex flex-row items-center justify-between h-[75px] col-span-2 p-6 space-x-6 text-white bg-gray-800 shadow-xl">
-            <ul class="flex flex-row items-center space-x-12">
-                <li><a href="{% url 'a_classroom:index' %}"><img class="h-10" src="{% static 'mysite_images/logo.png' %}" alt="logo.png"></a></li>
-                {% if request.user.is_authenticated %}
-                    <li><a href="{% url 'a_classroom:index' %}" class="p-4 rounded-lg hover:bg-gray-500">Home</a></li>
-                    {% if request.user.userprofile.role == "Student" %}
+        {% endif %}">
+    <!-- Navbar -->
+            <nav class="flex flex-row items-center justify-between h-[75px] col-span-2 p-6 space-x-6 text-white bg-gray-800 shadow-xl">
+                <ul class="flex flex-row items-center space-x-6">
+                    {% if request.user.is_authenticated and request.path != "/p/" %}
+                    <li>
+                        <button id="toggle-sidebar" 
+                            class="px-3 py-2 text-white transition bg-gray-800 rounded hover:bg-gray-500">
+                                ☰
+                            </button>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a href="{% url 'a_classroom:index' %}">
+                            <img class="h-10" src="/media/mysite_images/logo.png" alt="logo.png">
+                        </a>
+                    </li>
+                    {% if request.user.is_authenticated %}
+                        <li><a href="{% url 'a_classroom:index' %}" class="p-4 rounded-lg hover:bg-gray-500">Home</a></li>
+                        {% if request.user.userprofile.role == "Student" %}
+                            <li><a href="{% url 'd_compiler:index' %}" class="p-4 rounded-lg hover:bg-gray-500">Playground</a></li>
+                        {% endif %}
+                    {% else %}
                         <li><a href="{% url 'd_compiler:index' %}" class="p-4 rounded-lg hover:bg-gray-500">Playground</a></li>
                     {% endif %}
-                {% else %}
-                    <li><a href="{% url 'd_compiler:index' %}" class="p-4 rounded-lg hover:bg-gray-500">Playground</a></li>
-                {% endif %}
-            </ul>
-            <ul class="flex space-x-12">
-                {% if request.user.is_authenticated %}
-                    <li><a href="{% url 'a_classroom:setting' %}?from={{ request.path }}" class="p-4 rounded-lg hover:bg-gray-500">Settings</a></li>
-                {% else %}
-                    <li><a href="{% url 'register:register' %}" class="p-4 rounded-lg hover:bg-gray-500">Register</a></li>
-                    <li><a href="{% url 'register:login' %}" class="p-4 rounded-lg hover:bg-gray-500">Login</a></li>
-                {% endif %}
-            </ul>
-        </nav>
+                </ul>
+
+                <ul class="flex space-x-12">
+                    {% if request.user.is_authenticated %}
+                        <li><a href="{% url 'a_classroom:setting' %}?from={{ request.path }}" class="p-4 rounded-lg hover:bg-gray-500">Settings</a></li>
+                    {% else %}
+                        <li><a href="{% url 'register:register' %}" class="p-4 rounded-lg hover:bg-gray-500">Register</a></li>
+                        <li><a href="{% url 'register:login' %}" class="p-4 rounded-lg hover:bg-gray-500">Login</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
 
         {% if request.user.is_authenticated and request.path != "/p/" %}
-            <aside id="sidebar" class="flex flex-col justify-between p-4 text-white bg-gray-100 border-2 shadow-xl relative">
+            <aside id="sidebar" class="relative flex flex-col justify-between p-4 overflow-y-auto text-white bg-gray-100 border-2 shadow-xl">
                 <div
                     id="subjects"
                     hx-get="{% url 'a_classroom:index' %}" 
@@ -65,13 +78,28 @@
                     hx-swap="innerHTML"
                     hx-trigger="load">
                 </div>
-            </aside>
 
-            <button id="toggle-sidebar" 
-                class="absolute top-[100px] left-[200px] z-50 px-2 py-1 bg-gray-300 text-black rounded-r hover:bg-gray-400 transition">
-                ☰
-            </button>
+                <div id="sidebar-actions" class="mt-4">
+        {% if request.user.userprofile.role == "Instructor" %}
+                <a href="{% url 'a_classroom:create-subject' %}">
+                    <button class="w-full p-3 text-black bg-gray-200 border-2 border-black rounded-lg hover:bg-gray-300">
+                        Create Subject
+                    </button>
+                </a>
+        {% elif request.user.userprofile.role == "Student" %}
+                <button id="join-class"
+                        hx-get="{% url 'b_enrollment:join-a-class' %}"
+                        hx-trigger="click"
+                        hx-target="#main-content"
+                        hx-swap="innerHTML"
+                        class="w-full p-3 text-black bg-gray-200 border-2 border-black rounded-lg hover:bg-gray-300">
+                    Join Class
+                </button>
         {% endif %}
+        </div>
+
+</aside>
+{% endif %}
 
         <main id="main-content" class="p-8 overflow-auto">
             {% block content %}{% endblock %}

@@ -2,44 +2,44 @@
 {% tailwind_css %}
 <div class="flex items-center justify-center w-full h-full">
     {% if user %}
-    <div id="parent-element" class="border border-solid border-gray-300 h-full w-[700px] gap-4">
+    <div id="parent-element" class="border border-solid border-gray-300 h-full w-[700px] sm:max-w-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl gap-4 overflow-auto">
         <div class="flex items-center justify-center text-white bg-gray-800">
-            <h2 class="p-4 text-3xl">Edit Account</h2>
+            <h2 class="p-4 text-xl sm:text-2xl md:text-3xl">Edit Account</h2>
         </div>
         <hr>
 
-        <form action="{% url 'a_classroom:edit-account' %}" method="post" class="flex flex-col items-center justify-center gap-4 p-6">
+        <form action="{% url 'a_classroom:edit-account' %}" method="post" class="flex flex-col items-center justify-center gap-4 p-4 sm:p-6">
             {% csrf_token %}
 
-            <div class="flex flex-col items-center justify-center w-full pt-10">
-                <label for="first_name" class="mb-2 text-lg font-semibold">First Name</label>
+            <div class="flex flex-col items-center justify-center w-full pt-6 sm:pt-8 md:pt-10">
+                <label for="first_name" class="mb-2 text-base font-semibold sm:text-lg md:text-lg">First Name</label>
                 <input type="text" name="first_name" id="first_name" 
-                    class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-gray-100" 
+                    class="border border-solid border-gray-300 w-full p-2 rounded bg-gray-100 sm:w-[70%] md:w-[60%] lg:w-[50%]" 
                     value="{{ user.first_name }}" required>
             </div>
 
             <div class="flex flex-col items-center justify-center w-full">
-                <label for="last_name" class="mb-2 text-lg font-semibold">Last Name</label>
+                <label for="last_name" class="mb-2 text-base font-semibold sm:text-lg md:text-lg">Last Name</label>
                 <input type="text" name="last_name" id="last_name" 
-                    class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-gray-100" 
+                    class="border border-solid border-gray-300 w-full p-2 rounded bg-gray-100 sm:w-[70%] md:w-[60%] lg:w-[50%]" 
                     value="{{ user.last_name }}" required>
             </div>
 
             <div class="flex flex-col items-center justify-center w-full">
-                <label for="password" class="mb-2 text-lg font-semibold">Password</label>
+                <label for="password" class="mb-2 text-base font-semibold sm:text-lg md:text-lg">Password</label>
                 <input type="password" name="password" id="password" 
-                    class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-gray-100">
+                    class="border border-solid border-gray-300 w-full p-2 rounded bg-gray-100 sm:w-[70%] md:w-[60%] lg:w-[50%]">
             </div>
 
             <div class="flex flex-col items-center justify-center w-full">
-                <label for="confirm_password" class="mb-2 text-lg font-semibold">Confirm Password</label>
+                <label for="confirm_password" class="mb-2 text-base font-semibold sm:text-lg md:text-lg">Confirm Password</label>
                 <input type="password" name="confirm_password" id="confirm_password" 
-                    class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-gray-100">
+                    class="border border-solid border-gray-300 w-full p-2 rounded bg-gray-100 sm:w-[70%] md:w-[60%] lg:w-[50%]">
             </div>
 
             <div class="flex items-center justify-center w-full pt-3">
                 <button type="submit" 
-                    class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-black text-white cursor-pointer hover:bg-gray-600">
+                    class="border border-solid border-gray-300 w-full p-2 rounded bg-black text-white cursor-pointer hover:bg-gray-600 sm:w-[70%] md:w-[60%] lg:w-[50%]">
                     Save Changes
                 </button>
             </div>

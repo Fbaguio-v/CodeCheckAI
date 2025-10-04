@@ -14,27 +14,37 @@ from openai import OpenAI
 import google.generativeai as genai
 from datetime import datetime
 import re, json, requests, time
-from mysite.wsgi import pipe
 
 # Create your views here.
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
-genai.configure(api_key=settings.GEMINI_API_KEY)
-gemini_model = "gemini-2.5-flash-lite"
 
-def prompt_to_aimodel(prompt, activity_id):
-    outputs = pipe(prompt, max_length=100, num_return_sequences=5, do_sample=True, top_k=50, truncation=True)
-
+def prompt_to_aimodel_gpt4o(prompt, activity_id):
+    responses = []
+    for i in range(5):
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "You are a helpful AI assistant."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=100,
+            temperature=0.7,
+            n=1
+        )
+        
+        response_text = response.choices[0].message.content
+        responses.append({'generated_text': response_text})
+    
     activity = select_activity_by_id(activity_id)
     if not activity:
         return redirect("a_classroom:index")
     
     saved_examples = []
-    for output in outputs:
+    for output in responses:
         example = ActivityExample.objects.create(
-			activity=activity,
-			example_text=output['generated_text']
-		)
-
+            activity=activity,
+            example_text=output['generated_text']
+        )
         saved_examples.append(example.example_text)
 
     return saved_examples
@@ -64,7 +74,6 @@ def evaluate_student_code_with_openai(code, instruction="", examples="", criteri
     - Format the output as:
     <grading>Grading: your_score_here
     Insight: your_insight_here
-    Feedback:
     ALSO include what is wrong with the code compared to the instruction and how to improve it but do not give the whole code to solve the task at hand but instead give a hint of some sort just to help them improve it.
     """
 
@@ -79,82 +88,6 @@ def evaluate_student_code_with_openai(code, instruction="", examples="", criteri
     )
 
     return response.choices[0].message.content
-
-def evaluate_student_code_with_gemini(code, instruction="", examples="", criterias=None, max_score=100):
-    if not criterias or len(criterias) < 3:
-        criterias = [0, 0, 0]
-
-    prompt = f"""
-You are a strict Python and Java code reviewer. 
-You must ONLY evaluate code in Python or Java. 
-If asked to do anything unrelated, politely refuse. 
-
-Evaluate the following student code according to these criteria and weights:
-
-Criteria and Weights:
-- Correctness: {criterias[0]}%
-- Syntax: {criterias[1]}%
-- Structure: {criterias[2]}%
-
-Instruction: {instruction if instruction.strip() != "" else "No additional instructions provided."}
-
-Code to evaluate:
-{code}
-
-Example solutions for reference:
-{examples if examples else "No example solutions provided."}
-
-⚠️ REQUIRED FORMAT:
-- Use the weights above to calculate a final grade between 1 and {max_score}.
-- Always output in this exact format:
-
-<grading>Grading your_score_here
-Insight: your_insight_here
-
-For example:
-<grading>Grading {max_score - 15}
-Insight: The code is mostly correct but missing error handling.
-
-Do not include explanations, JSON, or anything else.
-Only output in the format above.
-"""
-
-    model = genai.GenerativeModel("gemini-2.5-flash-lite")
-
-    response = model.generate_content(
-        prompt,
-        generation_config={
-            "max_output_tokens": 500,
-            "temperature": 0.5,
-            "response_mime_type": "text/plain",
-        }
-    )
-
-    if not response or not response.text:
-        return "<grading>Grading 0\nInsight: No response from Gemini."
-
-    text = response.text.strip()
-    print("Gemini raw response:", repr(text))
-
-    match = re.search(
-        r"<grading>\s*Grading\s*([\d\.]+)(?:\s*/\s*\d+)?\s*[\r\n]+Insight:\s*(.+)",
-        text,
-        re.DOTALL | re.IGNORECASE,
-    )
-    if match:
-        grading = match.group(1).strip()
-        insight = match.group(2).strip()
-        return f"Grading {grading}\nInsight: {insight}"
-
-    if text.startswith("{") and text.endswith("}"):
-        try:
-            data = json.loads(text)
-            if "grading" in data and "insight" in data:
-                return f"Grading {data['grading']}\nInsight: {data['insight']}"
-        except Exception:
-            pass
-
-    return f"<grading>Grading 0\nInsight: (Unparsed) {text}"
 
 @method_decorator(never_cache, name='dispatch')
 class CreateActivityView(View):
@@ -232,10 +165,16 @@ class CreateActivityView(View):
                         activity=activity, text=criteria.strip()
                     )
 
-            code_examples = prompt_to_aimodel(description, activity.activity_id)
+            try:
+                code_examples = prompt_to_aimodel_gpt4o(description, activity.activity_id)
+            except Exception as e:
+                print(f"AI model failed: {e}")
+                code_examples = None
 
             messages.success(request, "Activity created successfully.")
-            return redirect("a_classroom:v", subject_id=subject.subject_id)
+            response = HttpResponse()
+            response["HX-Redirect"] = f"/c/activity/{activity.activity_id}/?subject_id={subject_id}&type=activity"
+            return response
 
         return redirect("a_classroom:index")
 
@@ -308,7 +247,7 @@ class EditActivityView(View):
 		if description != activity.description:
 			activity.description = description
 			ActivityExample.objects.filter(activity=activity).delete()
-			prompt_to_aimodel(description, activity.activity_id)
+			prompt_to_aimodel_gpt4o(description, activity.activity_id)
 		else:
 			activity.description = description
 

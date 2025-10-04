@@ -2,7 +2,7 @@
 {% tailwind_css %}
 
 <div class="flex flex-col items-center justify-center h-screen w-full py-10">
-    <h1 class="text-4xl mb-6">Create Activity</h1>
+    <h1 class="text-4xl mb-6">Create</h1>
     <div class="w-full max-w-xl border border-gray-300 p-6 rounded-lg shadow-sm">
     	<form class="flex flex-col space-y-4" hx-post="{% url 'c_activities:create-activity' %}" hx-trigger="submit">
     		{% csrf_token %}
@@ -32,7 +32,7 @@
 
 						<div class="mt-8">
 	            	<h5 class="text-lg font-semibold mb-2">
-		            	Evaluation Criteria
+		            	Evaluation Criteria (up to 100%)
 	            	</h5>
 	            <table class="w-full table-fixed border border-gray-300">
 	                <thead>
@@ -58,7 +58,7 @@
 	            </table>
 	    	</div>
 
-			<button type="submit" name="action" value="create_activity" class="mt-4 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition cursor-pointer">Create Activity</button>
+			<button type="submit" name="action" value="create_activity" class="mt-4 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition cursor-pointer">Create</button>
 
     	</form>
     </div>

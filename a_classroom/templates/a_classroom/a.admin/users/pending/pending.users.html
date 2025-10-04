@@ -29,7 +29,11 @@
 
 						<form class="pt-3">
 							{% csrf_token %}
-							<button class="border border-solid border-gray-300 cursor-pointer rounded-xl p-2 w-[30%] bg-red-600 hover:bg-red-500 text-black hover:text-black">Delete</button>
+							<button class="border border-solid border-gray-300 cursor-pointer rounded-xl p-2 w-[30%] bg-red-600 hover:bg-red-500 text-black hover:text-black"
+							hx-post="{% url 'a_classroom:delete-pending' pending.id %}"
+							hx-trigger="click"
+							hx-target="#parent"
+							hx-swap="innerHTML">Delete</button>
 						</form>
 					</td>
 				</tr>
