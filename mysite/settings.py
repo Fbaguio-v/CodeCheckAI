@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-pa=l1i$)u)wlx((%8pj41-*uc$)%z$knwmu5$s8w+n09mz+&yg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['172.28.212.223','3.27.158.135'] # also allow the domain here
+ALLOWED_HOSTS = ['*', 'localhost', '3.27.158.135'] # also allow the domain here
 
 SITE_ID = 1
 

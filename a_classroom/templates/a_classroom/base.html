@@ -46,7 +46,7 @@
                     {% endif %}
                     <li>
                         <a href="{% url 'a_classroom:index' %}">
-                            <img class="h-10" src="/media/mysite_images/logo.png" alt="logo.png">
+                            <img class="h-10" src="{% static 'mysite_images/logo.png' %}" alt="logo.png">
                         </a>
                     </li>
                     {% if request.user.is_authenticated %}
