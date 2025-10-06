@@ -89,6 +89,26 @@ def evaluate_student_code_with_openai(code, instruction="", examples="", criteri
 
     return response.choices[0].message.content
 
+def evaluate_student_code_with_openai_for_playground(code):
+
+    prompt = f"""
+    Code to evaluate:
+    {code}
+    ALSO include what is wrong with the code and how to improve it but do not give the whole code to solve the task at hand but instead give a hint of some sort just to help them improve it.
+    """
+
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "system", "content": "You are a Python and Java code reviewer."},
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=500,
+        temperature=0.5,
+    )
+
+    return response.choices[0].message.content
+
 @method_decorator(never_cache, name='dispatch')
 class CreateActivityView(View):
     def get(self, request):
