@@ -4,9 +4,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 <div class="flex flex-row h-full overflow-auto ">
-	<!-- Left Panel (Activity Info) -->
 	<div class="w-[40%] overflow-auto flex flex-col bg-gray-100">
-		<p>{{ submission }}</p>
 		<div id="activity-output" class="flex overflow-auto scrollbar-hidden flex-col justify-start border rounded h-[95%] p-4">
 
 			<p class="pt-3 pb-4 text-2xl font-bold text-center">{{ activity.title }}</p>
@@ -23,7 +21,7 @@
 
 			{% if activity.type == "quiz" %}
 				<p class="pb-3 text-xl text-left">
-					<span class="font-bold">Max score:</span> {{ activity.max_attempt }}
+					<span class="font-bold">Max Attempt:</span> {{ activity.max_attempt }}
 				</p>
 			{% endif %}
 
@@ -33,7 +31,7 @@
 		</div>
 
 		<div class="flex items-center justify-center pt-5 pb-5 bg-gray-100 border-2 border-gray-100 border-solid">
-			<button class="flex items-center justify-center h-12 text-white bg-black border-2 border-solid shadow-xl cursor-pointer w-50 rounded-xl hover:bg-gray-500"
+			<button class="h-12 px-8 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200 w-auto min-w-[140px]"
 				hx-get="{% url 'c_activities:edit-activity' activity.activity_id %}?type={{ activity.type }}" 
 				hx-target="#activity-output" 
 				hx-swap="innerHTML" 
@@ -49,54 +47,64 @@
 				<input type="hidden" name="activity_id" value="{{ activity.activity_id }}">
 				<input type="hidden" name="index" value="{{ index|default:0 }}">
 				<button type="submit" name="action" value="previous" 
-				class="flex items-center justify-center w-20 h-12 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500"
+				class="w-20 h-12 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200"
 				title="Go to previous page">Previous</button> 
 			</form>
 		</div>
 
-		<!-- Submission Details -->
-		<div class="relative w-full h-full pt-10 pl-5 pr-5">
+		<div class="relative w-full h-full bg-gray-200">
+			<div class="h-full overflow-y-auto pt-10 pl-5 pr-5 pb-20">
+				{% if activity_submissions %}
+					{% with first_submission=activity_submissions.first %}
+						<p class="pb-3 text-xl text-left">
+							<span class="font-bold">Email Address : </span>{{ first_submission.student.email }}
+						</p>
+
+						<p class="pb-3 text-xl text-left break-words">
+							<span class="font-bold">Submitted Code : </span>
+							<pre class="mt-2 p-3 bg-gray-100 rounded-lg overflow-x-auto">{{ first_submission.submitted_code }}</pre>
+						</p>
+
+						<!-- Editable Feedback with scrollable content -->
+						<div class="pb-3 text-xl text-left">
+							<span class="font-bold">Feedback : </span>
+							<div class="mt-2 p-3 bg-gray-100 rounded-lg max-h-32 overflow-y-auto">
+								{{ first_submission.feedback }}
+							</div>
+							<button class="ml-3 px-3 py-1 text-sm text-white bg-blue-600 rounded-lg shadow hover:bg-blue-800 transition-colors duration-200"
+								hx-get="{% url 'c_activities:edit-insight' first_submission.id %}"
+								hx-swap="outerHTML"
+								hx-target="#feedback-{{ first_submission.id }}"
+								title="Click to edit feedback">Edit Feedback</button>
+						</div>
+
+						<!-- Editable Score -->
+						<p id="score-{{ first_submission.id }}" class="pb-3 text-xl text-left">
+							<span class="font-bold">Score : </span>{{ first_submission.score }}
+							<button class="ml-3 px-3 py-1 text-sm text-white bg-green-600 rounded-lg shadow hover:bg-green-800 transition-colors duration-200"
+								hx-get="{% url 'c_activities:edit-grade' first_submission.id %}" 
+								hx-swap="outerHTML" 
+								hx-target="#score-{{ first_submission.id }}" 
+								title="Click to edit grade">Edit Grade</button>
+						</p>
+					{% endwith %}
+				{% else %}
+					<p class="text-center text-lg font-semibold">No submission.</p>
+				{% endif %}
+			</div>
+
+			<!-- Fixed Return Grade Button (not scrollable) -->
 			{% if activity_submissions %}
 				{% with first_submission=activity_submissions.first %}
-					<p class="pb-3 text-xl text-left">
-						<span class="font-bold">Email Address : </span>{{ first_submission.student.email }}
-					</p>
-
-					<p class="pb-3 text-xl text-left">
-						<span class="font-bold">Submitted Code : </span>{{ first_submission.submitted_code }}
-					</p>
-
-					<!-- Editable Feedback -->
-					<p id="feedback-{{ first_submission.id }}" class="pb-3 text-xl text-left">
-						<span class="font-bold">Feedback : </span>{{ first_submission.feedback }}
-						<button class="ml-3 px-3 py-1 text-sm text-white bg-blue-600 rounded-lg shadow hover:bg-blue-800"
-							hx-get="{% url 'c_activities:edit-insight' first_submission.id %}"
-							hx-swap="outerHTML"
-							hx-target="#feedback-{{ first_submission.id }}"
-							title="Click to edit feedback">Edit Feedback</button>
-					</p>
-
-					<!-- Editable Score -->
-					<p id="score-{{ first_submission.id }}" class="pb-3 text-xl text-left">
-						<span class="font-bold">Score : </span>{{ first_submission.score }}
-						<button class="ml-3 px-3 py-1 text-sm text-white bg-green-600 rounded-lg shadow hover:bg-green-800"
-							hx-get="{% url 'c_activities:edit-grade' first_submission.id %}" 
-							hx-swap="outerHTML" 
-							hx-target="#score-{{ first_submission.id }}" 
-							title="Click to edit grade">Edit Grade</button>
-					</p>
-
-					<!-- Return grade -->
-					<form hx-post="{% url 'c_activities:return-grade' first_submission.id %}" 
-						class="absolute pt-10 pl-5 transform -translate-x-1/2 bottom-4 left-1/2">
-						{% csrf_token %}
-						<button type="submit" name="action" value="return" 
-						class="flex items-center justify-center w-40 h-12 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500" 
-						title="Click to return grade to student">Return Grade</button>
-					</form>
+					<div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full flex justify-center">
+						<form hx-post="{% url 'c_activities:return-grade' first_submission.id %}">
+							{% csrf_token %}
+							<button type="submit" name="action" value="return" 
+							class="w-40 h-12 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200" 
+							title="Click to return grade to student">Return Grade</button>
+						</form>
+					</div>
 				{% endwith %}
-			{% else %}
-				<p class="text-center text-lg font-semibold">No submission.</p>
 			{% endif %}
 		</div>
 
@@ -106,7 +114,7 @@
 				<input type="hidden" name="activity_id" value="{{ activity.activity_id }}">
 				<input type="hidden" name="index" value="{{ index|default:0 }}">
 				<button type="submit" name="action" value="next" 
-				class="flex items-center justify-center w-20 h-12 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500"
+				class="w-20 h-12 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200"
 				title="Go to next page">Next</button> 
 			</form>
 		</div>
