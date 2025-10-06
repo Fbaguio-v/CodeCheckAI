@@ -33,8 +33,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*', 'localhost', '3.27.158.135'] # also allow the domain here
 
-SITE_ID = 1
-
 
 # Application definition
 
@@ -54,27 +52,11 @@ INSTALLED_APPS = [
     'c_activities.apps.CActivitiesConfig',
     'd_compiler.apps.DCompilerConfig',
     'register.apps.RegisterConfig',
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
 ]
 
 TAILWIND_APP_NAME = 'theme'
 NPM_BIN_PATH = "/usr/bin/npm"
 
-SOCIALACCOUNT_PROVIDERS = {
-    'google' : {
-        'SCOPE' : [
-            'profile',
-            'email'
-        ],
-        'AUTH_PARAMS' : {
-            'access_type' : 'online'
-        }
-    }
-}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -194,23 +176,6 @@ HEADERS = {
     "X-RapidAPI-Key": "504f5f8347mshfddb83bb53d2821p1f2430jsne3a1f53c5a1b",
     "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com"
 }
-#configuration for allowing user to login with google or email account
-AUTHENTICATION_BACKENDS = {
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend'
-}
-ACCOUNT_ADAPTER = "allauth.account.adapter.DefaultAccountAdapter"
-ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
-ACCOUNT_SIGNUP_REDIRECT_URL = "/"
-ACCOUNT_LOGIN_METHODS = {"email"}
-#configuration for sending an email
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "codecheckai@gmail.com"
-EMAIL_HOST_PASSWORD = "dzon ahym luyw naof"
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 #configuration for allowing the user to upload and display an image
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
