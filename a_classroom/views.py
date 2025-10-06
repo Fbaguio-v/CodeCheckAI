@@ -14,7 +14,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth import update_session_auth_hash
 from django.core.paginator import Paginator
-from django.core.mail import send_mail
+from django.core.mail import send_mail, get_connection
 from django.utils import timezone
 from django.db.models import Max
 # Create your views here.
@@ -355,17 +355,30 @@ class ApproveUserAdminView(View):
             subject = "Your Account Has Been Approved"
             message = f"""Hello {user.first_name},
 
-            Your account has been approved by the admin.
+Your account has been approved by the admin.
 
-            You can now login into your account.
+You can now login into your account.
 
-            Best regards,  
-            Admin Team
-            """
+Best regards,  
+Admin Team
+"""
             try:
-                send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+                connection = get_connection()
+                connection.open()
+                
+                send_mail(
+                    subject, 
+                    message, 
+                    settings.DEFAULT_FROM_EMAIL, 
+                    [user.email],
+                    connection=connection
+                )
+                connection.close()
+                
+                print("✅ Approval email sent successfully")
             except Exception as e:
                 print(f"❌ Email send failed: {e}")
+                
             pending_users = User.objects.filter(is_active=False)
             return render(
                 request,

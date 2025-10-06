@@ -176,12 +176,12 @@ HEADERS = {
 }
 #configuration for sending an email
 EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
-EMAIL_HOST = os.getenv("smtp.gmail.com")
+EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER")
 #configuration for allowing the user to upload and display an image
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
