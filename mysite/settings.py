@@ -70,8 +70,6 @@ MIDDLEWARE = [
     # below is the middleware from register app
     'register.middleware.NoCacheMiddleware',
     'register.middleware.RedirectAuthenticatedUserMiddleware',
-    # below is the middleware for allowing user to login with their google account
-    'allauth.account.middleware.AccountMiddleware',
     # below is the middleware for the django browser reload
     'django_browser_reload.middleware.BrowserReloadMiddleware',
     # below is the middleware for the whitenoise
