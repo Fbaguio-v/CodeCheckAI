@@ -318,7 +318,7 @@ def return_submission(request, submission_id):
     activity_type = submission.activity.type
 
     response = HttpResponse()
-    response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type={action_type}"
+    response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type={activity_type}"
     return response
 
 def delete_activity(request, activity_id):

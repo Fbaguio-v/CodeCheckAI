@@ -26,34 +26,6 @@
             <h1 class="text-sm text-center text-black sm:text-base md:text-lg">No subjects available</h1>
         {% endif %}
 
-        <!-- Instructor / Student Buttons 
-        <div class="flex justify-center w-full mt-4">
-            {% if request.user.userprofile.role == "Instructor" %}
-                <a href="{% url 'a_classroom:create-subject' %}">
-                    <button class="w-full sm:w-[70%] md:w-[60%] lg:w-[50%] 
-                                   p-2 sm:p-3 md:p-4 
-                                   text-sm sm:text-base md:text-lg 
-                                   text-black border-2 border-black rounded-lg 
-                                   cursor-pointer hover:bg-gray-300">
-                        Create Subject
-                    </button>
-                </a>
-            {% elif request.user.userprofile.role == "Student" %}
-                <button id="join-class"
-                        hx-get="{% url 'b_enrollment:join-a-class' %}"
-                        hx-trigger="click"
-                        hx-target="#main-content"
-                        hx-swap="innerHTML"
-                        class="w-full sm:w-[70%] md:w-[60%] lg:w-[50%] 
-                               p-2 sm:p-3 md:p-4 
-                               text-sm sm:text-base md:text-lg 
-                               text-black bg-gray-200 border-2 border-black rounded-lg 
-                               cursor-pointer hover:bg-gray-300">
-                    Join Class
-                </button>
-            {% endif %}
-        </div>-->
-
     {% elif request.user.userprofile.role == "Admin" %}
         <!-- Responsive Admin Menu -->
         <ul class="space-y-2 overflow-auto text-center 

@@ -190,7 +190,7 @@ class ActivityView(View):
         if user_profile.role == "Instructor":
             filters = {"activity": activity}
             if activity.type == "activity":
-                filters["status"] = "submitted"
+                filters["status__in"] = ["submitted", "returned"]
 
             activity_submissions = ActivitySubmission.objects.filter(**filters).select_related("student")
             return render(request, 'c_activities/activity.partial/student.submission.html', {
@@ -262,7 +262,7 @@ class ActivityView(View):
 def prev_or_next_view(request):
     button_type = request.GET.get("action")
     activity_id = request.GET.get("activity_id")
-    current_index = int(request.GET.get("index", 1))
+    current_index = int(request.GET.get("index", 0))
 
     activity = select_activity_by_id(activity_id)
     if not activity:
@@ -272,9 +272,8 @@ def prev_or_next_view(request):
     if activity.type == "activity":
         filters["status"] = "submitted"
 
-    submissions = ActivitySubmission.objects.filter(**filters).select_related("student")
-
-    total = submissions.count()
+    activity_submissions = ActivitySubmission.objects.filter(**filters).select_related("student")
+    total = activity_submissions.count()
 
     if button_type == "next":
         current_index += 1
@@ -283,17 +282,12 @@ def prev_or_next_view(request):
 
     current_index = max(0, min(current_index, total - 1))
 
-    activity_submission = submissions[current_index] if total > 0 else None
-
-    has_next = current_index < total - 1
-    has_prev = current_index > 0
+    submission = activity_submissions[current_index] if total > 0 else None
 
     return render(request, 'c_activities/activity.partial/partials/submission.partial.html', {
-        "index" : current_index,
-        "submission" : activity_submission,
-        "activity" : activity,
-        "has_next" : has_next,
-        "has_prev" : has_prev,
+        "index": current_index,
+        "submission": submission,
+        "activity": activity,
         "now": timezone.now(),
     })
 

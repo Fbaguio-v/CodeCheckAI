@@ -209,13 +209,22 @@ class CompilerView(View):
                                 max_score=activity.max_score,
                             )
 
-                            parts = ai_feedback.split("<grading>")
-                            raw_grading = parts[0].strip()
-                            match = re.search(r"(\d+)", raw_grading)
-                            score = int(match.group(1)) if match else 0
+                            # Extract score using regex
+                            score_match = re.search(r"Grading:\s*(\d+)", ai_feedback)
+                            score = int(score_match.group(1)) if score_match else 0
 
-                            feedback_match = re.search(r"(Feedback:[\s\S]*?)(?=\nEvaluation:|$)", ai_feedback)
-                            feedback_section = feedback_match.group(1).strip() if feedback_match else ai_feedback.strip()
+                            # Split by common section headers and take everything after grading
+                            sections = re.split(r'\*?\s*(?:Grading|Insight):\s*\*?\s*', ai_feedback)
+                            
+                            if len(sections) > 1:
+                                # Take the last section (actual feedback)
+                                feedback_section = sections[-1].strip()
+                            else:
+                                # Fallback: remove grading pattern
+                                feedback_section = re.sub(r'.*Grading:\s*\d+\s*', '', ai_feedback).strip()
+                            
+                            # Clean up any markdown formatting
+                            feedback_section = re.sub(r'\*\*', '', feedback_section).strip()
 
                             if submission.score is None or score > submission.score:
                                 submission.score = score
@@ -224,9 +233,7 @@ class CompilerView(View):
 
                             output = f"""
                             Score: {score}
-                            <br>
-                            Execution Time: {exec_time}
-                            <br>
+                            Run Time: {exec_time}
                             {feedback_section}
                             """
                         else:
@@ -239,7 +246,7 @@ class CompilerView(View):
                             Program Output:
                             {stdout or stderr or compile_output or message or status_description}
                             <br>
-                            Execution Time: {exec_time}
+                            Run Time: {exec_time}
                             <br>
                             {ai_feedback}
                             """

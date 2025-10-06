@@ -1,63 +1,78 @@
-   <!-- Previous-->
-<div class="flex flex-row w-full h-full border-solid">
-  <div class="flex justify-center items-center border-solid h-full w-[10%] bg-gray-200">
-    <form hx-get="{% url 'a_classroom:prev_or_next' %}" hx-target="#output" hx-swap="innerHTML">
-      <input type="hidden" name="activity_id" value="{{ activity.activity_id }}">
-      <input type="hidden" name="index" value="{{ index}}">
-      <button type="submit" name="action" value="previous" 
-      class="flex items-center justify-center w-20 h-12 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500"
-          hx-target="#output" hx-swap="innerHTML" title="Go to previous page">Previous</button> 
-    </form>
-  </div>
-
-  <div class="relative w-full h-full pt-10 pl-5 pr-5 bg-gray-200">
-    <div class="flex flex-col justify-start">
-      
-          <p class="pb-3 text-xl text-left">
-            <span class="font-bold">Email Address :</span> {{ submission.student.email }}
-          </p>
-
-          <p class="pb-3 text-xl text-left">
-            <span class="font-bold">Submitted Code :</span> {{ submission.submitted_code }}
-          </p>
-
-          <!-- Editable Feedback -->
-					<p id="feedback-{{ first_submission.id }}" class="pb-3 text-xl text-left">
-						<span class="font-bold">Feedback : </span>{{ first_submission.feedback }}
-						<button class="ml-3 px-3 py-1 text-sm text-white bg-blue-600 rounded-lg shadow hover:bg-blue-800"
-							hx-get="{% url 'c_activities:edit-insight' first_submission.id %}"
-							hx-swap="outerHTML"
-							hx-target="#feedback-{{ first_submission.id }}"
-							title="Click to edit feedback">Edit Feedback</button>
-					</p>
-
-					<!-- Editable Score -->
-					<p id="score-{{ first_submission.id }}" class="pb-3 text-xl text-left">
-						<span class="font-bold">Score : </span>{{ first_submission.score }}
-						<button class="ml-3 px-3 py-1 text-sm text-white bg-green-600 rounded-lg shadow hover:bg-green-800"
-							hx-get="{% url 'c_activities:edit-grade' first_submission.id %}" 
-							hx-swap="outerHTML" 
-							hx-target="#score-{{ first_submission.id }}" 
-							title="Click to edit grade">Edit Grade</button>
-					</p>
-
-        <!-- Return grade -->
-        <form hx-post="{% url 'c_activities:return-grade' submission.id %}" class="absolute pt-10 pl-5 transform -translate-x-1/2 bottom-4 left-1/2">
-          {% csrf_token %}
-          <button type="submit" name="action" value="return" 
-          class="flex items-center justify-center w-40 h-12 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500" 
-          title="click to return grade to student">Return Grade</button>
+<!-- Previous-->
+<div class="flex flex-row w-full h-full border-2 border-solid bg-gray-200">
+    <!-- Previous -->
+    <div class="flex justify-center items-center border-solid h-full w-[10%] bg-gray-200">
+        <form hx-get="{% url 'a_classroom:prev_or_next' %}" hx-target="#output" hx-swap="innerHTML">
+            <input type="hidden" name="activity_id" value="{{ activity.activity_id }}">
+            <input type="hidden" name="index" value="{{ index }}">
+            <button type="submit" name="action" value="previous" 
+            class="flex items-center justify-center w-20 h-12 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500"
+                hx-target="#output" hx-swap="innerHTML" title="Go to previous page">Previous</button> 
         </form>
     </div>
-  </div>
-        <!-- Next -->
-  <div class="flex justify-center items-center border-solid h-full w-[10%] bg-gray-200">
-    <form hx-get="{% url 'a_classroom:prev_or_next' %}" hx-target="#output" hx-swap="innerHTML">
-      <input type="hidden" name="activity_id" value="{{ activity.activity_id }}">
-      <input type="hidden" name="index" value="{{ index }}">
-      <button type="submit" name="action" value="next" 
-      class="flex items-center justify-center w-20 h-12 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500"
-          hx-target="#output" hx-swap="innerHTML" title="Go to previous page">Next</button> 
-    </form>
-  </div>
+
+    <!-- Submission Details -->
+    <div class="relative w-full h-full bg-gray-200">
+        <!-- Scrollable content area -->
+        <div class="h-full overflow-y-auto pt-10 pl-5 pr-5 pb-20">
+            {% if submission %}
+                <p class="pb-3 text-xl text-left">
+                    <span class="font-bold">Email Address : </span>{{ submission.student.email }}
+                </p>
+
+                <p class="pb-3 text-xl text-left break-words">
+                    <span class="font-bold">Submitted Code : </span>
+                    <pre class="mt-2 p-3 bg-gray-100 rounded-lg overflow-x-auto">{{ submission.submitted_code }}</pre>
+                </p>
+
+                <!-- Editable Feedback with scrollable content -->
+                <div class="pb-3 text-xl text-left">
+                    <span class="font-bold">Feedback : </span>
+                    <div class="mt-2 p-3 bg-gray-100 rounded-lg max-h-32 overflow-y-auto">
+                        {{ submission.feedback }}
+                    </div>
+                    <button class="ml-3 px-3 py-1 text-sm text-white bg-blue-600 rounded-lg shadow hover:bg-blue-800"
+                        hx-get="{% url 'c_activities:edit-insight' submission.id %}"
+                        hx-swap="outerHTML"
+                        hx-target="#feedback-{{ submission.id }}"
+                        title="Click to edit feedback">Edit Feedback</button>
+                </div>
+
+                <!-- Editable Score -->
+                <p id="score-{{ submission.id }}" class="pb-3 text-xl text-left">
+                    <span class="font-bold">Score : </span>{{ submission.score }}
+                    <button class="ml-3 px-3 py-1 text-sm text-white bg-green-600 rounded-lg shadow hover:bg-green-800"
+                        hx-get="{% url 'c_activities:edit-grade' submission.id %}" 
+                        hx-swap="outerHTML" 
+                        hx-target="#score-{{ submission.id }}" 
+                        title="Click to edit grade">Edit Grade</button>
+                </p>
+            {% else %}
+                <p class="text-center text-lg font-semibold">No submission.</p>
+            {% endif %}
+        </div>
+
+        <!-- Fixed Return Grade Button (not scrollable) -->
+        {% if submission %}
+            <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full flex justify-center">
+                <form hx-post="{% url 'c_activities:return-grade' submission.id %}">
+                    {% csrf_token %}
+                    <button type="submit" name="action" value="return" 
+                    class="flex items-center justify-center w-40 h-12 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500" 
+                    title="Click to return grade to student">Return Grade</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Next -->
+    <div class="flex justify-center items-center border-solid h-full w-[10%] bg-gray-200">
+        <form hx-get="{% url 'a_classroom:prev_or_next' %}" hx-target="#output" hx-swap="innerHTML">
+            <input type="hidden" name="activity_id" value="{{ activity.activity_id }}">
+            <input type="hidden" name="index" value="{{ index }}">
+            <button type="submit" name="action" value="next" 
+            class="flex items-center justify-center w-20 h-12 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500"
+                hx-target="#output" hx-swap="innerHTML" title="Go to next page">Next</button> 
+        </form>
+    </div>
 </div>
