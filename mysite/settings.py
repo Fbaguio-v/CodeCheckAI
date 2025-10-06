@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-pa=l1i$)u)wlx((%8pj41-*uc$)%z$knwmu5$s8w+n09mz+&yg'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -112,11 +112,11 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'codecheckai_db',
-        'USER' : 'tuna',
-        'PASSWORD' : 'Instantdeath0022!',
-        'HOST' : 'localhost',
-        'PORT' : '3306',
+        'NAME': os.getenv("DB_NAME"),
+        'USER' : os.getenv("DB_USER"),
+        'PASSWORD' : os.getenv("DB_PASSWORD"),
+        'HOST' : os.getenv("DB_HOST"),
+        'PORT' : os.getenv("DB_PORT"),
     }
 }
 
@@ -175,12 +175,12 @@ HEADERS = {
     "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com"
 }
 #configuration for sending an email
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "codecheckai@gmail.com"
-EMAIL_HOST_PASSWORD = "dzon ahym luyw naof"
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
+EMAIL_HOST = os.getenv("smtp.gmail.com")
+EMAIL_PORT = os.getenv("EMAIL_PORT")
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 #configuration for allowing the user to upload and display an image
 MEDIA_URL = '/media/'
