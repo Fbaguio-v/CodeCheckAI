@@ -2,7 +2,6 @@
 {% tailwind_css %}
 
 <div class="flex flex-col items-center justify-center h-screen w-full py-10">
-    <h1 class="text-4xl mb-6">Create</h1>
     <div class="w-full max-w-xl border border-gray-300 p-6 rounded-lg shadow-sm">
     	<form class="flex flex-col space-y-4" hx-post="{% url 'c_activities:create-activity' %}" hx-trigger="submit">
     		{% csrf_token %}

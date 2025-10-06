@@ -13,7 +13,7 @@
                         <li class="block w-full">
                             <a href="{% url 'a_classroom:v' subject.subject_id %}?from={{ request.path }}"
                                class="flex flex-col justify-center p-2 text-black border-2 border-black rounded-lg sm:p-3 md:p-4 hover:shadow-lg hover:bg-gray-300">
-                                <h1 class="text-base font-bold lowercase sm:text-lg md:text-xl first-letter:uppercase">
+                                <h1 class="text-base font-bold sm:text-lg md:text-xl">
                                     {{ subject.course_code }}
                                 </h1>
                                 <p class="text-sm sm:text-base md:text-lg">{{ subject.section.name }}</p>
