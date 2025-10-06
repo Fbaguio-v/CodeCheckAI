@@ -3,7 +3,7 @@ from django.views import View
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from django.conf import settings
-from c_activities.views import evaluate_student_code_with_openai, get_activity_examples, get_activity_criterias
+from c_activities.views import evaluate_student_code_with_openai, evaluate_student_code_with_openai_for_playground, get_activity_examples, get_activity_criterias
 from c_activities.models import Activity, ActivitySubmission, ActivityExample
 from a_classroom.models import Subject
 from a_classroom.views import select_subject_by_id, select_activity_by_id, get_student_submission_by_id, get_submission_by_id
@@ -195,21 +195,20 @@ class CompilerView(View):
                         status_description = result_data["status"]["description"]
 
                         exec_time = result_data.get("time", "0")
-                        memory_used = result_data.get("memory", "0")
-
-                        instruction = activity.description if a_type == "quiz" else "Run the given code and provide feedback."
-                        examples = get_activity_examples(activity) if a_type == "quiz" else []
-                        criterias = get_activity_criterias(activity) if a_type == "quiz" else []
-
-                        ai_feedback = evaluate_student_code_with_openai(
-                            code=code,
-                            instruction=instruction,
-                            examples=examples,
-                            criterias=criterias,
-                            max_score=activity.max_score if a_type == "quiz" else 0,
-                        )
 
                         if a_type == "quiz":
+                            instruction = activity.description
+                            examples = get_activity_examples(activity)
+                            criterias = get_activity_criterias(activity)
+
+                            ai_feedback = evaluate_student_code_with_openai(
+                                code=code,
+                                instruction=instruction,
+                                examples=examples,
+                                criterias=criterias,
+                                max_score=activity.max_score,
+                            )
+
                             parts = ai_feedback.split("<grading>")
                             raw_grading = parts[0].strip()
                             match = re.search(r"(\d+)", raw_grading)
@@ -225,21 +224,24 @@ class CompilerView(View):
 
                             output = f"""
                             Score: {score}
-
+                            <br>
+                            Execution Time: {exec_time}
+                            <br>
                             {feedback_section}
                             """
                         else:
-                            feedback_section = ai_feedback
-                            
-                            feedback_section = re.sub(r'Grading:\s*\d+\s*', '', feedback_section)
-                            feedback_section = re.sub(r'Insight:\s*', '', feedback_section)
-                            feedback_section = feedback_section.strip()
+                            # Use separate function for playground evaluation
+                            ai_feedback = evaluate_student_code_with_openai_for_playground(
+                                code=code
+                            )
                             
                             output = f"""
                             Program Output:
                             {stdout or stderr or compile_output or message or status_description}
                             <br>
-                            {feedback_section}
+                            Execution Time: {exec_time}
+                            <br>
+                            {ai_feedback}
                             """
 
                         return HttpResponse(output, content_type="text/plain")
