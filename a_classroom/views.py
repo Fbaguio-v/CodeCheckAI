@@ -357,8 +357,7 @@ class ApproveUserAdminView(View):
 
             Your account has been approved by the admin.
 
-            If you signed up with Google, your default password is 123. Please change your password after logging in.
-            If you registered normally, your account is now active and ready to use.
+            You can now login into your account.
 
             Best regards,  
             Admin Team
