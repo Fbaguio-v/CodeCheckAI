@@ -29,10 +29,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*', 'localhost', '3.27.158.135'] # also allow the domain here
 
+SITE_ID = 1
+DOMAIN = os.environ.get('DOMAIN')
+if not DOMAIN:
+    raise Exception("DOMAIN environment variable must be set")
+
+SITE_NAME = os.environ.get('SITE_NAME', 'CodeCheckAI')
 
 # Application definition
 
@@ -175,13 +181,16 @@ HEADERS = {
     "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com"
 }
 #configuration for sending an email
-EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
-EMAIL_HOST = os.getenv("EMAIL_HOST")
-EMAIL_PORT = os.getenv("EMAIL_PORT")
-EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER")
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
+    EMAIL_HOST = os.getenv("EMAIL_HOST")
+    EMAIL_PORT = os.getenv("EMAIL_PORT")
+    EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")
+    EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+    DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER")
 #configuration for allowing the user to upload and display an image
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

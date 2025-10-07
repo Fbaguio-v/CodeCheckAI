@@ -37,7 +37,7 @@
         <div class="border border-solid flex flex-row h-[140px] w-full">
             <div class="flex flex-row items-center justify-center w-full gap-4 p-4 bg-gray-300 border rounded">
 
-            {% if activity_submissions.0.status == "submitted" or activity_submissions.0.status == "returned" %}
+            {% if activity.type == "activity" and activity_submissions.0.status in "submitted,returned" %}
                 <button class="w-full sm:w-[150px] px-6 py-2 text-white bg-black hover:bg-gray-500 transition-colors rounded-lg shadow-md cursor-not-allowed opacity-60" 
                         disabled title="{% if activity_submissions.0.status == 'returned' %}Grade has been returned{% else %}Submission in review{% endif %}">
                     Unsubmit {% if activity_submissions.0.status == "returned" %}(Grade Returned){% endif %}

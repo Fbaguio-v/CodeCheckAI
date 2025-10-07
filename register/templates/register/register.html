@@ -6,9 +6,9 @@
 
 <div class="flex items-center justify-center w-full h-full px-4 bg-white sm:px-6 lg:px-8">
     <div class="flex items-center justify-center w-full max-w-md p-6 bg-white border border-gray-300 shadow-xl rounded-xl sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-4xl sm:p-8 md:p-10 lg:p-12">
-
+        
         <form action="{% url 'register:register' %}" method="post" 
-              class="flex flex-col items-center w-full max-w-sm gap-4 sm:gap-6 lg:gap-8 sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
+              class="flex flex-col items-center w-full max-w-sm gap-2 sm:gap-4 lg:gap-8 sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
             {% csrf_token %}
 
             <div id="termsModal" class="hidden">
@@ -131,7 +131,7 @@
                 Register
             </button>
 
-            <p class="mt-4 text-sm text-gray-600 sm:text-base lg:text-lg">
+            <p class="text-sm text-gray-600 sm:text-base lg:text-lg">
                 Already have an account? 
                 <a class="text-blue-600 hover:underline" href="{% url 'register:login' %}">
                     Login
@@ -143,27 +143,223 @@
 
 <script>
 const termsContent = `
-    <h4 class="mb-4 text-lg font-semibold">Terms and Conditions</h4>
-    <p class="mb-3">Welcome to our platform. By creating an account, you agree to the following terms:</p>
-    <ul class="pl-5 mb-4 list-disc">
-        <li class="mb-2">You must be at least 18 years old to use this service</li>
-        <li class="mb-2">You are responsible for maintaining the security of your account</li>
-        <li class="mb-2">You agree not to misuse the platform and respect other users</li>
-        <li class="mb-2">We reserve the right to terminate accounts that violate these terms</li>
-        <li>All content submitted must comply with our community guidelines</li>
-    </ul>
-    <p class="text-sm text-gray-600">Last updated: ${new Date().toLocaleDateString()}</p>
+    <h4 class="mb-4 text-lg font-semibold">CodeCheckAI Terms and Conditions</h4>
+    
+    <div class="max-h-96 overflow-y-auto pr-2 space-y-4 text-sm">
+        <div>
+            <h5 class="font-semibold mb-2">1. Acceptance of Terms</h5>
+            <p>Welcome to CodeCheckAI. By accessing our website at https://codecheckai.loan and using our educational platform, you agree to be bound by these Terms and Conditions. If you disagree with any part of these terms, you must discontinue use of our Services immediately.</p>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">2. Service Description</h5>
+            <p>CodeCheckAI is a free interactive learning platform designed to help beginners become confident coders. Our Services include:</p>
+            <ul class="pl-5 mt-1 list-disc">
+                <li>Bite-sized, interactive programming lessons</li>
+                <li>Real-world coding projects</li>
+                <li>Instant feedback on code submissions</li>
+                <li>Community forums and discussion boards</li>
+            </ul>
+            <p class="mt-1">All features are provided completely free of charge.</p>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">3. User Eligibility</h5>
+            <p>To use our Services, you must:</p>
+            <ul class="pl-5 mt-1 list-disc">
+                <li>Provide accurate and complete registration information</li>
+                <li>Maintain the security of your account credentials</li>
+                <li>Not use automated systems to access our Services</li>
+                <li>Comply with all applicable laws and regulations</li>
+            </ul>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">4. Account Registration</h5>
+            <p>When creating an account, you agree to:</p>
+            <ul class="pl-5 mt-1 list-disc">
+                <li>Provide true, accurate, and complete information</li>
+                <li>Keep your password confidential</li>
+                <li>Accept responsibility for all activities under your account</li>
+                <li>Not share your account with others</li>
+                <li>Not create multiple accounts without permission</li>
+            </ul>
+            <p class="mt-1">We reserve the right to suspend or terminate accounts that violate these terms.</p>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">5. Acceptable Use</h5>
+            <p>You may use our Services only for lawful purposes and in accordance with these terms. You agree not to:</p>
+            <ul class="pl-5 mt-1 list-disc">
+                <li><strong>Academic Integrity Violations:</strong> Submit code that is not your own work, copy solutions without attribution, or complete work on behalf of other users</li>
+                <li><strong>Platform Abuse:</strong> Use automated scripts, bots, or scraping tools; attempt to hack or exploit security vulnerabilities</li>
+                <li><strong>Content Restrictions:</strong> Post offensive content, share malicious code, or upload copyrighted material without permission</li>
+            </ul>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">6. Intellectual Property Rights</h5>
+            <p><strong>Our Content:</strong> We own or license all intellectual property in our platform, including lesson content, platform code, and branding.</p>
+            <p><strong>Your Content:</strong> You retain ownership of the code and projects you create, but grant us a license to display your content and use it to improve our Services.</p>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">7. Free Service Model</h5>
+            <p>CodeCheckAI is completely free to use. We do not charge subscription fees, require payment for premium features, sell your personal data, or include hidden costs.</p>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">8. Privacy and Data</h5>
+            <p>We collect and use data to provide and improve our educational services, personalize your learning experience, and ensure platform security. We do not sell your personal information to third parties.</p>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">9. Disclaimer of Warranties</h5>
+            <p>Our Services are provided "as is" and "as available." We make no warranties regarding uninterrupted service availability, accuracy of all educational content, or compatibility with all devices.</p>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">10. Limitation of Liability</h5>
+            <p>To the fullest extent permitted by law, CodeCheckAI shall not be liable for any indirect or consequential damages, loss of data, interruptions in service availability, or user-generated content.</p>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">11. Termination</h5>
+            <p>We may suspend or terminate your access if you violate these terms and conditions, engage in harmful or disruptive behavior, or attempt to compromise platform security.</p>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">12. Contact Information</h5>
+            <p>For questions about these terms, contact us at: codecheckai@gmail.com</p>
+        </div>
+    </div>
+
+    <p class="mt-4 text-sm text-gray-600">Last updated: ${new Date().toLocaleDateString()}</p>
 `;
 
 const privacyContent = `
-    <h4 class="mb-4 text-lg font-semibold">Privacy Policy</h4>
-    <p class="mb-3">We are committed to protecting your privacy. This policy explains how we handle your data:</p>
-    <ul class="pl-5 mb-4 list-disc">
-        <li class="mb-2">We collect only necessary information to provide our services</li>
-        <li class="mb-2">Your data is stored securely and never sold to third parties</li>
-        <li>We may update this policy</li>
-    </ul>
-    <p class="text-sm text-gray-600">Last updated: ${new Date().toLocaleDateString()}</p>
+    <h4 class="mb-4 text-lg font-semibold">CodeCheckAI Privacy Policy</h4>
+    
+    <div class="max-h-96 overflow-y-auto pr-2 space-y-4 text-sm">
+        <div>
+            <h5 class="font-semibold mb-2">1. Introduction</h5>
+            <p>Welcome to CodeCheckAI. We are committed to protecting your privacy and providing a safe online learning environment. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our free educational platform at https://codecheckai.loan.</p>
+            <p>By using our Services, you agree to the collection and use of information in accordance with this policy.</p>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">2. Information We Collect</h5>
+            <p><strong>Personal Information</strong></p>
+            <ul class="pl-5 mt-1 list-disc">
+                <li>Account Information: Name, email address, username, password</li>
+                <li>Profile Data: Educational background, learning preferences, skill levels</li>
+                <li>Contact Information: Email address for communications</li>
+            </ul>
+            
+            <p class="mt-2"><strong>Learning Data</strong></p>
+            <ul class="pl-5 mt-1 list-disc">
+                <li>Progress Data: Lesson completion, scores, learning milestones</li>
+                <li>Code Submissions: Programming exercises and projects you create</li>
+                <li>Interaction Data: Time spent on lessons, features used, learning patterns</li>
+                <li>Feedback: Reviews, ratings, and comments you provide</li>
+            </ul>
+            
+            <p class="mt-2"><strong>Technical Information</strong></p>
+            <ul class="pl-5 mt-1 list-disc">
+                <li>Device Information: IP address, browser type, operating system</li>
+                <li>Usage Data: Pages visited, features used, clickstream data</li>
+                <li>Cookies and Tracking: Session data, preferences, analytics data</li>
+            </ul>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">3. How We Use Your Information</h5>
+            <p><strong>Provide and Improve Services</strong></p>
+            <ul class="pl-5 mt-1 list-disc">
+                <li>Deliver personalized learning experiences</li>
+                <li>Track progress and suggest relevant content</li>
+                <li>Improve our educational materials and platform</li>
+                <li>Develop new features and functionality</li>
+            </ul>
+            
+            <p class="mt-2"><strong>Communication</strong></p>
+            <ul class="pl-5 mt-1 list-disc">
+                <li>Send important service updates and announcements</li>
+                <li>Respond to your questions and support requests</li>
+                <li>Provide learning reminders and motivational messages</li>
+            </ul>
+            
+            <p class="mt-2"><strong>Platform Operations</strong></p>
+            <ul class="pl-5 mt-1 list-disc">
+                <li>Ensure platform security and prevent abuse</li>
+                <li>Conduct research and analysis to enhance learning outcomes</li>
+                <li>Comply with legal obligations</li>
+            </ul>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">4. Data Sharing and Disclosure</h5>
+            <p><strong>We Do Not Sell Your Data</strong></p>
+            <p>CodeCheckAI does not sell, trade, or rent your personal information to third parties.</p>
+            
+            <p class="mt-2"><strong>Limited Sharing Circumstances</strong></p>
+            <ul class="pl-5 mt-1 list-disc">
+                <li>Service Providers: Trusted partners who help operate our platform</li>
+                <li>Legal Requirements: When required by law or to protect our rights</li>
+                <li>Academic Research: Anonymized, aggregated data for educational research</li>
+                <li>Business Transfers: In connection with mergers or acquisitions</li>
+            </ul>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">5. Data Security</h5>
+            <p>We implement appropriate security measures including:</p>
+            <ul class="pl-5 mt-1 list-disc">
+                <li>Encryption: Data transmission using SSL/TLS encryption</li>
+                <li>Access Controls: Limited access to personal information</li>
+                <li>Regular Security Assessments: Ongoing monitoring and testing</li>
+                <li>Secure Infrastructure: Protected servers and databases</li>
+            </ul>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">6. Your Rights and Choices</h5>
+            <p>You have the right to:</p>
+            <ul class="pl-5 mt-1 list-disc">
+                <li><strong>Access:</strong> Request copies of your personal data</li>
+                <li><strong>Correction:</strong> Update or correct inaccurate information</li>
+                <li><strong>Deletion:</strong> Request deletion of your personal data</li>
+                <li><strong>Portability:</strong> Receive your data in a readable format</li>
+                <li><strong>Restriction:</strong> Limit how we use your data</li>
+            </ul>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">7. Data Retention</h5>
+            <p>We retain your information only as long as necessary for:</p>
+            <ul class="pl-5 mt-1 list-disc">
+                <li>Providing our educational services</li>
+                <li>Maintaining learning progress and history</li>
+                <li>Complying with legal obligations</li>
+                <li>Resolving disputes and enforcing agreements</li>
+            </ul>
+            <p class="mt-1">You may request account deletion at any time.</p>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">8. Children's Privacy</h5>
+            <p>Our Services are intended for users 18 years and older. We do not knowingly collect data from children under 18. If we discover such data, we will delete it immediately.</p>
+        </div>
+
+        <div>
+            <h5 class="font-semibold mb-2">9. Contact Us</h5>
+            <p>For privacy-related questions or requests, contact us at:</p>
+            <p><strong>Email:</strong> codecheckai@gmail.com</p>
+            <p>We respond to all legitimate requests within 30 days.</p>
+        </div>
+    </div>
+
+    <p class="mt-4 text-sm text-gray-600">Last updated: ${new Date().toLocaleDateString()}</p>
 `;
 
 function showTerms() {
