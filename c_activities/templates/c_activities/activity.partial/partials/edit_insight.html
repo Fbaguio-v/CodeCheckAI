@@ -1,25 +1,24 @@
 <form 
-  class="w-full max-w-xs"
+  class="w-full"
   hx-post="{% url 'c_activities:edit-insight' submission.id %}" 
   hx-target="this"
   hx-swap="outerHTML"
 >
   {% csrf_token %}
   
-  <input 
-    type="text" 
-    name="new_insight" 
-    value="{{ submission.feedback }}"
-    class="border-2 border-solid rounded px-3 py-2 w-full mb-2"
+  <span class="font-bold">Feedback : </span>
+  <textarea 
+    name="new_insight"
+    class="mt-2 p-3 bg-gray-100 rounded-lg w-full h-32 resize-none overflow-y-auto"
     required
-  >
+  >{{ submission.feedback }}</textarea>
   
-  <div class="flex w-full space-x-2">
+  <div class="flex w-full space-x-2 mt-2">
     <button 
       type="submit" 
       name="action" 
       value="confirm"
-      class="w-[50%] border-2 border-green-500 rounded py-2 text-green-700 hover:bg-green-500 cursor-pointer"
+      class="px-3 py-1 text-sm text-white bg-blue-600 rounded-lg shadow hover:bg-blue-800 transition-colors duration-200"
     >
       Confirm
     </button>
@@ -28,7 +27,7 @@
       type="submit" 
       name="action" 
       value="cancel"
-      class="w-[50%] border-2 border-red-500 rounded py-2 text-red-700 hover:bg-red-500 cursor-pointer"
+      class="px-3 py-1 text-sm text-white bg-red-600 rounded-lg shadow hover:bg-red-800 transition-colors duration-200"
     >
       Cancel
     </button>
