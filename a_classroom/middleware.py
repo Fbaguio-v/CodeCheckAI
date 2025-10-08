@@ -13,6 +13,9 @@ class A_ClassroomMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        if request.path_info == "/" and request.user.is_authenticated:
+            return redirect("a_classroom:index")
+            
         if request.path_info == "/" and not request.user.is_authenticated:
             return redirect("d_compiler:index")
 
