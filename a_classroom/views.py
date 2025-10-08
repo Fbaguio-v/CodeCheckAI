@@ -270,7 +270,7 @@ def prev_or_next_view(request):
 
     filters = {"activity": activity}
     if activity.type == "activity":
-        filters["status"] = "submitted"
+        filters["status__in"] = ["submitted", "returned"]
 
     activity_submissions = ActivitySubmission.objects.filter(**filters).select_related("student")
     total = activity_submissions.count()
