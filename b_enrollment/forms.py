@@ -7,8 +7,17 @@ class UploadImageForm(forms.ModelForm):
         model = UserProfile
         fields = ['image']
         widgets = {
-            'image': forms.ClearableFileInput(attrs={'class': 'border border-solid border-gray-300'})
+            'image': forms.ClearableFileInput(attrs={
+                'class': 'border border-solid border-gray-300',
+                'required': True
+            })
         }
+    
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        if not image:
+            raise forms.ValidationError("Please select a photo to upload.")
+        return image
 
 class JoinClassForm(forms.Form):
     subject_id = forms.CharField(label='Join Class')
