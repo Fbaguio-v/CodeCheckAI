@@ -37,33 +37,37 @@
         <div class="border border-solid flex flex-row h-[140px] w-full">
             <div class="flex flex-row items-center justify-center w-full gap-4 p-4 bg-gray-300 border rounded">
 
-            {% if activity.type == "activity" and activity_submissions.0.status in "submitted,returned" %}
-                <button class="w-full sm:w-[150px] px-6 py-2 text-white bg-black hover:bg-gray-500 transition-colors rounded-lg shadow-md cursor-not-allowed opacity-60" 
-                        disabled title="{% if activity_submissions.0.status == 'returned' %}Grade has been returned{% else %}Submission in review{% endif %}">
-                    Unsubmit {% if activity_submissions.0.status == "returned" %}(Grade Returned){% endif %}
-                </button>
-            {% else %}
-                {% if activity.type == "activity" %}
-                    <form>
-                        {% csrf_token %}
-                        <button name="action" value="turn_in"  
-                                hx-post="{% url 'd_compiler:index' %}" 
-                                hx-include="#compiler, input[name='activity_id'], input[name='subject_id']"
-                                class="w-full sm:w-[150px] px-6 py-2 text-white bg-black hover:bg-gray-500 transition-colors rounded-lg shadow-md">
-                            Submit
-                        </button>
-                    </form>
+                {% if activity.type == "activity" and activity_submissions.0.status in "submitted,returned" %}
+                    <button class="w-full sm:w-[150px] px-6 py-2 text-white bg-black hover:bg-gray-500 transition-colors rounded-lg shadow-md cursor-not-allowed opacity-60" 
+                            disabled title="{% if activity_submissions.0.status == 'returned' %}Grade has been returned{% else %}Submission in review{% endif %}">
+                        Unsubmit {% if activity_submissions.0.status == "returned" %}(Grade Returned){% endif %}
+                    </button>
+                {% else %}
+                    {% if activity.type == "activity" %}
+                        {% now "Y-m-d H:i:s" as current_time %}
+                        <form>
+                            {% csrf_token %}
+                            <button name="action" value="turn_in"  
+                                    hx-post="{% url 'd_compiler:index' %}" 
+                                    hx-include="#compiler, input[name='activity_id'], input[name='subject_id']"
+                                    class="w-full sm:w-[150px] px-6 py-2 text-white rounded-lg shadow-md {% if activity.due_at and current_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
+                                    {% if activity.due_at and current_time > activity.due_at|date:'Y-m-d H:i:s' %}disabled title="Submission period has ended"{% else %}title="Submit your activity"{% endif %}>
+                                Submit
+                            </button>
+                        </form>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
 
                 {% if activity_submissions.0.status != "submitted" and activity_submissions.0.status != "returned" %}
                     {% if activity.type == "activity" %}
+                        {% now "Y-m-d H:i:s" as current_time %}
                         <form>
                             {% csrf_token %}
                             <button name="action" value="save_draft" 
                                     hx-post="{% url 'd_compiler:index' %}" 
                                     hx-include="#compiler, input[name='activity_id'], input[name='subject_id']"
-                                    class="w-full sm:w-[150px] px-6 py-2 text-white bg-black hover:bg-blue-700 transition-colors rounded-lg shadow-md">
+                                    class="w-full sm:w-[150px] px-6 py-2 text-white rounded-lg shadow-md {% if activity.due_at and current_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-blue-700 transition-colors{% endif %}"
+                                    {% if activity.due_at and current_time > activity.due_at|date:'Y-m-d H:i:s' %}disabled title="Submission period has ended"{% else %}title="Save your work as draft"{% endif %}>
                                 Save as Draft
                             </button>
                         </form>
@@ -71,9 +75,10 @@
                 {% endif %}
 
                 {% if activity.type == "quiz" %}
+                    {% now "Y-m-d H:i:s" as current_time %}
                     <select name="language_id" id="language_id"
-                        class="w-full sm:w-[150px] px-6 py-2 text-white bg-black hover:bg-gray-500 transition-colors rounded-lg shadow-md"
-                        required>
+                        class="w-full sm:w-[150px] px-6 py-2 text-white rounded-lg shadow-md {% if activity.due_at and current_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
+                        {% if activity.due_at and current_time > activity.due_at|date:'Y-m-d H:i:s' %}disabled title="Quiz period has ended"{% else %}required{% endif %}>
                         <option value="71">Python</option>
                         <option value="62">Java</option>
                     </select>
@@ -84,7 +89,8 @@
                                 hx-post="{% url 'd_compiler:index' %}?type=quiz" 
                                 hx-include="#compiler, #language_id, input[name='activity_id'], input[name='subject_id']" 
                                 hx-target="#code-output" hx-swap="innerHTML"
-                                class="w-full sm:w-[150px] px-6 py-2 text-white bg-black hover:bg-gray-500 transition-colors rounded-lg shadow-md">
+                                class="w-full sm:w-[150px] px-6 py-2 text-white rounded-lg shadow-md {% if activity.due_at and current_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
+                                {% if activity.due_at and current_time > activity.due_at|date:'Y-m-d H:i:s' %}disabled title="Quiz period has ended"{% else %}title="Run your code"{% endif %}>
                             Run Code
                         </button>
                     </form>
