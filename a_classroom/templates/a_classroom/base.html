@@ -36,10 +36,10 @@
     <!-- Navbar -->
             <nav class="flex flex-row items-center justify-between h-[75px] col-span-2 p-6 space-x-6 text-white bg-gray-800 shadow-xl">
                 <ul class="flex flex-row items-center space-x-6">
-                    {% if request.user.is_authenticated and request.path != "/p/" %}
+                    {% if request.user.is_authenticated %}
                     <li>
                         <button id="toggle-sidebar" 
-                            class="px-3 py-2 text-white transition bg-gray-800 rounded hover:bg-gray-500">
+                            class="px-3 py-2 text-white transition bg-gray-800 rounded hover:bg-gray-500 cursor-pointer">
                                 ☰
                             </button>
                         </li>
@@ -69,7 +69,7 @@
                 </ul>
             </nav>
 
-        {% if request.user.is_authenticated and request.path != "/p/" %}
+        {% if request.user.is_authenticated %}
             <aside id="sidebar" class="relative flex flex-col justify-between p-4 overflow-y-auto text-white bg-gray-100 border-2 shadow-xl">
                 <div
                     id="subjects"
@@ -82,7 +82,7 @@
                 <div id="sidebar-actions" class="mt-4">
         {% if request.user.userprofile.role == "Instructor" %}
                 <a href="{% url 'a_classroom:create-subject' %}">
-                    <button class="w-full p-3 text-black bg-gray-200 border-2 border-black rounded-lg hover:bg-gray-300">
+                    <button class="w-full p-3 text-black bg-gray-200 border-2 border-black rounded-lg hover:bg-gray-300 cursor-pointer">
                         Create Subject
                     </button>
                 </a>
@@ -92,7 +92,7 @@
                         hx-trigger="click"
                         hx-target="#main-content"
                         hx-swap="innerHTML"
-                        class="w-full p-3 text-black bg-gray-200 border-2 border-black rounded-lg hover:bg-gray-300">
+                        class="w-full p-3 text-black bg-gray-200 border-2 border-black rounded-lg hover:bg-gray-300 cursor-pointer">
                     Join Class
                 </button>
         {% endif %}

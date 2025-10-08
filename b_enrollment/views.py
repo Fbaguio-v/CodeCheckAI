@@ -10,32 +10,50 @@ import json
 
 # Create your views here.
 class JoinClassView(View):
-	def get(self, request):
-		trigger = request.headers.get("HX-Trigger")
-		if request.headers.get("HX-Request") == "true":
-			if trigger == "join-class":
-				return render(request, 'b_enrollment/form/form.html')
+    def get(self, request):
+        trigger = request.headers.get("HX-Trigger")
+        if request.headers.get("HX-Request") == "true":
+            if trigger == "join-class":
+                return render(request, 'b_enrollment/form/form.join.class.html')
+        return redirect("a_classroom:index")
 
-		return redirect("a_classroom:index")
+    def post(self, request):
+        subject_id = request.POST.get("subject_id")
+        
+        try:
+            subject = Subject.objects.get(subject_id=subject_id)
+        except Subject.DoesNotExist:
+            if request.headers.get("HX-Request"):
+                return HttpResponse(
+                    '<div class="text-red-500 text-sm">Invalid class code. Please try again.</div>',
+                    status=400
+                )
+            else:
+                messages.error(request, "You entered an invalid class code")
+                return redirect("a_classroom:index")
+        
+        enrolled = StudentSubject.objects.filter(student=request.user, subject=subject).exists()
 
-	def post(self, request):
-		data = json.loads(request.body)
-		subject_id = data.get("subject_id")
+        if enrolled:
+            if request.headers.get("HX-Request"):
+                return HttpResponse(
+                    '<div class="text-blue-500 text-sm">You are already enrolled in this class.</div>',
+                    status=200
+                )
+            else:
+                messages.info(request, "You are already enrolled in this class")
+                return redirect("a_classroom:index")
 
-		subject = get_object_or_404(Subject, subject_id = subject_id)
-
-		if subject.instructor == request.user:
-			messages.error(request, 'You are the instructor of this class.')
-
-		enrolled = StudentSubject.objects.filter(student = request.user, subject = subject).exists()
-		if not enrolled:
-			StudentSubject.objects.create(student = request.user, subject = subject)
-
-			messages.success(request, 'You successfully enrolled in the subject!')
-
-			return JsonResponse({"status": 200, "message": "You successfully enrolled!", "redirect_url": reverse("a_classroom:v", args=[subject.subject_id])})
-
-		return JsonResponse({"status" : 200, "message" : "You joined a subject successfully."})
+        if not enrolled:
+            StudentSubject.objects.create(student=request.user, subject=subject)
+            
+            if request.headers.get("HX-Request"):
+                response = HttpResponse()
+                response["HX-Redirect"] = reverse('a_classroom:v', args=[subject.subject_id])
+                return response
+            else:
+                messages.success(request, "You successfully enrolled in the subject!")
+                return redirect('a_classroom:v', subject_id=subject.subject_id)
 
 class UnenrollClassView(View):
     def post(self, request):
