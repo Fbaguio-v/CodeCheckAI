@@ -370,8 +370,10 @@ Admin Team
                 connection.close()
                 
                 print("✅ Approval email sent successfully")
+                messages.success(request, "Approval email sent successfully")
             except Exception as e:
                 print(f"❌ Email send failed: {e}")
+                messages.error(request, f"Email send failed : {e}")
                 
             pending_users = User.objects.filter(is_active=False)
             return render(

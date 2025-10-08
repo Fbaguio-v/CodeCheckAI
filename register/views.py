@@ -21,7 +21,7 @@ class RegisterView(View):
         if form.is_valid():
             try:
                 user = form.save()
-                messages.success(request, "Account created successfully. Please check your email for confirmation.")
+                messages.success(request, "Account created successfully. Please check your email for acknowledgement.")
                 return redirect('register:login')
             except Exception as e:
                 messages.error(request, f"Error creating user account: {e}")
