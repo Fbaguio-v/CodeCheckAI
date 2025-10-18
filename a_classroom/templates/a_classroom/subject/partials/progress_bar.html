@@ -1,0 +1,12 @@
+<div hx-post="{% url 'a_classroom:create-subject' %}"
+     hx-trigger="load delay:0.5s"
+     hx-target="this"
+     hx-swap="outerHTML"
+     hx-include="[name='course_code'], [name='section_name'], [name='id_name']"
+     hx-vals='{"processing": "true", "action": "create_subject"}'>
+    
+    <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+        <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 70%"></div>
+    </div>
+    <p class="text-center text-sm text-gray-600">Creating Subject...</p>
+</div>

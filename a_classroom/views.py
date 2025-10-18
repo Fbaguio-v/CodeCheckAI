@@ -74,8 +74,25 @@ class CreateSubjectView(View):
         form = CreateSubjectForm()
         sections = Section.objects.all()
         return render(request, 'a_classroom/subject/create_subject.html', {"form": form, "sections" : sections})
-    
+
     def post(self, request):
+        action_type = request.POST.get("action")
+
+        if action_type == "create_subject":
+            if request.headers.get("HX-Request"):
+                if not request.POST.get("processing"):
+                    return render(request, "a_classroom/subject/partials/progress_bar.html")
+                else:
+                    print("debugging one")
+                    return self.process_subject_creation(request)
+
+            return self.process_subject_creation(request)
+            
+        form = CreateSubjectForm()
+        return render(request, 'a_classroom/create_subject.html', {"form": form})
+
+    def process_subject_creation(self, request):
+        print("You triggered this function")
         form = CreateSubjectForm(request.POST)
         if form.is_valid():
             course_code = form.cleaned_data["course_code"]
@@ -102,8 +119,10 @@ class CreateSubjectView(View):
                 messages.success(request, f"{course_code} for section {section_name} has been created.")
             
             form = CreateSubjectForm() 
-            
-            return HttpResponseRedirect(reverse("a_classroom:v", args=[subject.subject_id]))
+
+            response = HttpResponse()
+            response["HX-Redirect"] = reverse("a_classroom:v", args=[subject.subject_id])
+            return response
 
         return render(request, 'a_classroom/create_subject.html', {"form": form})
 
