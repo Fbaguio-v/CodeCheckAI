@@ -237,18 +237,31 @@ class CompilerView(View):
                             {feedback_section}
                             """
                         else:
-                            # Use separate function for playground evaluation
-                            ai_feedback = evaluate_student_code_with_openai_for_playground(
-                                code=code
-                            )
-                            
+                            ai_feedback = evaluate_student_code_with_openai_for_playground(code=code)
+
                             output = f"""
-                            Program Output:
-                            {stdout or stderr or compile_output or message or status_description}
-                            <br>
-                            Run Time: {exec_time}
-                            <br>
-                            {ai_feedback}
+                            <div class="output-container">
+                                <div class="output-section">
+                                    <h3 class="section-title">📄 Program Output</h3>
+                                    <div class="output-content">
+                                        <pre>{stdout or stderr or compile_output or message or status_description}</pre>
+                                    </div>
+                                </div>
+                                
+                                <div class="execution-info">
+                                    <div class="info-item">
+                                        <span class="label">⏱️ Run Time:</span>
+                                        <span class="value">{exec_time}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="ai-feedback-section">
+                                    <h3 class="section-title">🤖 AI Feedback</h3>
+                                    <div class="feedback-content">
+                                        {ai_feedback.replace('-', '<br>')}
+                                    </div>
+                                </div>
+                            </div>
                             """
 
                         return HttpResponse(output, content_type="text/plain")

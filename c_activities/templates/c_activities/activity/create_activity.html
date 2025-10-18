@@ -1,9 +1,9 @@
 {% load static tailwind_tags %}
 {% tailwind_css %}
 
-<div class="flex flex-col items-center justify-center h-screen w-full py-10">
+<div class="flex flex-col items-center justify-center h-full w-full py-10">
     <div class="w-full max-w-xl border border-gray-300 p-6 rounded-lg shadow-sm">
-    	<form class="flex flex-col space-y-4" hx-post="{% url 'c_activities:create-activity' %}" hx-trigger="submit">
+    	<form class="flex flex-col space-y-4" method="post" action="{% url 'c_activities:create-activity' %}">
     		{% csrf_token %}
     		<input id="subject_id" name="subject_id" hidden value="{{ subject_id }}">
 			
@@ -56,8 +56,8 @@
 	                </tbody>
 	            </table>
 	    	</div>
-
-			<button type="submit" name="action" value="create_activity" class="mt-4 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition cursor-pointer">Create</button>
+			
+			<button type="submit" name="action" value="create_activity" hx-post="{% url 'c_activities:create-activity' %}" hx-target="this" hx-swap="outerHTML" class="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition cursor-pointer">Create</button>
 
     	</form>
     </div>
