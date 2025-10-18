@@ -94,7 +94,9 @@ def evaluate_student_code_with_openai_for_playground(code):
     prompt = f"""
     Code to evaluate:
     {code}
+    Do not put acknowledgement into my command or anything just say something like Here's a structured review of the provided code or something.
     ALSO include what is wrong with the code and how to improve it but do not give the whole code to solve the task at hand but instead give a hint of some sort just to help them improve it.
+    Finally, Can you fix the format of your response and make it pleasing like a bullet form and put the bulleted sentence next line.
     """
 
     response = client.chat.completions.create(
@@ -127,76 +129,86 @@ class CreateActivityView(View):
 
     def post(self, request):
         action_type = request.POST.get("action")
+
         if action_type == "create_activity":
+            if request.headers.get("HX-Request"):
+                if not request.POST.get("processing"):
+                    return render(request, "c_activities/activity/partial/progress_bar.html")
+                else:
+                    return self.process_activity_creation(request)
 
-            subject_id = request.POST.get("subject_id")
-            activity_type = request.POST.get("type")
-            title = request.POST.get("id_title")
-            description = request.POST.get("id_description")
-            max_score = request.POST.get("id_max_score")
-            due_at_raw = request.POST.get("id_due_at")
-            criterias = request.POST.getlist("criteria")
-
-            if activity_type == "quiz":
-                raw_attempt = request.POST.get("id_max_attempt")
-                max_attempt = int(raw_attempt) if raw_attempt else 3
-            else:
-                max_attempt = None
-
-            subject = select_subject_by_id(subject_id)
-            if not subject:
-                return redirect("a_classroom:index")
-
-            due_at = None
-            if due_at_raw:
-                try:
-                    due_at = datetime.strptime(due_at_raw, "%Y-%m-%dT%H:%M")
-                except ValueError:
-                    return HttpResponse(
-                        "Invalid date format. Expected YYYY-MM-DDTHH:MM", status=400
-                    )
-
-            filters = {
-                "subject": subject,
-                "title": title,
-                "description": description,
-                "type": activity_type,
-            }
-            existing_activity = Activity.objects.filter(**filters).first()
-            if existing_activity:
-                messages.error(request, "Activity already exists.")
-                return redirect(
-                    f"{request.path}?action=create-activity&subject_id={subject_id}"
-                )
-
-            activity = Activity.objects.create(
-                subject=subject,
-                title=title,
-                description=description,
-                max_score=max_score,
-                max_attempt=max_attempt,
-                due_at=due_at,
-                type=activity_type,
-            )
-
-            for criteria in criterias:
-                if criteria.strip():
-                    ActivityCriteria.objects.create(
-                        activity=activity, text=criteria.strip()
-                    )
-
-            try:
-                code_examples = prompt_to_aimodel_gpt4o(description, activity.activity_id)
-            except Exception as e:
-                print(f"AI model failed: {e}")
-                code_examples = None
-
-            messages.success(request, "Activity created successfully.")
-            response = HttpResponse()
-            response["HX-Redirect"] = f"/c/activity/{activity.activity_id}/?subject_id={subject_id}&type=activity"
-            return response
+            return self.process_activity_creation(request)
 
         return redirect("a_classroom:index")
+    
+    def process_activity_creation(self, request):
+        subject_id = request.POST.get("subject_id")
+        activity_type = request.POST.get("type")
+        title = request.POST.get("id_title")
+        description = request.POST.get("id_description")
+        max_score = request.POST.get("id_max_score")
+        due_at_raw = request.POST.get("id_due_at")
+        criterias = request.POST.getlist("criteria")
+
+        if activity_type == "quiz":
+            raw_attempt = request.POST.get("id_max_attempt")
+            max_attempt = int(raw_attempt) if raw_attempt else 3
+        else:
+            max_attempt = None
+
+        subject = select_subject_by_id(subject_id)
+        if not subject:
+            return redirect("a_classroom:index")
+
+        due_at = None
+        if due_at_raw:
+            try:
+                due_at = datetime.strptime(due_at_raw, "%Y-%m-%dT%H:%M")
+            except ValueError:
+                return HttpResponse(
+                    "Invalid date format. Expected YYYY-MM-DDTHH:MM", status=400
+                )
+
+        filters = {
+            "subject": subject,
+            "title": title,
+            "description": description,
+            "type": activity_type,
+        }
+        existing_activity = Activity.objects.filter(**filters).first()
+        if existing_activity:
+            messages.error(request, "Activity already exists.")
+            return redirect(
+                f"{request.path}?action=create-activity&subject_id={subject_id}"
+            )
+
+        activity = Activity.objects.create(
+            subject=subject,
+            title=title,
+            description=description,
+            max_score=max_score,
+            max_attempt=max_attempt,
+            due_at=due_at,
+            type=activity_type,
+        )
+
+        for criteria in criterias:
+            if criteria.strip():
+                ActivityCriteria.objects.create(
+                    activity=activity, text=criteria.strip()
+                )
+
+        try:
+            code_examples = prompt_to_aimodel_gpt4o(description, activity.activity_id)
+        except Exception as e:
+            print(f"AI model failed: {e}")
+            code_examples = None
+
+        messages.success(request, "Activity created successfully.")
+        response = HttpResponse()
+        response["HX-Redirect"] = f"/c/activity/{activity.activity_id}/?subject_id={subject_id}&type=activity"
+        return response
+
 
 
 class StudentGradeView(View):
