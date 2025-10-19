@@ -28,7 +28,7 @@
     {% endif %}
 
     <div id="layout" class="grid grid-rows-[auto_1fr] min-h-screen max-h-screen font-normal
-        {% if request.user.is_authenticated and request.path != '/p/' %}
+        {% if request.user.is_authenticated and request.path != '/p/' and request.user.userprofile.role != 'Admin' %}
             grid-cols-[200px_1fr]
         {% else %}
             grid-cols-1
@@ -69,7 +69,7 @@
                 </ul>
             </nav>
 
-        {% if request.user.is_authenticated %}
+        {% if request.user.is_authenticated and request.user.userprofile.role != "Admin" %}
             <aside id="sidebar" class="relative flex flex-col justify-between p-4 overflow-y-auto text-white bg-gray-100 border-2 shadow-xl">
                 <div
                     id="subjects"
@@ -80,26 +80,26 @@
                 </div>
 
                 <div id="sidebar-actions" class="mt-4">
-        {% if request.user.userprofile.role == "Instructor" %}
-                <a href="{% url 'a_classroom:create-subject' %}">
-                    <button class="w-full p-3 text-black bg-gray-200 border-2 border-black rounded-lg hover:bg-gray-300 cursor-pointer">
-                        Create Subject
-                    </button>
-                </a>
-        {% elif request.user.userprofile.role == "Student" %}
-                <button id="join-class"
-                        hx-get="{% url 'b_enrollment:join-a-class' %}"
-                        hx-trigger="click"
-                        hx-target="#main-content"
-                        hx-swap="innerHTML"
-                        class="w-full p-3 text-black bg-gray-200 border-2 border-black rounded-lg hover:bg-gray-300 cursor-pointer">
-                    Join Class
-                </button>
-        {% endif %}
-        </div>
+                    {% if request.user.userprofile.role == "Instructor" %}
+                            <a href="{% url 'a_classroom:create-subject' %}">
+                                <button class="w-full p-3 text-black bg-gray-200 border-2 border-black rounded-lg hover:bg-gray-300 cursor-pointer">
+                                    Create Subject
+                                </button>
+                            </a>
+                    {% elif request.user.userprofile.role == "Student" %}
+                            <button id="join-class"
+                                    hx-get="{% url 'b_enrollment:join-a-class' %}"
+                                    hx-trigger="click"
+                                    hx-target="#main-content"
+                                    hx-swap="innerHTML"
+                                    class="w-full p-3 text-black bg-gray-200 border-2 border-black rounded-lg hover:bg-gray-300 cursor-pointer">
+                                Join Class
+                            </button>
+                    {% endif %}
+                </div>
 
-</aside>
-{% endif %}
+            </aside>
+        {% endif %}
 
         <main id="main-content" class="p-8 overflow-auto">
             {% block content %}{% endblock %}

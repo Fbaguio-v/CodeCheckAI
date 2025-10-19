@@ -336,24 +336,17 @@ class AdminDashboardView(HtmxTemplateView):
 
 class PendingUsersView(HtmxTemplateView):
     queryset = lambda self: User.objects.filter(is_active=False)
-    template = 'a_classroom/a.admin/users/pending.html'
+    template = 'a_classroom/a.admin/users/admin.html'
     htmx_template = 'a_classroom/a.admin/users/pending/pending.users.html'
-    htmx_trigger = 'pending'
+    htmx_trigger = 'pending-users'
     context_name = 'pending_users'
 
 class SubjectListView(HtmxTemplateView):
     queryset = Subject.objects.all
-    template = 'a_classroom/a.admin/users/subject.html'
+    template = 'a_classroom/a.admin/users/admin.html'
     htmx_template = 'a_classroom/a.admin/users/subject/subjects.html'
-    htmx_trigger = 'all-subject'
+    htmx_trigger = 'subjects'
     context_name = 'subjects'
-
-class ArchivedSubjectListView(HtmxTemplateView):
-    queryset = lambda self: Subject.objects.filter(is_archived=True)
-    template = 'a_classroom/a.admin/users/archived.html'
-    htmx_template = 'a_classroom/a.admin/users/subject/archived.subjects.html'
-    htmx_trigger = 'archived'
-    context_name = 'archived_subjects'
 
 class ApproveUserAdminView(View):
     def post(self, request, user_id):

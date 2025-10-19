@@ -1,7 +1,7 @@
 {% load static tailwind_tags %}
 {% tailwind_css %}
 <div class="w-full h-full">
-	<table id="parent" class="w-full border border-gray-300 border-solid table-fixed">
+	<table id="pending-table" class="w-full border border-gray-300 border-solid table-fixed">
 		<thead class="bg-gray-800 text-white h-[60px] border border-solid border-gray-300">
 			<tr class="text-left">
 				<th class="px-4 py-2">Full Name</th>
@@ -23,7 +23,7 @@
 							id="approve-button"
 							hx-post="{% url 'a_classroom:approve' pending.id %}"
 							hx-trigger="click"
-							hx-target="#parent"
+							hx-target="#pending-table"
 							hx-swap="innerHTML">Approve</button>
 						</form>
 
