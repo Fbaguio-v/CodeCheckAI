@@ -44,13 +44,41 @@
 	                <tbody>
 						<tr>
 							<td class="text-center border px-2 py-1">
-								<input name="criteria" class="w-full resize-none border rounded p-1" type="number" min="1">%</input>
+								<input name="criteria" 
+										hx-post="{% url 'c_activities:check-criteria' %}" 
+										class="w-full resize-none border rounded p-1 criteria-input" 
+										type="number" 
+										min="1"
+										hx-trigger="keyup changed delay:500ms"
+										hx-target="#criteria-total"
+										hx-include=".criteria-input" >%</input>
 							</td>
 							<td class="text-center border px-2 py-1">
-								<input name="criteria" class="w-full resize-none border rounded p-1" type="number" min="1">%</input>
+								<input name="criteria"
+										hx-post="{% url 'c_activities:check-criteria' %}"  
+										class="w-full resize-none border rounded p-1 criteria-input" 
+										type="number" 
+										min="1"
+										hx-trigger="keyup changed delay:500ms"
+										hx-target="#criteria-total"
+										hx-include=".criteria-input">%</input>
 							</td>
 							<td class="text-center border px-2 py-1">
-								<input name="criteria" class="w-full resize-none border rounded p-1" type="number" min="1">%</input>
+								<input name="criteria"
+										hx-post="{% url 'c_activities:check-criteria' %}"  
+										class="w-full resize-none border rounded p-1" 
+										type="number" 
+										min="1"
+										hx-trigger="keyup changed delay:500ms"
+										hx-target="#criteria-total"
+										hx-include=".criteria-input">%</input>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3" class="text-center border px-2 py-1">
+								<div id="criteria-total">
+									Total: <span class="font-bold">0%</span>
+								</div>
 							</td>
 						</tr>
 	                </tbody>

@@ -83,7 +83,6 @@ class CreateSubjectView(View):
                 if not request.POST.get("processing"):
                     return render(request, "a_classroom/subject/partials/progress_bar.html")
                 else:
-                    print("debugging one")
                     return self.process_subject_creation(request)
 
             return self.process_subject_creation(request)
@@ -92,7 +91,6 @@ class CreateSubjectView(View):
         return render(request, 'a_classroom/create_subject.html', {"form": form})
 
     def process_subject_creation(self, request):
-        print("You triggered this function")
         form = CreateSubjectForm(request.POST)
         if form.is_valid():
             course_code = form.cleaned_data["course_code"]
@@ -109,6 +107,7 @@ class CreateSubjectView(View):
 
             if subject:
                 messages.error(request, f"{course_code} for section {section_name} already exists.")
+                return redirect("a_classroom:index")
             else:
                 subject = Subject.objects.create(
                     instructor=request.user,
@@ -117,6 +116,8 @@ class CreateSubjectView(View):
                     name=name
                 )
                 messages.success(request, f"{course_code} for section {section_name} has been created.")
+                response = reverse("a_classroom:v", args=[subject.subject_id])
+                return redirect(response)
             
             form = CreateSubjectForm() 
 

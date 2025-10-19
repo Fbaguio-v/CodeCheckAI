@@ -124,7 +124,6 @@ class CreateActivityView(View):
                 "c_activities/activity/create_activity.html",
                 {"subject_id": subject_id},
             )
-
         return redirect("a_classroom:index")
 
     def post(self, request):
@@ -133,6 +132,11 @@ class CreateActivityView(View):
         if action_type == "create_activity":
             if request.headers.get("HX-Request"):
                 if not request.POST.get("processing"):
+                    # messages.error(request, "Activity creation failed.")
+                    # subject_id = request.POST.get("subject_id")
+                    # response = HttpResponse()
+                    # response["HX-Redirect"] = f"/c/subject/{subject_id}/"
+                    # return response
                     return render(request, "c_activities/activity/partial/progress_bar.html")
                 else:
                     return self.process_activity_creation(request)
@@ -142,74 +146,95 @@ class CreateActivityView(View):
         return redirect("a_classroom:index")
     
     def process_activity_creation(self, request):
-        subject_id = request.POST.get("subject_id")
-        activity_type = request.POST.get("type")
-        title = request.POST.get("id_title")
-        description = request.POST.get("id_description")
-        max_score = request.POST.get("id_max_score")
-        due_at_raw = request.POST.get("id_due_at")
-        criterias = request.POST.getlist("criteria")
+        try:
+            subject_id = request.POST.get("subject_id")
+            activity_type = request.POST.get("type")
+            title = request.POST.get("id_title")
+            description = request.POST.get("id_description")
+            max_score = request.POST.get("id_max_score")
+            due_at_raw = request.POST.get("id_due_at")
+            criterias = request.POST.getlist("criteria")
 
-        if activity_type == "quiz":
-            raw_attempt = request.POST.get("id_max_attempt")
-            max_attempt = int(raw_attempt) if raw_attempt else 3
-        else:
-            max_attempt = None
+            values = []
+            for val in criterias:
+                try:
+                    values.append(int(val) if val else 0)
+                except (ValueError, TypeError):
+                    values.append(0)
+            
+            total = sum(values)
 
-        subject = select_subject_by_id(subject_id)
-        if not subject:
-            return redirect("a_classroom:index")
+            if total > 100:
+                messages.error(request, f"Criteria total cannot exceed 100%")
+                response = HttpResponse()
+                response["HX-Redirect"] = f"/c/subject/{subject_id}/"
+                return response
 
-        due_at = None
-        if due_at_raw:
-            try:
-                due_at = datetime.strptime(due_at_raw, "%Y-%m-%dT%H:%M")
-            except ValueError:
-                return HttpResponse(
-                    "Invalid date format. Expected YYYY-MM-DDTHH:MM", status=400
-                )
 
-        filters = {
-            "subject": subject,
-            "title": title,
-            "description": description,
-            "type": activity_type,
-        }
-        existing_activity = Activity.objects.filter(**filters).first()
-        if existing_activity:
-            messages.error(request, "Activity already exists.")
-            return redirect(
-                f"{request.path}?action=create-activity&subject_id={subject_id}"
+            if not all([subject_id, activity_type, title]):
+                messages.error(request, "Missing required fields")
+                return redirect(f"/a/?action=create-activity&subject_id={subject_id}")
+
+            if activity_type == "quiz":
+                raw_attempt = request.POST.get("id_max_attempt")
+                max_attempt = int(raw_attempt) if raw_attempt else 3
+            else:
+                max_attempt = None
+
+            subject = select_subject_by_id(subject_id)
+            if not subject:
+                messages.error(request, "Subject not found")
+                return redirect("a_classroom:index")
+
+            due_at = None
+            if due_at_raw:
+                try:
+                    due_at = datetime.strptime(due_at_raw, "%Y-%m-%dT%H:%M")
+                except ValueError:
+                    messages.error(request, "Invalid date format. Use YYYY-MM-DDTHH:MM")
+                    return redirect(f"/a/?action=create-activity&subject_id={subject_id}")
+
+            filters = {
+                "subject": subject,
+                "title": title,
+                "type": activity_type,
+            }
+            existing_activity = Activity.objects.filter(**filters).first()
+            if existing_activity:
+                messages.error(request, "Activity with this title already exists for this subject.")
+                return redirect(f"/a/?action=create-activity&subject_id={subject_id}")
+
+            activity = Activity.objects.create(
+                subject=subject,
+                title=title,
+                description=description or "",
+                max_score=float(max_score) if max_score else 0.0,
+                max_attempt=max_attempt,
+                due_at=due_at,
+                type=activity_type,
             )
 
-        activity = Activity.objects.create(
-            subject=subject,
-            title=title,
-            description=description,
-            max_score=max_score,
-            max_attempt=max_attempt,
-            due_at=due_at,
-            type=activity_type,
-        )
+            for criteria in criterias:
+                if criteria and criteria.strip():
+                    ActivityCriteria.objects.create(
+                        activity=activity, text=criteria.strip()
+                    )
 
-        for criteria in criterias:
-            if criteria.strip():
-                ActivityCriteria.objects.create(
-                    activity=activity, text=criteria.strip()
-                )
+            try:
+                code_examples = prompt_to_aimodel_gpt4o(description, activity.activity_id)
+            except Exception as e:
+                print(f"AI model failed: {e}")
 
-        try:
-            code_examples = prompt_to_aimodel_gpt4o(description, activity.activity_id)
+            messages.success(request, "Activity created successfully!")
+            response = HttpResponse()
+            response["HX-Redirect"] = f"/c/activity/{activity.activity_id}/?subject_id={subject_id}&type={activity_type}"
+            return response
+
         except Exception as e:
-            print(f"AI model failed: {e}")
-            code_examples = None
-
-        messages.success(request, "Activity created successfully.")
-        response = HttpResponse()
-        response["HX-Redirect"] = f"/c/activity/{activity.activity_id}/?subject_id={subject_id}&type=activity"
-        return response
-
-
+            import traceback
+            
+            messages.error(request, f"Error creating activity: {str(e)}")
+            return redirect(f"/a/?action=create-activity&subject_id={subject_id}")
 
 class StudentGradeView(View):
 	def get(self, request):
@@ -345,3 +370,25 @@ def delete_activity(request, activity_id):
 	response = HttpResponse()
 	response["HX-Redirect"] = f"/c/subject/{subject_id}/?from=/c/"
 	return response
+
+def criteria_checking_function(request):
+    if request.method == "POST":
+        criteria_values = request.POST.getlist("criteria")
+
+        values = []
+        for val in criteria_values:
+            try:
+                values.append(int(val) if val else 0)
+            except (ValueError, TypeError):
+                values.append(0)
+        
+        total = sum(values)
+
+        if total == 100:
+            return HttpResponse(f'Total: <span class="font-bold text-green-600">{total}% ✓</span>')
+        elif total > 100:
+            return HttpResponse(f'Total: <span class="font-bold text-red-600">{total}% (Over 100%)</span>')
+        else:
+            return HttpResponse(f'Total: <span class="font-bold text-yellow-600">{total}% (Need {100-total}% more)</span>')
+    
+    return HttpResponse('')
