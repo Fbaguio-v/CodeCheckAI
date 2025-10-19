@@ -25,25 +25,7 @@
         {% else %}
             <h1 class="text-sm text-center text-black sm:text-base md:text-lg">No subjects available</h1>
         {% endif %}
-
-    {% elif request.user.userprofile.role == "Admin" %}
-        <!-- Responsive Admin Menu -->
-        <ul class="space-y-2 overflow-auto text-center 
-                   max-h-[400px] sm:max-h-[500px] md:max-h-[600px] lg:max-h-[700px] 
-                   px-2 sm:px-3 md:px-4 scrollbar-hidden">
-            <a href="{% url 'a_classroom:get-users' %}?from={{ request.path }}"
-               class="flex justify-center p-2 text-sm text-black border-2 border-black rounded-lg sm:p-3 md:p-4 sm:text-base md:text-lg hover:shadow-lg hover:bg-gray-300">
-                <li class="block w-full">Users</li>
-            </a>
-            <a href="{% url 'a_classroom:pending-users' %}?from={{ request.path }}"
-               class="flex justify-center p-2 text-sm text-black border-2 border-black rounded-lg sm:p-3 md:p-4 sm:text-base md:text-lg hover:shadow-lg hover:bg-gray-300">
-                <li class="block w-full">Pendings</li>
-            </a>
-            <a href="{% url 'a_classroom:get-subjects' %}?from={{ request.path }}"
-               class="flex justify-center p-2 text-sm text-black border-2 border-black rounded-lg sm:p-3 md:p-4 sm:text-base md:text-lg hover:shadow-lg hover:bg-gray-300">
-                <li class="block w-full">Subjects</li>
-            </a>
-        </ul>
+        
     {% endif %}
 {% endif %}
 
