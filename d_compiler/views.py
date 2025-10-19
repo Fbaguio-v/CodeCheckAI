@@ -142,6 +142,11 @@ class CompilerView(View):
                 except (ValueError, TypeError):
                     return HttpResponse("Invalid language ID", status=400)
 
+                if code.strip() == "":
+                    response = HttpResponse()
+                    response["HX-Redirect"] = "/p/"
+                    return response
+
                 judge_payload = {
                     "source_code": code,
                     "language_id": language_id,
@@ -209,21 +214,16 @@ class CompilerView(View):
                                 max_score=activity.max_score,
                             )
 
-                            # Extract score using regex
                             score_match = re.search(r"Grading:\s*(\d+)", ai_feedback)
                             score = int(score_match.group(1)) if score_match else 0
 
-                            # Split by common section headers and take everything after grading
                             sections = re.split(r'\*?\s*(?:Grading|Insight):\s*\*?\s*', ai_feedback)
                             
                             if len(sections) > 1:
-                                # Take the last section (actual feedback)
                                 feedback_section = sections[-1].strip()
                             else:
-                                # Fallback: remove grading pattern
                                 feedback_section = re.sub(r'.*Grading:\s*\d+\s*', '', ai_feedback).strip()
                             
-                            # Clean up any markdown formatting
                             feedback_section = re.sub(r'\*\*', '', feedback_section).strip()
 
                             if submission.score is None or score > submission.score:
