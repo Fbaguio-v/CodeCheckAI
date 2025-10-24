@@ -17,6 +17,7 @@ from django.core.paginator import Paginator
 from django.core.mail import send_mail, get_connection
 from django.utils import timezone
 from django.db.models import Max
+from django.utils.timezone import localtime
 # Create your views here.
 def select_user_related(user):
     try:
@@ -267,6 +268,7 @@ class ActivityView(View):
                     "highest_feedback" : highest_feedback
                 })
 
+
             return render(request, 'c_activities/compiler/student.compiler.html', {
                 "activity": activity,
                 "submission" : submission,
@@ -274,7 +276,9 @@ class ActivityView(View):
                 "user_profile": user_profile,
                 "subject_id": subject_id,
                 "subject": subject,
-                "submission_count" : submission_count
+                "submission_count" : submission_count,
+                "current_time" : localtime(timezone.now()),
+                "server_time": timezone.now().isoformat(),
             })
 
         return HttpResponse("Unhandled request case.", status=400)

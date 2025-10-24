@@ -25,51 +25,53 @@
 
         <!-- Right Side Sections -->
         <div class="col-span-1 flex flex-col h-full gap-4">
-            <!-- Pending Users -->
-            <div class="h-1/2 min-h-0 flex flex-col">
-                <div class="h-full border border-gray-300 rounded-lg p-4 flex flex-col">
-                    <h3 class="text-lg font-semibold mb-3">Pending Users</h3>
-                    <div class="mb-3">
-                        <input type="text" 
-                               name="search_pending" 
-                               placeholder="Search pending..."
-                               class="w-full h-9 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               onkeyup="filterTable('pending-table', this.value, [0, 1, 2])">
-                    </div>
-                    <div id="pending-users-container" class="flex-1 min-h-0" style="height: calc(100% - 80px);">  <!-- Fixed height -->
-                        <div id="pending-users"
-                             hx-get="{% url 'a_classroom:pending-users' %}"
-                             hx-target="#pending-users-container"
-                             hx-swap="innerHTML"
-                             hx-trigger="load delay:500ms">
-                            <p class="text-gray-500">Loading pending users...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+			<!-- Pending Users -->
+			<div class="h-1/2 min-h-0 flex flex-col">
+				<div class="h-full border border-gray-300 rounded-lg p-4 flex flex-col">
+					<h3 class="text-lg font-semibold mb-3">Pending Users</h3>
+					<div class="mb-3">
+						<input type="text" 
+							name="search_pending" 
+							placeholder="Search pending..."
+							class="w-full h-9 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+							onkeyup="filterTable('pending-table', this.value, [0, 1, 2])">
+					</div>
+					<!-- Make this flex-1 and overflow-auto -->
+					<div id="pending-users-container" class="flex-1 min-h-0 overflow-auto">
+						<div id="pending-users"
+							hx-get="{% url 'a_classroom:pending-users' %}"
+							hx-target="#pending-users-container"
+							hx-swap="innerHTML"
+							hx-trigger="load delay:500ms">
+							<p class="text-gray-500">Loading pending users...</p>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <!-- Subjects -->
-            <div class="h-1/2 min-h-0 flex flex-col overflow-auto">
-                <div class="h-full border border-gray-300 rounded-lg p-4 flex flex-col">
-                    <h3 class="text-lg font-semibold mb-3">Subjects</h3>
-                    <div class="mb-3">
-                        <input type="text" 
-                               name="search_subject" 
-                               placeholder="Search subject..."
-                               class="w-full h-9 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               onkeyup="filterTable('subjects-table', this.value, [0, 1, 2, 3, 4])">
-                    </div>
-                    <div id="subjects-container" class="flex-1 min-h-0" style="height: calc(100% - 80px);">  <!-- Fixed height -->
-                        <div id="subjects"
-                             hx-get="{% url 'a_classroom:get-subjects' %}"
-                             hx-target="#subjects-container"
-                             hx-swap="innerHTML"
-                             hx-trigger="load delay:500ms">
-                            <p class="text-gray-500">Loading subjects...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+			<!-- Subjects -->
+			<div class="h-1/2 min-h-0 flex flex-col">
+				<div class="h-full border border-gray-300 rounded-lg p-4 flex flex-col">
+					<h3 class="text-lg font-semibold mb-3">Subjects</h3>
+					<div class="mb-3">
+						<input type="text" 
+							name="search_subject" 
+							placeholder="Search subject..."
+							class="w-full h-9 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+							onkeyup="filterTable('subjects-table', this.value, [0, 1, 2, 3, 4])">
+					</div>
+					<!-- Make this flex-1 and overflow-auto -->
+					<div id="subjects-container" class="flex-1 min-h-0 overflow-auto">
+						<div id="subjects"
+							hx-get="{% url 'a_classroom:get-subjects' %}"
+							hx-target="#subjects-container"
+							hx-swap="innerHTML"
+							hx-trigger="load delay:500ms">
+							<p class="text-gray-500">Loading subjects...</p>
+						</div>
+					</div>
+				</div>
+			</div>
         </div>
     </div>
 </div>

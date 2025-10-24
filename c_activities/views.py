@@ -132,11 +132,6 @@ class CreateActivityView(View):
         if action_type == "create_activity":
             if request.headers.get("HX-Request"):
                 if not request.POST.get("processing"):
-                    # messages.error(request, "Activity creation failed.")
-                    # subject_id = request.POST.get("subject_id")
-                    # response = HttpResponse()
-                    # response["HX-Redirect"] = f"/c/subject/{subject_id}/"
-                    # return response
                     return render(request, "c_activities/activity/partial/progress_bar.html")
                 else:
                     return self.process_activity_creation(request)
