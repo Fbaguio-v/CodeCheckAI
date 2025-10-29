@@ -24,15 +24,7 @@
                 style="resize: none;"
                 {% if submission.status == "submitted" or submission.status == "returned" %}
                     readonly
-                {% endif %}>
-                {% if submission %}
-                    {% if submission.status == "in_progress" %}
-                        {{ submission.saved_code }}
-                    {% elif submission.status == "submitted" or submission.status == "returned" %}
-                        {{ submission.submitted_code }}
-                    {% endif %}
-                {% endif %}
-            </textarea>
+                {% endif %}>{% if submission %}{% if submission.status == "in_progress" %}{{ submission.saved_code }}{% elif submission.status == "submitted" or submission.status == "returned" %}{{ submission.submitted_code }}{% endif %}{% endif %}</textarea>
         </div>
 
         <div class="border border-solid flex flex-row h-[140px] w-full">
@@ -92,7 +84,7 @@
                     {% with server_time=current_time|date:'Y-m-d H:i:s' %}
                     <select name="language_id" id="language_id"
                         class="w-full sm:w-[150px] px-6 py-2 text-white rounded-lg shadow-md {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
-                        {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}disabled title="Quiz period has ended"{% else %}required title="Select programming language"{% endif %}
+                        {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}disabled title="Quiz period has ended"{% else %}required title="Select programming language"{% endif %}>
                         <option value="71">Python</option>
                         <option value="62">Java</option>
                     </select>
@@ -104,7 +96,7 @@
                                 hx-include="#compiler, #language_id, input[name='activity_id'], input[name='subject_id']" 
                                 hx-target="#code-output" hx-swap="innerHTML"
                                 class="w-full sm:w-[150px] px-6 py-2 text-white rounded-lg shadow-md {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
-                                {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}disabled title="Quiz period has ended"{% else %}title="Run your code"{% endif %}
+                                {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}disabled title="Quiz period has ended"{% else %}title="Run your code"{% endif %}>
                             Run Code
                         </button>
                     </form>

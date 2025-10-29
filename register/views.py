@@ -25,14 +25,19 @@ class RegisterView(View):
                 return redirect('register:login')
             except Exception as e:
                 messages.error(request, f"Error creating user account: {e}")
+# ...existing code...
         else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    if field == 'agree_terms':
-                        messages.error(request, error)
-                    else:
-                        field_name = field.replace('_', ' ').capitalize()
-                        messages.error(request, f"{field_name}: {error}")
+            # Show only the first form error message (one at a time)
+            first_error = next(iter(form.errors.items()), None)
+            if first_error:
+                field, errors = first_error
+                error = errors[0] if errors else "Invalid input."
+                if field == 'agree_terms':
+                    messages.error(request, error)
+                else:
+                    field_name = field.replace('_', ' ').capitalize()
+                    messages.error(request, f"{field_name}: {error}")
+#
 
         return render(request, 'register/register.html', {'form': form})
     
