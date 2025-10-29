@@ -143,8 +143,9 @@ class CompilerView(View):
                     return HttpResponse("Invalid language ID", status=400)
 
                 if code.strip() == "":
+                    messages.error(request, "Code cannot be empty.")
                     response = HttpResponse()
-                    response["HX-Redirect"] = "/p/"
+                    response["HX-Redirect"] = reverse('a_classroom:v', args=[subject_id])
                     return response
 
                 judge_payload = {
@@ -232,39 +233,147 @@ class CompilerView(View):
                                 submission.save()
 
                             output = f"""
-                            Score: {score}
-                            Run Time: {exec_time}
-                            {feedback_section}
+                            <div class="max-w-3xl mx-auto">
+                              <div class="bg-white border border-gray-200 rounded-lg shadow overflow-hidden">
+                                <div class="p-4">
+                                  <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-sm font-semibold">🏆 Quiz Result</h3>
+                                    <div class="text-sm text-gray-700">Score: <span class="font-medium">{score}</span></div>
+                                  </div>
+                                  <div class="bg-gray-800 text-gray-100 rounded-md p-3">
+                                    <h4 class="text-xs text-gray-300">📄 Program Output</h4>
+                                    <pre id="quiz-output-pre" class="mt-2 whitespace-pre-wrap text-sm bg-gray-900 text-green-300 rounded p-3 max-h-48 overflow-auto">{stdout or stderr or compile_output or message or status_description}</pre>
+                                    <div class="mt-2 text-xs text-gray-400">⏱️ Run Time: <span class="font-medium">{exec_time}</span></div>
+                                  </div>
+                                  <div class="mt-3 bg-gradient-to-br from-white to-gray-50 border border-gray-100 rounded-md p-3">
+                                    <h4 class="text-sm font-semibold">🤖 AI Feedback</h4>
+                                    <div class="mt-2 text-sm text-gray-700 leading-relaxed" id="quiz-ai-feedback">{feedback_section.replace('-', '<br>')}</div>
+                                  </div>
+                                  <div class="mt-3 flex gap-2">
+                                    <button data-copy-target="quiz-output-pre" class="copy-btn inline-flex items-center gap-2 px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded text-white">Copy Output</button>
+                                    <button id="copy-quiz-feedback" class="inline-flex items-center px-3 py-1 text-xs bg-black text-white rounded">Copy Feedback</button>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <style>
+                                #quiz-output-pre {{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace; }}
+                                .copy-btn {{ cursor: pointer; }}
+                              </style>
+
+                             <script>
+                                (function(){{
+                                  function copyTextFromSelector(selector){{
+                                    const el = document.getElementById(selector);
+                                    if(!el) return;
+                                    const text = el.innerText || el.textContent || '';
+                                    navigator.clipboard?.writeText(text).then(()=>{{
+                                      const btn = document.querySelector('[data-copy-target="' + selector + '"]');
+                                      if(btn){{ btn.textContent = 'Copied'; setTimeout(()=> btn.textContent = 'Copy Output', 1200); }}
+                                    }}).catch(()=>{{}});
+                                  }}
+
+                                  document.querySelectorAll('.copy-btn').forEach(btn=>{{
+                                    btn.addEventListener('click', function(e){{
+                                      const target = this.getAttribute('data-copy-target');
+                                      copyTextFromSelector(target);
+                                    }});
+                                  }});
+
+                                  const fbBtn = document.getElementById('copy-quiz-feedback');
+                                 if(fbBtn){{
+                                    fbBtn.addEventListener('click', function(){{
+                                      const content = document.getElementById('quiz-ai-feedback');
+                                      const text = content ? content.innerText || content.textContent : '';
+                                      navigator.clipboard?.writeText(text).then(()=>{{
+                                        fbBtn.textContent = 'Copied'; setTimeout(()=> fbBtn.textContent = 'Copy Feedback', 1200);
+                                      }}).catch(()=>{{}});
+                                    }});
+                                  }}
+                                }})();
+                              </script>
+                            </div>
                             """
                         else:
                             ai_feedback = evaluate_student_code_with_openai_for_playground(code=code)
 
                             output = f"""
-                            <div class="output-container">
-                                <div class="output-section">
-                                    <h3 class="section-title">📄 Program Output</h3>
-                                    <div class="output-content">
-                                        <pre>{stdout or stderr or compile_output or message or status_description}</pre>
+                            <div class="max-w-5xl mx-auto p-4">
+                              <div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+                                <div class="p-4 md:p-6">
+                                  <div class="flex flex-col gap-4">
+                                    <div class="w-full">
+                                      <div class="bg-gray-800 text-gray-100 rounded-md p-3">
+                                        <div class="flex items-center justify-between">
+                                          <h3 class="text-sm font-semibold">📄 Program Output</h3>
+                                          <div class="flex items-center gap-2">
+                                            <button data-copy-target="output-pre" class="copy-btn inline-flex items-center gap-2 px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded text-white">Copy</button>
+                                          </div>
+                                        </div>
+                                        <pre id="output-pre" class="mt-3 whitespace-pre-wrap text-sm bg-gray-900 text-green-300 rounded p-3 max-h-64 overflow-auto">{stdout or stderr or compile_output or message or status_description}</pre>
+                                      </div>
+
+                                      <div class="mt-3 flex items-center justify-between text-sm text-gray-600">
+                                        <div>⏱️ <span class="font-medium">Run Time:</span> <span class="ml-1">{exec_time}</span></div>
+                                        <div class="text-right">Status: <span class="font-medium">{status_description}</span></div>
+                                      </div>
                                     </div>
-                                </div>
-                                
-                                <div class="execution-info">
-                                    <div class="info-item">
-                                        <span class="label">⏱️ Run Time:</span>
-                                        <span class="value">{exec_time}</span>
+
+                                    <div class="w-full">
+                                      <div class="h-full bg-gradient-to-br from-white to-gray-50 border border-gray-100 rounded-md p-3">
+                                        <h3 class="text-sm font-semibold">🤖 AI Feedback</h3>
+                                        <div class="mt-2 text-sm text-gray-700 space-y-2 leading-relaxed" id="ai-feedback">{ai_feedback.replace('-', '<br>')}</div>
+                                        <div class="mt-3">
+                                          <button id="copy-feedback" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 bg-black text-white rounded-md text-sm">Copy Feedback</button>
+                                        </div>
+                                      </div>
                                     </div>
+                                  </div>
                                 </div>
-                                
-                                <div class="ai-feedback-section">
-                                    <h3 class="section-title">🤖 AI Feedback</h3>
-                                    <div class="feedback-content">
-                                        {ai_feedback.replace('-', '<br>')}
-                                    </div>
-                                </div>
+                              </div>
+
+                              <style>
+                                /* small helpers to ensure nice scrollbars and wrapping */
+                                #output-pre {{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace; }}
+                                .copy-btn {{ cursor: pointer; }}
+                              </style>
+
+                              <script>
+                                (function(){{
+                                  function copyTextFromSelector(selector){{
+                                    const el = document.getElementById(selector);
+                                    if(!el) return;
+                                    const text = el.innerText || el.textContent || '';
+                                    navigator.clipboard?.writeText(text).then(()=>{{
+                                      // flash a tiny toast
+                                      const btn = document.querySelector('[data-copy-target="' + selector + '"]');
+                                      if(btn){{ btn.textContent = 'Copied'; setTimeout(()=> btn.textContent = 'Copy', 1200); }}
+                                    }}).catch(()=>{{}});
+                                  }}
+
+                                  document.querySelectorAll('.copy-btn').forEach(btn=>{{
+                                    btn.addEventListener('click', function(e){{
+                                      const target = this.getAttribute('data-copy-target');
+                                      copyTextFromSelector(target);
+                                    }});
+                                  }});
+
+                                  const fbBtn = document.getElementById('copy-feedback');
+                                  if(fbBtn){{
+                                    fbBtn.addEventListener('click', function(){{
+                                      const content = document.getElementById('ai-feedback');
+                                      const text = content ? content.innerText || content.textContent : '';
+                                      navigator.clipboard?.writeText(text).then(()=>{{
+                                        fbBtn.textContent = 'Copied'; setTimeout(()=> fbBtn.textContent = 'Copy Feedback', 1200);
+                                      }}).catch(()=>{{}});
+                                    }});
+                                  }}
+                                }})();
+                              </script>
                             </div>
                             """
 
-                        return HttpResponse(output, content_type="text/plain")
+                        return HttpResponse(output, content_type="text/html")
 
                     return HttpResponse("Timeout retrieving result", status=500)
 

@@ -1,144 +1,130 @@
+<!-- ...existing code... -->
 {% extends 'a_classroom/base.html' %}
 {% load static tailwind_tags %}
 {% block title %} Register {% endblock %}
 {% tailwind_css %}
 {% block content %}
 
-<div class="flex items-center justify-center w-full h-full px-4 bg-white sm:px-6 lg:px-8">
-    <div class="flex items-center justify-center w-full max-w-md p-6 bg-white border border-gray-300 shadow-xl rounded-xl sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-4xl sm:p-8 md:p-10 lg:p-12">
-        
-        <form action="{% url 'register:register' %}" method="post" 
-              class="flex flex-col items-center w-full max-w-sm gap-2 sm:gap-4 lg:gap-8 sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
-            {% csrf_token %}
+<div class="min-h-screen flex items-center justify-center bg-white px-4 py-10">
+  <div class="w-full max-w-md mx-auto bg-white border border-gray-300 rounded-xl shadow-xl p-6 sm:p-8">
+    <form action="{% url 'register:register' %}" method="post" class="w-full flex flex-col items-stretch gap-4" novalidate>
+      {% csrf_token %}
 
-            <div id="termsModal" class="hidden">
-                <div class="absolute inset-0 z-50 flex items-center justify-center p-4 bg-white bg-opacity-95 rounded-lg shadow-2xl">
-                    <div class="w-full max-w-2xl max-h-[70vh] overflow-hidden border border-gray-300 rounded-lg bg-white">
-                        <div class="flex items-center justify-between p-4 border-b bg-gray-50">
-                            <h3 class="text-lg font-semibold">Terms and Conditions</h3>
-                            <button type="button" onclick="closeModal('termsModal')" class="text-gray-500 hover:text-gray-700">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="p-6 overflow-y-auto max-h-[50vh]">
-                            <div id="termsContent">
-                                <p class="text-gray-600">Loading terms and conditions...</p>
-                            </div>
-                        </div>
-                        <div class="flex justify-end p-4 border-t bg-gray-50">
-                            <button type="button" onclick="closeModal('termsModal')" class="px-4 py-2 text-white bg-black rounded-md hover:bg-gray-800">
-                                I Understand
-                            </button>
-                        </div>
-                    </div>
-                </div>
+      <div id="termsModal" class="hidden">
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+          <div class="w-full max-w-2xl max-h-[70vh] overflow-hidden border border-gray-300 rounded-lg bg-white">
+            <div class="flex items-center justify-between p-4 border-b bg-gray-50">
+              <h3 class="text-lg font-semibold">Terms and Conditions</h3>
+              <button type="button" onclick="closeModal('termsModal')" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
             </div>
-
-            <div id="privacyModal" class="hidden">
-                <div class="absolute inset-0 z-50 flex items-center justify-center p-4 bg-white bg-opacity-95 rounded-lg shadow-2xl">
-                    <div class="w-full max-w-2xl max-h-[70vh] overflow-hidden border border-gray-300 rounded-lg bg-white">
-                        <div class="flex items-center justify-between p-4 border-b bg-gray-50">
-                            <h3 class="text-lg font-semibold">Privacy Policy</h3>
-                            <button type="button" onclick="closeModal('privacyModal')" class="text-gray-500 hover:text-gray-700">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="p-6 overflow-y-auto max-h-[50vh]">
-                            <div id="privacyContent">
-                                <p class="text-gray-600">Loading privacy policy...</p>
-                            </div>
-                        </div>
-                        <div class="flex justify-end p-4 border-t bg-gray-50">
-                            <button type="button" onclick="closeModal('privacyModal')" class="px-4 py-2 text-white bg-black rounded-md hover:bg-gray-800">
-                                I Understand
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div class="p-6 overflow-y-auto max-h-[50vh]">
+              <div id="termsContent">
+                <p class="text-gray-600">Loading terms and conditions...</p>
+              </div>
             </div>
-
-            <div class="flex flex-col w-full gap-1 sm:gap-2">
-                <label for="id_first_name" class="text-base font-semibold sm:text-lg lg:text-xl">
-                    First Name
-                </label>
-                <input type="text" name="first_name" id="id_first_name"
-                       class="w-full h-10 px-3 border border-gray-300 rounded-md shadow-md sm:h-12 sm:px-4 lg:h-14 lg:px-5 focus:outline-none focus:ring-2 focus:ring-black" 
-                       value="{{ form.first_name.value|default:'' }}" 
-                       placeholder="First Name" required>
+            <div class="flex justify-end p-4 border-t bg-gray-50">
+              <button type="button" onclick="closeModal('termsModal')" class="px-4 py-2 text-white bg-black rounded-md hover:bg-gray-800 cursor-pointer">
+                I Understand
+              </button>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <div class="flex flex-col w-full gap-1 sm:gap-2">
-                <label for="id_last_name" class="text-base font-semibold sm:text-lg lg:text-xl">
-                    Last Name
-                </label>
-                <input type="text" name="last_name" id="id_last_name"
-                       class="w-full h-10 px-3 border border-gray-300 rounded-md shadow-md sm:h-12 sm:px-4 lg:h-14 lg:px-5 focus:outline-none focus:ring-2 focus:ring-black" 
-                       value="{{ form.last_name.value|default:'' }}" 
-                       placeholder="Last Name" required>
+      <div id="privacyModal" class="hidden">
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+          <div class="w-full max-w-2xl max-h-[70vh] overflow-hidden border border-gray-300 rounded-lg bg-white">
+            <div class="flex items-center justify-between p-4 border-b bg-gray-50">
+              <h3 class="text-lg font-semibold">Privacy Policy</h3>
+              <button type="button" onclick="closeModal('privacyModal')" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
             </div>
-
-            <div class="flex flex-col w-full gap-1 sm:gap-2">
-                <label for="id_email" class="text-base font-semibold sm:text-lg lg:text-xl">
-                    Email Address
-                </label>
-                <input type="email" name="email" id="id_email"
-                       class="w-full h-10 px-3 border border-gray-300 rounded-md shadow-md sm:h-12 sm:px-4 lg:h-14 lg:px-5 focus:outline-none focus:ring-2 focus:ring-black" 
-                       value="{{ form.email.value|default:'' }}" 
-                       placeholder="Email Address" required>
+            <div class="p-6 overflow-y-auto max-h-[50vh]">
+              <div id="privacyContent">
+                <p class="text-gray-600">Loading privacy policy...</p>
+              </div>
             </div>
-
-            <div class="flex flex-col w-full gap-1 sm:gap-2">
-                <label for="id_password1" class="text-base font-semibold sm:text-lg lg:text-xl">
-                    Password
-                </label>
-                <input type="password" name="password1" id="id_password1"
-                       class="w-full h-10 px-3 border border-gray-300 rounded-md shadow-md sm:h-12 sm:px-4 lg:h-14 lg:px-5 focus:outline-none focus:ring-2 focus:ring-black" 
-                       placeholder="Password" required>
+            <div class="flex justify-end p-4 border-t bg-gray-50">
+              <button type="button" onclick="closeModal('privacyModal')" class="px-4 py-2 text-white bg-black rounded-md hover:bg-gray-800 cursor-pointer">
+                I Understand
+              </button>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <div class="flex flex-col w-full gap-1 sm:gap-2">
-                <label for="id_password2" class="text-base font-semibold sm:text-lg lg:text-xl">
-                    Confirm Password
-                </label>
-                <input type="password" name="password2" id="id_password2"
-                       class="w-full h-10 px-3 border border-gray-300 rounded-md shadow-md sm:h-12 sm:px-4 lg:h-14 lg:px-5 focus:outline-none focus:ring-2 focus:ring-black" 
-                       placeholder="Confirm Password" required>
-            </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="flex flex-col gap-1">
+          <label for="id_first_name" class="text-base font-semibold sm:text-lg lg:text-xl">First Name</label>
+          <input type="text" name="first_name" id="id_first_name"
+                 class="w-full h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black sm:h-12 sm:px-4"
+                 value="{{ form.first_name.value|default:'' }}" placeholder="First Name" required>
+        </div>
 
-            <div class="terms-section">
-                <label class="text-sm text-gray-700">
-                    {{ form.agree_terms }}
-                    I agree to the 
-                    <a href="javascript:void(0)" onclick="showTerms()" style="text-decoration: underline;" class="text-blue-600 hover:text-blue-800">Terms and Conditions</a>
-                    and 
-                    <a href="javascript:void(0)" onclick="showPrivacy()" style="text-decoration: underline;" class="text-blue-600 hover:text-blue-800">Privacy Policy</a>
-                </label>
-                {% if form.agree_terms.errors %}
-                    <div class="mt-1 text-sm text-red-600">
-                        {% for error in form.agree_terms.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
+        <div class="flex flex-col gap-1">
+          <label for="id_last_name" class="text-base font-semibold sm:text-lg lg:text-xl">Last Name</label>
+          <input type="text" name="last_name" id="id_last_name"
+                 class="w-full h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black sm:h-12 sm:px-4"
+                 value="{{ form.last_name.value|default:'' }}" placeholder="Last Name" required>
+        </div>
 
-            <button type="submit" 
-                    class="w-full px-4 py-2 text-sm text-white transition duration-200 bg-black rounded-md shadow-lg cursor-pointer sm:text-base md:text-lg lg:text-xl hover:bg-gray-800">
-                Register
-            </button>
+        <div class="sm:col-span-2 flex flex-col gap-1">
+          <label for="id_email" class="text-base font-semibold sm:text-lg lg:text-xl">Email Address</label>
+          <input type="email" name="email" id="id_email"
+                 class="w-full h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black sm:h-12 sm:px-4"
+                 value="{{ form.email.value|default:'' }}" placeholder="Email Address" required>
+        </div>
 
-            <p class="text-sm text-gray-600 sm:text-base lg:text-lg">
-                Already have an account? 
-                <a class="text-blue-600 hover:underline" href="{% url 'register:login' %}">
-                    Login
-                </a>
-            </p>
-        </form>
-    </div>
+        <div class="flex flex-col gap-1">
+          <label for="id_password1" class="text-base font-semibold sm:text-lg lg:text-xl">Password</label>
+          <input type="password" name="password1" id="id_password1"
+                 class="w-full h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black sm:h-12 sm:px-4"
+                 placeholder="Password" required>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label for="id_password2" class="text-base font-semibold sm:text-lg lg:text-xl">Confirm Password</label>
+          <input type="password" name="password2" id="id_password2"
+                 class="w-full h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black sm:h-12 sm:px-4"
+                 placeholder="Confirm Password" required>
+        </div>
+      </div>
+
+      <div class="terms-section">
+        <label class="text-sm text-gray-700 block">
+          {{ form.agree_terms }}
+          I agree to the
+          <a href="javascript:void(0)" onclick="showTerms()" class="text-blue-600 hover:text-blue-800 underline">Terms and Conditions</a>
+          and
+          <a href="javascript:void(0)" onclick="showPrivacy()" class="text-blue-600 hover:text-blue-800 underline">Privacy Policy</a>
+        </label>
+        {% if form.agree_terms.errors %}
+          <div class="mt-1 text-sm text-red-600">
+            {% for error in form.agree_terms.errors %}
+              {{ error }}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <button type="submit"
+              class="w-full px-4 py-2 text-sm sm:text-base md:text-lg text-white bg-black rounded-md shadow-md hover:bg-gray-800 transition cursor-pointer">
+        Register
+      </button>
+
+      <p class="text-center text-sm text-gray-600">
+        Already have an account?
+        <a class="text-blue-600 hover:underline" href="{% url 'register:login' %}">Login</a>
+      </p>
+    </form>
+  </div>
 </div>
 
 <script>
@@ -210,7 +196,7 @@ const termsContent = `
 
         <div>
             <h5 class="font-semibold mb-2">8. Privacy and Data</h5>
-            <p>We collect and use data to provide and improve our educational services, personalize your learning experience, and ensure platform security. We do not sell your personal information to third parties.</p>
+            <p>We collect and use data to provide and improve data educational services, personalize your learning experience, and ensure platform security. We do not sell your personal information to third parties.</p>
         </div>
 
         <div>
@@ -385,3 +371,4 @@ document.addEventListener('keydown', function(event) {
 });
 </script>
 {% endblock %}
+<!-- ...existing code... -->

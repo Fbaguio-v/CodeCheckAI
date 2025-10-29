@@ -96,7 +96,7 @@ def evaluate_student_code_with_openai_for_playground(code):
     {code}
     Do not put acknowledgement into my command or anything just say something like Here's a structured review of the provided code or something.
     ALSO include what is wrong with the code and how to improve it but do not give the whole code to solve the task at hand but instead give a hint of some sort just to help them improve it.
-    Finally, Can you fix the format of your response and make it pleasing like a bullet form and put the bulleted sentence next line.
+    Finally, Can you fix the format of your response.
     """
 
     response = client.chat.completions.create(
