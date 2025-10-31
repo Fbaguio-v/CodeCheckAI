@@ -1,0 +1,11 @@
+<div hx-post="{% url 'd_compiler:save_draft' %}"
+     hx-trigger="load delay:0.5s"
+     hx-target="this"
+     hx-swap="outerHTML"
+     hx-vals='{"processing": "true"}'>
+    
+    <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+        <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 70%"></div>
+    </div>
+    <p class="text-center text-sm text-gray-600">Please wait...</p>
+</div>
