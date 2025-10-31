@@ -16,8 +16,8 @@ import json
 import time
 import re
 
-# Create your views here.
-        
+# Create your views here.   
+
 class CompilerView(View):
     def get(self, request):
         user_agent = get_user_agent(request)
@@ -44,97 +44,6 @@ class CompilerView(View):
         student = request.user
 
         match action_type:
-            case "turn_in":
-                if not code or code.strip() == "":
-                    messages.error(request, "Cannot submit empty code.")
-                    response = HttpResponse()
-                    response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
-                    return response
-
-                submission = get_student_submission_by_id(student, activity)
-                
-                if submission and submission.status == "submitted":
-                    messages.error(request, "You have already submitted this activity.")
-                    response = HttpResponse()
-                    response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
-                    return response
-
-                instruction = activity.description
-                examples = get_activity_examples(activity)
-                criterias = get_activity_criterias(activity)
-
-                evaluate = evaluate_student_code_with_openai(code, instruction, examples, criterias, activity.max_score)
-
-                parts = evaluate.split("<grading>")
-                raw_grading = parts[0]
-                match = re.search(r"(\d+(?:\.\d+)?)", raw_grading)
-                score = float(match.group(1)) if match else 0
-                feedback = re.sub(r"Grading:.*?Insight:\s*", "", raw_grading, flags=re.DOTALL).strip()
-
-                if submission:
-                    submission.submitted_code = code
-                    submission.submitted_at = timezone.now()
-                    submission.feedback = feedback
-                    submission.score = score
-                    submission.status = "submitted"
-                    submission.evaluator = "OpenAI"
-                    submission.save()
-                else:
-                    submission = ActivitySubmission.objects.create(
-                        student=student,
-                        activity=activity,
-                        submitted_code=code,
-                        submitted_at=timezone.now(),
-                        feedback=feedback,
-                        score=score,
-                        status="submitted",
-                        evaluator="OpenAI"
-                    )
-
-                response = HttpResponse()
-                response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
-                return response
-            case "save_draft":
-                existing = get_student_submission_by_id(student, activity)
-                
-                if existing and existing.status == "submitted":
-                    messages.error(request, "You have already submitted this activity.")
-                    response = HttpResponse()
-                    response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
-                    return response
-                
-                submission, created = ActivitySubmission.objects.update_or_create(
-                    student=student,
-                    activity=activity,
-                    defaults={
-                        "saved_code": code,
-                        "status": "in_progress"
-                    }			
-                )
-                
-                if created:
-                    messages.success(request, "Draft saved successfully!")
-                else:
-                    messages.success(request, "Draft updated successfully!")
-                
-                response = HttpResponse()
-                response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
-                return response
-            case "unsubmit":
-                submission = get_submission_by_id(submission_id)
-                if not submission:
-                    response = HttpResponse()
-                    response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
-                    return response
-
-                if submission.submitted_code:
-                    submission.saved_code = submission.submitted_code
-                submission.status = "in_progress"
-                submission.save()
-                
-                response = HttpResponse()
-                response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
-                return response
             case "run_code":
                 language_id = request.POST.get("language_id")
                 try:
@@ -381,3 +290,160 @@ class CompilerView(View):
                     return HttpResponse(f"Judge0 server error: {str(e)}", status=500)
             case _:
                 return HttpResponse("Invalid action", status=400)
+
+
+class TurnInView(View):
+  def post(self, request):
+      if not request.POST.get("processing"):
+          return render(request, 'c_activities/compiler/partials/turn_in_progress_bar.html')
+      else:
+          return self.process_turn_in(request)
+
+  def process_turn_in(self, request):
+      a_type = request.GET.get("type")
+      code = request.POST.get("compiler")
+      subject_id = request.POST.get("subject_id")
+      activity_id = request.POST.get("activity_id")
+
+      subject = None
+      activity = None
+      subject = select_subject_by_id(subject_id)
+      activity = select_activity_by_id(activity_id)
+      if not subject and not activity:
+          return redirect("a_classroom:index")
+
+      student = request.user
+
+      if not code or code.strip() == "":
+          messages.error(request, "Cannot submit empty code.")
+          response = HttpResponse()
+          response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
+          return response
+
+      submission = get_student_submission_by_id(student, activity)
+      
+      if submission and submission.status == "submitted":
+          messages.error(request, "You have already submitted this activity.")
+          response = HttpResponse()
+          response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
+          return response
+
+      instruction = activity.description
+      examples = get_activity_examples(activity)
+      criterias = get_activity_criterias(activity)
+
+      evaluate = evaluate_student_code_with_openai(code, instruction, examples, criterias, activity.max_score)
+
+      parts = evaluate.split("<grading>")
+      raw_grading = parts[0]
+      match = re.search(r"(\d+(?:\.\d+)?)", raw_grading)
+      score = float(match.group(1)) if match else 0
+      feedback = re.sub(r"Grading:.*?Insight:\s*", "", raw_grading, flags=re.DOTALL).strip()
+
+      if submission:
+          submission.submitted_code = code
+          submission.submitted_at = timezone.now()
+          submission.feedback = feedback
+          submission.score = score
+          submission.status = "submitted"
+          submission.evaluator = "OpenAI"
+          submission.save()
+      else:
+          submission = ActivitySubmission.objects.create(
+              student=student,
+              activity=activity,
+              submitted_code=code,
+              submitted_at=timezone.now(),
+              feedback=feedback,
+              score=score,
+              status="submitted",
+              evaluator="OpenAI"
+          )
+
+      response = HttpResponse()
+      response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
+      return response
+
+class SaveDraftView(View):
+    def post(self, request):
+        if not request.POST.get("processing"):
+            return render(request, 'c_activities/compiler/partials/save_draft_progress_bar.html')
+        else:
+            return self.process_save_draft(request)
+
+    def process_save_draft(self, request):
+        code = request.POST.get("compiler")
+        subject_id = request.POST.get("subject_id")
+        activity_id = request.POST.get("activity_id")
+        submission_id = request.POST.get("submission_id")
+
+        student = request.user
+
+        subject = None
+        activity = None
+        subject = select_subject_by_id(subject_id)
+        activity = select_activity_by_id(activity_id)
+        if not subject and not activity:
+            return redirect("a_classroom:index")
+
+        existing = get_student_submission_by_id(student, activity)
+        
+        if existing and existing.status == "submitted":
+            messages.error(request, "You have already submitted this activity.")
+            response = HttpResponse()
+            response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
+            return response
+        
+        submission, created = ActivitySubmission.objects.update_or_create(
+            student=student,
+            activity=activity,
+            defaults={
+                "saved_code": code,
+                "status": "in_progress"
+            }			
+        )
+        
+        if created:
+            messages.success(request, "Draft saved successfully!")
+        else:
+            messages.success(request, "Draft updated successfully!")
+        
+        response = HttpResponse()
+        response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
+        return response
+
+class UnsubmitView(View):
+  def post(self, request):
+      if not request.POST.get("processing"):
+          return render(request, 'c_activities/compiler/partials/unsubmit_progress_bar.html')
+      else:
+          return self.process_unsubmit(request)
+
+  def process_unsubmit(self, request):
+      subject_id = request.POST.get("subject_id")
+      activity_id = request.POST.get("activity_id")
+      submission_id = request.POST.get("submission_id")
+
+      subject = None
+      activity = None
+      subject = select_subject_by_id(subject_id)
+      activity = select_activity_by_id(activity_id)
+      if not subject and not activity:
+          return redirect("a_classroom:index")
+
+      student = request.user
+
+      submission = get_submission_by_id(submission_id)
+      if not submission:
+          response = HttpResponse()
+          response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
+          return response
+
+      if submission.submitted_code:
+          submission.saved_code = submission.submitted_code
+      submission.status = "in_progress"
+      submission.save()
+      
+      response = HttpResponse()
+      response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
+      return response
