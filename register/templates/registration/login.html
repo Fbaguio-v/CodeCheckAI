@@ -12,7 +12,7 @@
       {% csrf_token %}
 
       <!-- Optional visible heading for accessibility -->
-      <h1 class="text-center text-2xl font-semibold text-gray-900">Login</h1>
+      <h1 class="text-center text-2xl font-semibold text-gray-900">Login to CodeCheckAI</h1>
 
       <!-- Email -->
       <div class="flex flex-col w-full gap-1">
@@ -30,9 +30,27 @@
         <label for="id_password" class="text-sm font-medium text-gray-800 sm:text-base">
           Password
         </label>
-        <input type="password" name="password" id="id_password"
-               class="w-full h-10 sm:h-12 px-3 sm:px-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
-               placeholder="Password" required>
+        <div class="relative border-black">
+          <input type="password" name="password" id="id_password"
+                 class="w-full h-10 sm:h-12 px-3 sm:px-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
+                 placeholder="Password" required>
+          <button type="button" id="toggle_password_login" aria-label="Toggle password visibility"
+                  class="absolute inset-y-0 right-0 flex items-center pr-3 p-2 text-gray-600 hover:text-gray-800 focus:outline-none z-20">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 icon-show" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 icon-hide hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 012.223-3.477M6.18 6.18A9.969 9.969 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.964 9.964 0 01-1.05 2.266M3 3l18 18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Show password checkbox -->
+      <div class="flex items-center gap-2 text-sm">
+        <input id="show_password_checkbox" type="checkbox" class="h-4 w-4 text-black focus:ring-black border-gray-300" />
+        <label for="show_password_checkbox" class="text-gray-700 select-none">Show Password</label>
       </div>
 
       <!-- Button -->
@@ -53,4 +71,55 @@
     </form>
   </div>
 </div>
+<script>
+// Toggle password visibility (keeps template variables unchanged)
+function togglePassword(inputId, btnId) {
+  const input = document.getElementById(inputId);
+  const btn = document.getElementById(btnId);
+  if (!input || !btn) return;
+  const showIcon = btn.querySelector('.icon-show');
+  const hideIcon = btn.querySelector('.icon-hide');
+  if (input.type === 'password') {
+    input.type = 'text';
+    if (showIcon) showIcon.classList.add('hidden');
+    if (hideIcon) hideIcon.classList.remove('hidden');
+  } else {
+    input.type = 'password';
+    if (showIcon) showIcon.classList.remove('hidden');
+    if (hideIcon) hideIcon.classList.add('hidden');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  const btn = document.getElementById('toggle_password_login');
+  const cb = document.getElementById('show_password_checkbox');
+  const input = document.getElementById('id_password');
+  if (btn) {
+    btn.setAttribute('type','button');
+    btn.classList.add('z-10');
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      togglePassword('id_password','toggle_password_login');
+      if (cb && input) cb.checked = (input.type === 'text');
+    });
+  }
+  if (cb && input) {
+    cb.addEventListener('change', function () {
+      if (cb.checked) {
+        input.type = 'text';
+        const showIcon = btn?.querySelector('.icon-show');
+        const hideIcon = btn?.querySelector('.icon-hide');
+        if (showIcon) showIcon.classList.add('hidden');
+        if (hideIcon) hideIcon.classList.remove('hidden');
+      } else {
+        input.type = 'password';
+        const showIcon = btn?.querySelector('.icon-show');
+        const hideIcon = btn?.querySelector('.icon-hide');
+        if (showIcon) showIcon.classList.remove('hidden');
+        if (hideIcon) hideIcon.classList.add('hidden');
+      }
+    });
+  }
+});
+</script>
 {% endblock %}

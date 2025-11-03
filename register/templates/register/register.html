@@ -1,12 +1,12 @@
-<!-- ...existing code... -->
 {% extends 'a_classroom/base.html' %}
 {% load static tailwind_tags %}
 {% block title %} Register {% endblock %}
 {% tailwind_css %}
 {% block content %}
 
-<div class="min-h-screen flex items-center justify-center bg-white px-4 py-10">
-  <div class="w-full max-w-md mx-auto bg-white border border-gray-300 rounded-xl shadow-xl p-6 sm:p-8">
+<div class="min-h-screen lg:min-h-[85vh] flex items-center justify-center bg-white px-4 py-10 lg:py-20">
+  <!-- Constrain width so it never becomes too wide on large screens (matches login.html) -->
+  <div class="w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto bg-white border border-gray-300 rounded-xl shadow-xl p-6 sm:p-8">
     <form action="{% url 'register:register' %}" method="post" class="w-full flex flex-col items-stretch gap-4" novalidate>
       {% csrf_token %}
 
@@ -60,40 +60,70 @@
         </div>
       </div>
 
+      <h1 class="text-center text-2xl font-semibold text-gray-900">Register to CodeCheckAI</h1>
+
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="flex flex-col gap-1">
-          <label for="id_first_name" class="text-base font-semibold sm:text-lg lg:text-xl">First Name</label>
+          <label for="id_first_name" class="text-sm font-medium text-gray-800 sm:text-base">First Name</label>
           <input type="text" name="first_name" id="id_first_name"
-                 class="w-full h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black sm:h-12 sm:px-4"
+                 class="w-full h-10 sm:h-12 px-3 sm:px-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
                  value="{{ form.first_name.value|default:'' }}" placeholder="First Name" required>
         </div>
 
         <div class="flex flex-col gap-1">
-          <label for="id_last_name" class="text-base font-semibold sm:text-lg lg:text-xl">Last Name</label>
+          <label for="id_last_name" class="text-sm font-medium text-gray-800 sm:text-base">Last Name</label>
           <input type="text" name="last_name" id="id_last_name"
-                 class="w-full h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black sm:h-12 sm:px-4"
+                 class="w-full h-10 sm:h-12 px-3 sm:px-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
                  value="{{ form.last_name.value|default:'' }}" placeholder="Last Name" required>
         </div>
 
         <div class="sm:col-span-2 flex flex-col gap-1">
-          <label for="id_email" class="text-base font-semibold sm:text-lg lg:text-xl">Email Address</label>
+          <label for="id_email" class="text-sm font-medium text-gray-800 sm:text-base">CCA Email Address</label>
           <input type="email" name="email" id="id_email"
-                 class="w-full h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black sm:h-12 sm:px-4"
+                 class="w-full h-10 sm:h-12 px-3 sm:px-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
                  value="{{ form.email.value|default:'' }}" placeholder="Email Address" required>
         </div>
 
         <div class="flex flex-col gap-1">
-          <label for="id_password1" class="text-base font-semibold sm:text-lg lg:text-xl">Password</label>
-          <input type="password" name="password1" id="id_password1"
-                 class="w-full h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black sm:h-12 sm:px-4"
-                 placeholder="Password" required>
+          <label for="id_password1" class="text-sm font-medium text-gray-800 sm:text-base">Password</label>
+          <div class="relative">
+            <input type="password" name="password1" id="id_password1"
+                   class="w-full h-10 sm:h-12 px-3 sm:px-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
+                   placeholder="Password" required>
+            <button type="button" id="toggle_password1" aria-label="Toggle password visibility" class="absolute inset-y-0 right-0 flex items-center pr-3 p-2 text-gray-600 hover:text-gray-800 focus:outline-none z-20">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 icon-show" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 icon-hide hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 012.223-3.477M6.18 6.18A9.969 9.969 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.964 9.964 0 01-1.05 2.266M3 3l18 18" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <div class="flex flex-col gap-1">
-          <label for="id_password2" class="text-base font-semibold sm:text-lg lg:text-xl">Confirm Password</label>
-          <input type="password" name="password2" id="id_password2"
-                 class="w-full h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black sm:h-12 sm:px-4"
-                 placeholder="Confirm Password" required>
+          <label for="id_password2" class="text-sm font-medium text-gray-800 sm:text-base">Confirm Password</label>
+          <div class="relative">
+            <input type="password" name="password2" id="id_password2"
+                   class="w-full h-10 sm:h-12 px-3 sm:px-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
+                   placeholder="Confirm Password" required>
+            <button type="button" id="toggle_password2" aria-label="Toggle confirm password visibility" class="absolute inset-y-0 right-0 flex items-center pr-3 p-2 text-gray-600 hover:text-gray-800 focus:outline-none z-20">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 icon-show" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 icon-hide hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 012.223-3.477M6.18 6.18A9.969 9.969 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.964 9.964 0 01-1.05 2.266M3 3l18 18" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Show password checkbox -->
+        <div class="flex items-center gap-2 text-sm">
+          <input id="show_password_checkbox_reg" type="checkbox" class="h-4 w-4 text-black focus:ring-black border-gray-300" />
+          <label for="show_password_checkbox_reg" class="text-gray-700 select-none">Show Password</label>
         </div>
       </div>
 
@@ -115,7 +145,7 @@
       </div>
 
       <button type="submit"
-              class="w-full px-4 py-2 text-sm sm:text-base md:text-lg text-white bg-black rounded-md shadow-md hover:bg-gray-800 transition cursor-pointer">
+              class="w-full px-4 py-2 text-sm sm:text-base md:text-lg text-white bg-black rounded-md shadow-lg hover:bg-gray-800 transition-colors cursor-pointer">
         Register
       </button>
 
@@ -369,6 +399,70 @@ document.addEventListener('keydown', function(event) {
         closeModal('privacyModal');
     }
 });
+
+// Password visibility helpers for register
+function togglePassword(inputId, btnId) {
+    const input = document.getElementById(inputId);
+    const btn = document.getElementById(btnId);
+    if (!input || !btn) return;
+    const showIcon = btn.querySelector('.icon-show');
+    const hideIcon = btn.querySelector('.icon-hide');
+    if (input.type === 'password') {
+        input.type = 'text';
+        if (showIcon) showIcon.classList.add('hidden');
+        if (hideIcon) hideIcon.classList.remove('hidden');
+    } else {
+        input.type = 'password';
+        if (showIcon) showIcon.classList.remove('hidden');
+        if (hideIcon) hideIcon.classList.add('hidden');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  const t1 = document.getElementById('toggle_password1');
+  const t2 = document.getElementById('toggle_password2');
+  const cb = document.getElementById('show_password_checkbox_reg');
+  const i1 = document.getElementById('id_password1');
+  const i2 = document.getElementById('id_password2');
+  if (t1) {
+    t1.setAttribute('type','button');
+    t1.addEventListener('click', function(e){
+      e.preventDefault();
+      togglePassword('id_password1','toggle_password1');
+      if (cb) cb.checked = (i1.type==='text');
+    });
+  }
+  if (t2) {
+    t2.setAttribute('type','button');
+    t2.addEventListener('click', function(e){
+      e.preventDefault();
+      togglePassword('id_password2','toggle_password2');
+      if (cb) cb.checked = (i2.type==='text');
+    });
+  }
+  if (cb) {
+    cb.addEventListener('change', function(){
+      const checked = cb.checked;
+      if (i1) i1.type = checked ? 'text' : 'password';
+      if (i2) i2.type = checked ? 'text' : 'password';
+      const show1 = t1?.querySelector('.icon-show');
+      const hide1 = t1?.querySelector('.icon-hide');
+      const show2 = t2?.querySelector('.icon-show');
+      const hide2 = t2?.querySelector('.icon-hide');
+      if (checked) {
+        if (show1) show1.classList.add('hidden');
+        if (hide1) hide1.classList.remove('hidden');
+        if (show2) show2.classList.add('hidden');
+        if (hide2) hide2.classList.remove('hidden');
+      } else {
+        if (show1) show1.classList.remove('hidden');
+        if (hide1) hide1.classList.add('hidden');
+        if (show2) show2.classList.remove('hidden');
+        if (hide2) hide2.classList.add('hidden');
+      }
+    });
+  }
+});
 </script>
+
 {% endblock %}
-<!-- ...existing code... -->
