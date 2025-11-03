@@ -4,8 +4,9 @@
      hx-swap="outerHTML"
      hx-vals='{"processing": "true", "action": "create_activity"}'>
     
-    <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
-        <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 70%"></div>
+    <div class="flex flex-col items-center justify-center space-y-3 p-1">
+        <div role="status" aria-live="polite" class="flex items-center justify-center">
+            <div class="w-4 h-4 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" aria-hidden="true"></div>
+        </div>
     </div>
-    <p class="text-center text-sm text-gray-600">Creating Activity...</p>
 </div>
