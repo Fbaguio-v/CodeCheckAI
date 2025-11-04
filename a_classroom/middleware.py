@@ -72,7 +72,6 @@ class AdminOnlyMiddleware:
         "get-users",
         "pending-users",
         "get-subjects",
-        "archived-subjects",
     ]
 
     def __init__(self, get_response):

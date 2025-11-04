@@ -4,7 +4,7 @@
 {% if request.user.is_authenticated %}
     {% if request.user.userprofile.role == "Instructor" or request.user.userprofile.role == "Student" %}
         {% if subjects %}
-            <!-- Responsive Scrollable Subjects -->
+            <!-- Responsive Scrollable Subjects (updated to match Admin card style) -->
             <div class="flex-1 overflow-y-auto scrollbar-hidden 
                         max-h-[500px] sm:max-h-[600px] md:max-h-[700px] lg:max-h-[750px] 
                         px-2 sm:px-3 md:px-4">
@@ -12,11 +12,11 @@
                     {% for subject in subjects %}
                         <li class="block w-full">
                             <a href="{% url 'a_classroom:v' subject.subject_id %}?from={{ request.path }}"
-                               class="flex flex-col justify-center p-2 text-black border-2 border-black rounded-lg sm:p-3 md:p-4 hover:shadow-lg hover:bg-gray-300">
+                               class="block text-black border-2 border-black rounded-lg hover:shadow-lg hover:bg-gray-300 p-2 sm:p-3 md:p-4 m-1 sm:m-2">
                                 <h1 class="text-base font-bold sm:text-lg md:text-xl">
                                     {{ subject.course_code }}
                                 </h1>
-                                <p class="text-sm sm:text-base md:text-lg">{{ subject.section.name }}</p>
+                                <p class="text-sm sm:text-base md:text-lg text-gray-600">{{ subject.section.name }}</p>
                             </a>
                         </li>
                     {% endfor %}
@@ -25,7 +25,31 @@
         {% endif %}
     {% elif request.user.userprofile.role == "Admin" %}
 
-        <h1 class="text-black">Hello world!</h1>
+        <div class="mt-2">
+            <ul class="space-y-3">
+                <li>
+                    <a href="{% url 'a_classroom:get-users' %}?from={{ request.path }}" 
+                       class="block p-3 text-black border-2 border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
+                        <h1 class="text-base font-bold">Users</h1>
+                        <p class="text-sm text-gray-600">Manage all users</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'a_classroom:pending-users' %}?from={{ request.path }}" 
+                       class="block p-3 text-black border-2 border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
+                        <h1 class="text-base font-bold">Pending Users</h1>
+                        <p class="text-sm text-gray-600">Approve pending accounts</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'a_classroom:get-subjects' %}?from={{ request.path }}" 
+                       class="block p-3 text-black border-2 border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
+                        <h1 class="text-base font-bold">Subjects</h1>
+                        <p class="text-sm text-gray-600">View and manage subjects</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
         
     {% endif %}
 {% endif %}

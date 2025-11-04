@@ -146,16 +146,11 @@ class CreateActivityView(View):
             response["HX-Redirect"] = f"/c/subject/{subject_id}/"
             return response
 
-        if action_type == "create_activity":
-            if request.headers.get("HX-Request"):
-                if not request.POST.get("processing"):
-                    return render(request, "c_activities/activity/partial/progress_bar.html")
-                else:
-                    return self.process_activity_creation(request)
-
+        if not request.POST.get("processing"):
+            return render(request, "c_activities/activity/partial/progress_bar.html")
+        else:
             return self.process_activity_creation(request)
 
-        return redirect("a_classroom:index")
     
     def process_activity_creation(self, request):
         try:
