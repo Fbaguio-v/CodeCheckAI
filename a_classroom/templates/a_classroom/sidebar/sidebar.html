@@ -22,9 +22,10 @@
                     {% endfor %}
                 </ul>
             </div>
-        {% else %}
-            <h1 class="text-sm text-center text-black sm:text-base md:text-lg">No subjects available</h1>
         {% endif %}
+    {% elif request.user.userprofile.role == "Admin" %}
+
+        <h1 class="text-black">Hello world!</h1>
         
     {% endif %}
 {% endif %}

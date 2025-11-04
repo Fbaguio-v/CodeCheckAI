@@ -10,7 +10,6 @@ from django.conf import settings
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        # Determine the user's role
         if instance.is_staff or instance.is_superuser:
             role = Role.ADMIN
             instance.is_active = True
@@ -21,13 +20,12 @@ def create_user_profile(sender, instance, created, **kwargs):
             role = Role.INSTRUCTOR
             instance.is_active = False
 
-        # Set a default password if none provided
         if not instance.has_usable_password():
             instance.set_password("123")
 
         instance.save(update_fields=["is_active", "password"])
 
-        UserProfile.objects.create(user=instance, role=role)
+        UserProfile.objects.create(user=instance, role=role, image=None)
 
         if not instance.is_active:
             try:
