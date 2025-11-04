@@ -1,34 +1,149 @@
-{% load static tailwind_tags %}
-{% tailwind_css %}
-<div class="h-full w-full flex flex-col">
-    <div class="flex-1 min-h-0 overflow-auto">
-        <table id="subjects-table" class="table-fixed w-full border border-solid border-gray-300">
-            <thead class="bg-gray-800 text-white h-[60px] border border-solid border-gray-300 sticky top-0">
-                <tr class="text-left">
-                    <th class="px-4 py-2">Course Code</th>
-                    <th class="px-4 py-2">Subject</th>
-                    <th class="px-4 py-2">Section</th>
-                    <th class="px-4 py-2">Instructor</th>
-                    <th class="px-4 py-2">Activities</th>
-                </tr>
-            </thead>
-            <tbody class="w-full">
-                {% for subject in subjects %}
-                    <tr class="h-[50px] border border-solid border-gray-300">
-                        <td class="px-4 py-2">{{ subject.course_code }}</td>
-                        <td class="px-4 py-2">{{ subject.name }}</td>
-                        <td class="px-4 py-2">{{ subject.section.name }}</td>
-                        <td class="px-4 py-2">{{ subject.instructor.get_full_name }}</td>
-                        <td class="px-4 py-2">
-                            {{ subject.activities.count }}
-                        </td>
+{% extends 'a_classroom/base.html' %}
+{% block content %}
+<div class="h-full w-full">
+    <div class="h-full bg-gray-100 border-2 border-black rounded-lg p-3 sm:p-4 shadow-xl flex flex-col min-h-0">
+        <!-- Search input for subjects (keep name and onkeyup) -->
+        <div class="mb-3">
+            <input id="subjects-search" type="text"
+                   name="search_subject"
+                   placeholder="Search subjects..."
+                   class="w-full h-10 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                   onkeyup="filterTable('subjects-table', this.value, [0, 1, 2, 3])">
+        </div>
+
+        <div class="flex-1 min-h-0 overflow-y-auto">
+            <table id="subjects-table" class="table-fixed w-full border border-solid border-gray-300">
+                <thead class="bg-gray-800 text-white h-[60px] border border-solid border-gray-300 sticky top-0">
+                    <tr class="text-left">
+                        <th class="px-4 py-2">Course Code</th>
+                        <th class="px-4 py-2">Subject</th>
+                        <th class="px-4 py-2">Section</th>
+                        <th class="px-4 py-2">Instructor</th>
+                        <th class="px-4 py-2">Activities</th>
                     </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center py-4">No subject available.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="w-full">
+                    {% for subject in subjects %}
+                        <tr class="h-[50px] border border-solid border-gray-300">
+                            <td class="px-4 py-2">{{ subject.course_code }}</td>
+                            <td class="px-4 py-2">{{ subject.name }}</td>
+                            <td class="px-4 py-2">{{ subject.section.name }}</td>
+                            <td class="px-4 py-2">{{ subject.instructor.get_full_name }}</td>
+                            <td class="px-4 py-2">{{ subject.activities.count }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4">No subject available.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination controls for subjects -->
+        <div id="subjects-pagination" class="flex items-center justify-between mt-3">
+            <button id="subjects-prev-btn" class="w-32 h-10 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200 opacity-50 cursor-not-allowed" disabled>
+                Previous
+            </button>
+            <div id="subjects-page-indicator" class="text-sm text-gray-600">Page 1</div>
+            <button id="subjects-next-btn" class="w-32 h-10 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200 opacity-50 cursor-not-allowed" disabled>
+                Next
+            </button>
+        </div>
     </div>
 </div>
+
+<script>
+// Local filter + pagination for subjects table. Preserves template variables.
+(function(){
+    const pageSizeDefault = 10;
+    const tableId = 'subjects-table';
+    const prevBtn = document.getElementById('subjects-prev-btn');
+    const nextBtn = document.getElementById('subjects-next-btn');
+    const pageIndicator = document.getElementById('subjects-page-indicator');
+    const searchInput = document.getElementById('subjects-search');
+
+    let state = { pageSize: pageSizeDefault, currentPage: 1, rows: [] };
+
+    function init() {
+        const table = document.getElementById(tableId);
+        if (!table) return;
+        const tbody = table.querySelector('tbody');
+        if (!tbody) return;
+
+        state.rows = Array.from(tbody.querySelectorAll('tr'));
+        state.rows.forEach(r => r.dataset.matches = '1');
+        state.currentPage = 1;
+        renderPage();
+
+        prevBtn.onclick = () => { if (state.currentPage > 1) { state.currentPage--; renderPage(); } };
+        nextBtn.onclick = () => { const totalPages = Math.max(1, Math.ceil(getMatchedRows().length / state.pageSize)); if (state.currentPage < totalPages) { state.currentPage++; renderPage(); } };
+
+        if (searchInput) {
+            searchInput.onkeyup = (e) => { filterTable(tableId, e.target.value, [0,1,2,3]); };
+        }
+    }
+
+    function getMatchedRows() { return state.rows.filter(r => r.dataset.matches !== '0'); }
+
+    function renderPage() {
+        const matched = getMatchedRows();
+        const totalPages = Math.max(1, Math.ceil(matched.length / state.pageSize));
+        if (state.currentPage > totalPages) state.currentPage = totalPages;
+
+        state.rows.forEach(r => r.style.display = 'none');
+
+        const start = (state.currentPage - 1) * state.pageSize;
+        const end = start + state.pageSize;
+        const pageRows = matched.slice(start, end);
+        pageRows.forEach(r => r.style.display = '');
+
+        pageIndicator.textContent = `Page ${state.currentPage} of ${totalPages}`;
+        prevBtn.disabled = state.currentPage <= 1;
+        nextBtn.disabled = state.currentPage >= totalPages;
+        prevBtn.classList.toggle('opacity-50', prevBtn.disabled);
+        nextBtn.classList.toggle('opacity-50', nextBtn.disabled);
+        prevBtn.classList.toggle('cursor-not-allowed', prevBtn.disabled);
+        nextBtn.classList.toggle('cursor-not-allowed', nextBtn.disabled);
+    }
+
+    // Shared filterTable function
+    window.filterTable = function(tableId, searchText, searchColumns) {
+        const table = document.getElementById(tableId);
+        if (!table) return;
+        const tbody = table.getElementsByTagName('tbody')[0];
+        const rows = Array.from(tbody.getElementsByTagName('tr'));
+        const searchLower = (searchText || '').toLowerCase();
+
+        rows.forEach(row => {
+            if (!searchLower) {
+                row.dataset.matches = '1';
+            } else {
+                let found = false;
+                for (let colIndex of searchColumns) {
+                    const cell = row.cells[colIndex];
+                    if (cell && cell.textContent.toLowerCase().includes(searchLower)) {
+                        found = true;
+                        break;
+                    }
+                }
+                row.dataset.matches = found ? '1' : '0';
+            }
+        });
+
+        state.currentPage = 1;
+        renderPage();
+    };
+
+    // Re-init when HTMX updates this fragment (if used as HTMX target)
+    const container = document.querySelector('#' + tableId) ? document.getElementById(tableId).parentElement : null;
+    if (container) {
+        const observer = new MutationObserver((mutations) => { setTimeout(init, 50); });
+        observer.observe(container, { childList: true, subtree: true });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => setTimeout(init, 100));
+    setTimeout(init, 150);
+})();
+</script>
+{% endblock %}

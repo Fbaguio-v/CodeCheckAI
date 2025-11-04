@@ -327,8 +327,14 @@ class HtmxTemplateView(View):
     htmx_trigger = None
     context_name = None
 
+    def get_queryset(self):
+        """Override this method in subclasses"""
+        if callable(self.queryset):
+            return self.queryset()
+        return self.queryset
+
     def get(self, request: HttpRequest):
-        data = self.queryset() if callable(self.queryset) else self.queryset
+        data = self.get_queryset()
         trigger = request.headers.get("HX-Trigger")
 
         if request.headers.get("HX-Request") == "true" and trigger == self.htmx_trigger:
@@ -336,26 +342,49 @@ class HtmxTemplateView(View):
 
         return render(request, self.template, {self.context_name: data})
 
+def get_admin_dashboard(request):
+    users = User.objects.all()
+    trigger = request.headers.get("HX-Trigger")
+
+    if request.headers.get("HX-Request") == "true" and trigger == "all-user":
+        return render(request, 'a_classroom/a.admin/users/users.html', {"all_users": users})
+
+    return render(request, 'a_classroom/a.admin/admin.html', {"all_users": users})
+
+def get_pending_users(request):
+    pending_users = User.objects.filter(is_active=False)
+    return render(request, 'a_classroom/a.admin/users/pending/pending.users.html', {"pending_users": pending_users})
+
+def get_subject_list(request):
+    subjects = Subject.objects.all()
+    return render(request, 'a_classroom/a.admin/users/subject/subjects.html', {"subjects": subjects})
+
 class AdminDashboardView(HtmxTemplateView):
-    queryset = User.objects.all
+    def get_queryset(self):
+        return User.objects.all()
+    
     template = 'a_classroom/a.admin/admin.html'
     htmx_template = 'a_classroom/a.admin/users/users.html'
     htmx_trigger = 'all-user'
     context_name = 'all_users'
 
-class PendingUsersView(HtmxTemplateView):
-    queryset = lambda self: User.objects.filter(is_active=False)
-    template = 'a_classroom/a.admin/users/admin.html'
-    htmx_template = 'a_classroom/a.admin/users/pending/pending.users.html'
-    htmx_trigger = 'pending-users'
-    context_name = 'pending_users'
+# class PendingUsersView(HtmxTemplateView):
+#     def get_queryset(self):
+#         return User.objects.filter(is_active=False)
+    
+#     template = 'a_classroom/a.admin/admin.html'
+#     htmx_template = 'a_classroom/a.admin/users/pending/pending.users.html'
+#     htmx_trigger = 'pending-users'
+#     context_name = 'pending_users'
 
-class SubjectListView(HtmxTemplateView):
-    queryset = Subject.objects.all
-    template = 'a_classroom/a.admin/users/admin.html'
-    htmx_template = 'a_classroom/a.admin/users/subject/subjects.html'
-    htmx_trigger = 'subjects'
-    context_name = 'subjects'
+# class SubjectListView(HtmxTemplateView):
+#     def get_queryset(self):
+#         return Subject.objects.all()
+    
+#     template = 'a_classroom/a.admin/admin.html'
+#     htmx_template = 'a_classroom/a.admin/users/subject/subjects.html'
+#     htmx_trigger = 'subjects'
+#     context_name = 'subjects'
 
 class ApproveUserAdminView(View):
     def post(self, request, user_id):
@@ -398,11 +427,7 @@ Admin Team
                 messages.error(request, f"Email send failed : {e}")
                 
             pending_users = User.objects.filter(is_active=False)
-            return render(
-                request,
-                'a_classroom/a.admin/users/pending/pending.users.html',
-                {"pending_users": pending_users}
-            )
+            return redirect("a_classroom:get-users")
 
         return redirect("a_classroom:index")
 

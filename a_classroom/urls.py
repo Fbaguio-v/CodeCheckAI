@@ -15,8 +15,8 @@ urlpatterns = [
     path("settings/", views.user_settings, name="setting"),
     path("edit/", views.EditAccountView.as_view(), name="edit-account"),
     path("users/", views.AdminDashboardView.as_view(), name="get-users"),
-    path("pending/", views.PendingUsersView.as_view(), name="pending-users"),
-    path("subjects/", views.SubjectListView.as_view(), name="get-subjects"),
+    path("pending/", views.get_pending_users, name="pending-users"),
+    path("subjects/", views.get_subject_list, name="get-subjects"),
     path("show/", views.prev_or_next_view, name="prev_or_next"),
     path("delete/<int:user_id>/", views.delete_account_creation, name="delete-pending")
 ]

@@ -4,30 +4,30 @@
 {% block title %} Settings {% endblock %}
 {% block content %}
 <div class="flex items-center justify-center w-full h-full">
-	<div id="parent-element" class="border border-solid border-gray-300 h-full w-[700px] gap-4 overflow-auto">
-		<div class="flex items-center justify-center text-white bg-gray-800">
+	<div id="parent-element" class="h-full w-[700px] bg-gray-100 border-2 border-black rounded-lg p-4 shadow-xl overflow-auto">
+		<div class="flex items-center justify-center text-white bg-gray-800 rounded-t-lg w-full">
 			<h2 class="p-4 text-3xl">Account Settings</h2>
 		</div>
 		<hr>
 
-		<div class="flex items-center justify-center">
+		<div class="flex items-center justify-center py-4">
 			<img src="{{ user_profile.get_image_url }}" 
             alt="Profile Image" class="rounded-circle shadow-lg h-[150px] w-[150px] object-cover border-2 border-solid border-black rounded-full m-2">
 		</div>
 
 		<div class="flex flex-col items-center justify-center w-full pt-3">
 			<label for="id_first_name" class="mb-2 text-1xl">First Name</label>
-			<input class="border border-solid border-gray-300 h-full w-[50%] p-2 rounded bg-gray-100" type="text" id="id_first_name" value="{{ user_profile.user.first_name }}" readonly>
+			<input class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-white" type="text" id="id_first_name" value="{{ user_profile.user.first_name }}" readonly>
 		</div>
 
 		<div class="flex flex-col items-center justify-center w-full pt-3">
 			<label for="id_last_name" class="mb-2 text-1x1">Last Name</label>
-			<input class="border border-solid border-gray-300 h-full w-[50%] p-2 rounded bg-gray-100" type="text" id="id_last_name" value="{{ user_profile.user.last_name }}" readonly>
+			<input class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-white" type="text" id="id_last_name" value="{{ user_profile.user.last_name }}" readonly>
 		</div>
 
 		<div class="flex flex-col items-center justify-center w-full pt-3">
 			<label for="id_email" class="mb-2 text-1x1">Email Address</label>
-			<input class="border border-solid border-gray-300 h-full w-[50%] p-2 rounded bg-gray-100" type="text" id="id_email" value="{{ email }}" readonly>
+			<input class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-white" type="text" id="id_email" value="{{ email }}" readonly>
 		</div>
 
 		<div class="flex items-center justify-center w-full pt-5">
