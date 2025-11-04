@@ -14,6 +14,7 @@ from openai import OpenAI
 import google.generativeai as genai
 from datetime import datetime
 import re, json, requests, time
+import traceback
 
 # Create your views here.
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
@@ -150,6 +151,15 @@ class CreateActivityView(View):
             due_at_raw = request.POST.get("id_due_at")
             criterias = request.POST.getlist("criteria")
 
+            if (not subject_id or not activity_type or not title or not description or 
+                not max_score or not due_at_raw or not criterias or
+                subject_id.strip() == "" or activity_type.strip() == "" or 
+                title.strip() == "" or description.strip() == "" or 
+                max_score.strip() == "" or due_at_raw.strip() == ""):
+                
+                messages.error(request, "Missing required fields")
+                return redirect(f"/c/subject/{subject_id}")
+
             values = []
             for val in criterias:
                 try:
@@ -226,7 +236,6 @@ class CreateActivityView(View):
             return response
 
         except Exception as e:
-            import traceback
             
             messages.error(request, f"Error creating activity: {str(e)}")
             return redirect(f"/a/?action=create-activity&subject_id={subject_id}")
