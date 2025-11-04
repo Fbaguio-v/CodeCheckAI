@@ -69,7 +69,7 @@
                 </ul>
             </nav>
 
-        {% if request.user.is_authenticated and request.path != '/p/' and request.user.userprofile.role != "Admin" %}
+        {% if request.user.is_authenticated and request.path != '/p/' %}
             <aside id="sidebar" class="relative flex flex-col justify-between p-4 overflow-y-auto text-white bg-gray-100 border-2 shadow-xl">
                 <div
                     id="subjects"

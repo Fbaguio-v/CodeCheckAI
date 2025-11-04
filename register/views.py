@@ -25,7 +25,6 @@ class RegisterView(View):
                 return redirect('register:login')
             except Exception as e:
                 messages.error(request, f"Error creating user account: {e}")
-# ...existing code...
         else:
             # Show only the first form error message (one at a time)
             first_error = next(iter(form.errors.items()), None)
