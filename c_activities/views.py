@@ -129,6 +129,22 @@ class CreateActivityView(View):
 
     def post(self, request):
         action_type = request.POST.get("action")
+        criterias = request.POST.getlist("criteria")
+        subject_id = request.POST.get("subject_id")
+        values = []
+        for val in criterias:
+            try:
+                values.append(int(val) if val else 0)
+            except (ValueError, TypeError):
+                values.append(0)
+        
+        total = sum(values)
+
+        if total > 100:
+            messages.error(request, f"Criteria total cannot exceed 100%")
+            response = HttpResponse()
+            response["HX-Redirect"] = f"/c/subject/{subject_id}/"
+            return response
 
         if action_type == "create_activity":
             if request.headers.get("HX-Request"):
