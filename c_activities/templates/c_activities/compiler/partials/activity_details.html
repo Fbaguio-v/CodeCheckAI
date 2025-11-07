@@ -3,45 +3,48 @@
 <div class="flex items-center justify-center h-full w-[700px]">
     <div class="flex flex-col justify-start border bg-gray-100 border-gray-500 rounded h-[95%] w-[95%] p-4 overflow-hidden">
         <!-- Scrollable content area -->
-        <div class="h-full overflow-y-auto pr-2 font-mono text-sm leading-5">
+        <div class="h-full overflow-y-auto pr-2 leading-5">
             <p class="pt-3 pb-4 text-3xl font-bold text-center">{{ activity.title }}</p>
 
             <div class="overflow-auto scrollbar-hidden">
-                <p class="justify-start pb-3 pr-3 text-2xl text-left">
+                <p class="justify-start pb-3 pr-3 text-sm font-medium text-gray-800 sm:text-base text-left">
                     <span class="font-bold">Instruction:</span> {{ activity.description }}
                 </p> 
             </div>
 
-            <p class="pb-3 text-2xl text-left">
+            <p class="pb-3 text-sm font-medium text-gray-800 sm:text-base text-left">
                 <span class="font-bold">Max score:</span>{{ activity.max_score }}
             </p>
+            
+            <p class="pb-3 text-sm font-medium text-gray-800 sm:text-base text-left">
+                <span class="font-bold">Language:</span>{{ activity.language }}
+            </p>
 
-            <p class="pb-3 text-2xl text-left">
+            <p class="pb-3 text-sm font-medium text-gray-800 sm:text-base text-left">
                 <span class="font-bold">Due:</span>{{ activity.due_at }}
             </p>
 
             {% if activity.type == "quiz" %}
-                <p class="pb-2 text-2xl text-left">
+                <p class="pb-2 text-sm font-medium text-gray-800 sm:text-base text-left">
                     <span class="font-bold">Max Attempt : </span>{{ activity.max_attempt }}
                 </p>
 
-                <p class="pb-2 text-2xl text-left">
+                <p class="pb-2 text-sm font-medium text-gray-800 sm:text-base text-left">
                     <span class="font-bold">Attempt Number : </span>{{ submission_count }}
                 </p>
 
-                <p class="pb-2 text-2xl text-left">
+                <p class="pb-2 text-sm font-medium text-gray-800 sm:text-base text-left">
                     <span class="font-bold">Highest Score : </span>{{ highest_score }}
                 </p>
 
                 {% if activity_submissions.0.status == "returned" %}
-                    <p class="pb-2 text-2xl text-left">{{ highest_feedback }}</p>
+                    <p class="pb-2 text-sm font-medium text-gray-800 sm:text-base text-left">{{ highest_feedback }}</p>
                 {% endif %}
             {% endif %}
             
             {% if activity_submissions.0.status == "returned" and activity.type == "activity" %}
                 <br><br>
-                <p class="pb-2 text-2xl text-left">{{ activity_submissions.0.feedback }}</p>
-                <p class="pb-2 text-2xl text-left">{{ activity_submissions.0.score }}</p>
+                <p class="pb-2 text-sm font-medium text-gray-800 sm:text-base text-left">{{ activity_submissions.0.feedback }}</p>
             {% endif %}
         </div>
     </div>

@@ -20,7 +20,7 @@
             </div>
             <textarea id="compiler"
                 name="compiler"
-                class="w-full h-full p-2 overflow-y-scroll font-mono text-sm leading-5 bg-gray-200 border resize-none scrollbar-hidden focus:ring focus:ring-black"
+                class="w-full h-full p-2 overflow-y-scroll text-sm leading-5 border resize-none scrollbar-hidden focus:ring focus:ring-black font-medium text-gray-800 sm:text-base"
                 style="resize: none;"
                 {% if submission.status == "submitted" or submission.status == "returned" %}
                     readonly
@@ -83,7 +83,7 @@
                 {% if activity.type == "quiz" %}
                     {% with server_time=current_time|date:'Y-m-d H:i:s' %}
                     <select name="language_id" id="language_id"
-                        class="w-full sm:w-[150px] px-6 py-2 text-white rounded-lg shadow-md {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
+                        class="w-full text-sm sm:text-base md:text-lg sm:w-[150px] px-6 py-2 text-white rounded-lg shadow-md {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
                         {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}disabled title="Quiz period has ended"{% else %}required title="Select programming language"{% endif %}>
                         <option value="71">Python</option>
                         <option value="62">Java</option>
@@ -95,7 +95,7 @@
                                 hx-post="{% url 'd_compiler:index' %}?type=quiz" 
                                 hx-include="#compiler, #language_id, input[name='activity_id'], input[name='subject_id']" 
                                 hx-target="#code-output" hx-swap="innerHTML"
-                                class="w-full sm:w-[150px] px-6 py-2 text-white rounded-lg shadow-md {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
+                                class="w-full text-sm sm:text-base md:text-lg sm:w-[150px] px-6 py-2 text-white rounded-lg shadow-md {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
                                 {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}disabled title="Quiz period has ended"{% else %}title="Run your code"{% endif %}>
                             Run Code
                         </button>
@@ -105,7 +105,7 @@
             </div>
         </div>
 
-        <div id="code-output" class="border border-gray-300 bg-gray-100 p-4 text-sm font-mono whitespace-pre-wrap overflow-auto h-[200px]">
+        <div id="code-output" class="border border-gray-300 bg-gray-100 text-sm font-mono overflow-auto h-[200px]">
         </div>
     </div>
 </div>

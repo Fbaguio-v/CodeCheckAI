@@ -4,7 +4,7 @@
 {% tailwind_css %}
 {% block content %}
 
-<div class="min-h-screen lg:min-h-[85vh] flex items-center justify-center bg-white px-4 py-10 lg:py-20">
+<div class="min-h-screen lg:min-h-[85vh] flex items-center justify-center bg-white lg:py-20 overflow-auto">
   <!-- Constrain width so it never becomes too wide on large screens (matches login.html) -->
   <div class="w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto bg-white border border-gray-300 rounded-xl shadow-xl p-6 sm:p-8">
     <form action="{% url 'register:register' %}" method="post" class="w-full flex flex-col items-stretch gap-4" novalidate>

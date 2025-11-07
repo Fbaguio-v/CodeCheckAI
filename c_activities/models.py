@@ -15,6 +15,7 @@ class Activity(models.Model):
     type = models.CharField(max_length=10, choices=ACTIVITY_TYPES, default='activity')
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    language = models.CharField(max_length=50, default='python')
     max_score = models.PositiveIntegerField(default=100)
     max_attempt = models.PositiveIntegerField(null=True, blank=True, default=3)
     created_at = models.DateTimeField(auto_now_add=True)

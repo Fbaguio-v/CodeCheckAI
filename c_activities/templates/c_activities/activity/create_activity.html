@@ -1,7 +1,7 @@
 {% load static tailwind_tags %}
 {% tailwind_css %}
 
-<div class="flex flex-col items-center justify-center h-full w-full py-10">
+<div class="flex flex-col items-center justify-center h-screen w-full">
     <div class="w-full max-w-xl border border-gray-300 p-6 rounded-lg shadow-sm">
     	<form class="flex flex-col space-y-4" method="post" action="{% url 'c_activities:create-activity' %}"
 			hx-post="{% url 'c_activities:create-activity' %}"
@@ -15,6 +15,13 @@
 				<option value="" disabled selected>Select type</option>
 				<option value="activity">Activity</option>
 				<option value="quiz">Quiz</option>
+			</select>
+
+			<label for="id_language" class="block font-semibold">Language</label>
+			<select id="id_language" name="language" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" required>
+				<option value="" disabled selected>Select type</option>
+				<option value="Python">Python</option>
+				<option value="Java">Java</option>
 			</select>
 
     		<label for="id_title" class="block font-semibold">Title</label>
@@ -32,10 +39,10 @@
 			<label for="id_due_at" class="block font-semibold">Due</label>
             <input id="id_due_at" name="id_due_at" type="datetime-local" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" required>
 
-						<div class="mt-8">
-	            	<h5 class="text-lg font-semibold mb-2">
-		            	Evaluation Criteria (up to 100%)
-	            	</h5>
+			<div>
+				<h5 class="text-lg font-semibold mb-2">
+					Evaluation Criteria (up to 100%)
+				</h5>
 	            <table class="w-full table-fixed border border-gray-300">
 	                <thead>
 	                    <tr class="bg-gray-100">

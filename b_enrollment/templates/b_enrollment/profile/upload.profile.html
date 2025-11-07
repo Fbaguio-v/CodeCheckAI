@@ -1,5 +1,5 @@
 <div class="flex items-center justify-center w-full h-full overflow-hidden">
-    <div id="parent-element" class="border border-solid border-gray-300 h-full w-[700px] gap-4">
+    <div id="parent-element" class="h-full w-[700px] gap-4">
             <div class="flex items-center justify-center text-white bg-gray-800">
                 <h2 class="p-4 text-3xl">Upload Profile</h2>
             </div>
@@ -23,6 +23,10 @@
                         class="border border-solid border-gray-300 w-[70%] p-2 rounded bg-black text-white cursor-pointer hover:bg-gray-600">
                         Upload
                     </button>
+                    <a href="{% url 'a_classroom:setting' %}?from={{ request.path }}" 
+                       class="border border-solid border-gray-300 w-[70%] p-2 rounded bg-black text-white cursor-pointer hover:bg-gray-600 text-center">
+                        Back
+                    </a>
                 </div>
             </form>
             </div>

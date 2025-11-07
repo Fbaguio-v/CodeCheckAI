@@ -27,17 +27,17 @@
             </div>
         {% endif %}
     </div>
-    <div class="col-span-2">
+    <div class="col-span-2 h-[calc(100vh-200px)]">
         {% if activities %}
-            <div class="flex flex-col items-center justify-center w-full">
+            <div class="flex flex-col items-center w-full h-full overflow-auto">
                 {% for activity in activities %}
                     <!-- Whole card clickable except dropdown -->
                     <div class="relative w-full max-w-3xl mt-5">
-                        <div class="flex items-center justify-between h-20 px-4 overflow-hidden leading-none text-left border border-gray-300 border-solid rounded-md shadow-xl bg-white hover:bg-gray-50 transition">
+                        <div class="flex items-center justify-between h-20 px-4 overflow-visible leading-none text-left border border-gray-300 border-solid rounded-md shadow-xl bg-white hover:bg-gray-50 transition">
                             
                             <!-- Whole left side clickable -->
                             <a href="{% url 'a_classroom:view-activity' activity.activity_id %}?subject_id={{ subject.subject_id }}&type={{ activity.type }}" 
-                            class="flex-1 block">
+                            class="flex-1 block text-sm font-medium text-gray-800 sm:text-base">
                                 <h1 class="font-medium">{{ activity.title }}</h1>
                             </a>
                             
@@ -49,7 +49,7 @@
                                         ⋮
                                     </button>
 
-                                    <div class="dropdown-menu hidden flex-col absolute right-0 top-full mt-2 w-32 bg-white rounded-md shadow-lg z-10">
+                                    <div class="dropdown-menu hidden flex-col absolute right-0 top-full mt-2 w-32 bg-white rounded-md shadow-lg z-50">
                                         {% if request.user.userprofile.role == "Instructor" %}
                                             <form hx-post="{% url 'c_activities:delete-activity' activity.activity_id %}" hx-swap="none" class="w-full">
                                                 {% csrf_token %}
@@ -66,11 +66,13 @@
                 {% endfor %}
             </div>
         {% else %}
-            <h1>No Activities Available</h1>
+            <div class="flex items-start justify-center w-full h-full pt-6">
+                <img src="/static/mysite_images/noclasswork.png" alt="No classwork available" class="object-contain opacity-75 block max-w-[300px] max-h-[300px]">
+            </div>
         {% endif %}
     </div>
     {% if request.user.is_authenticated and request.user.userprofile.role == "Instructor" %}
-        <div class="flex flex-col items-center justify-center gap-4 border-gray-300 rounded-lg shadow-lg h-50">
+        <div class="flex flex-col items-center justify-center gap-4 border-gray-300 rounded-lg shadow-lg h-50 text-sm font-medium text-gray-800 sm:text-base">
             <button
             name="action"
             value="create-activity"
