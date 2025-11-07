@@ -4,6 +4,6 @@ from . import views
 app_name = "b_enrollment"
 urlpatterns = [
 	path("", views.JoinClassView.as_view(), name="join-a-class"),
-	path("p/", views.UploadProfileView.as_view(), name="upload-profile"),
-	path("u/", views.UnenrollClassView.as_view(), name="unenroll"),
+	path("upload-profile/", views.UploadProfileView.as_view(), name="upload-profile"),
+	path("unenroll/", views.UnenrollClassView.as_view(), name="unenroll"),
 	]

@@ -118,6 +118,7 @@ class CompilerView(View):
 
                             ai_feedback = evaluate_student_code_with_openai(
                                 code=code,
+                                language=activity.language,
                                 instruction=instruction,
                                 examples=examples,
                                 criterias=criterias,
@@ -142,25 +143,24 @@ class CompilerView(View):
                                 submission.save()
 
                             output = f"""
-                            <div class="max-w-3xl mx-auto">
                               <div class="bg-white border border-gray-200 rounded-lg shadow overflow-hidden">
                                 <div class="p-4">
                                   <div class="flex items-center justify-between mb-3">
-                                    <h3 class="text-sm font-semibold">🏆 Quiz Result</h3>
-                                    <div class="text-sm text-gray-700">Score: <span class="font-medium">{score}</span></div>
+                                    <h3 class="text-sm font-medium text-gray-800 sm:text-base">🏆 Quiz Result</h3>
+                                    <div class="text-sm font-medium text-gray-800 sm:text-base">Score: <span class="font-medium">{score}</span></div>
                                   </div>
                                   <div class="bg-gray-800 text-gray-100 rounded-md p-3">
-                                    <h4 class="text-xs text-gray-300">📄 Program Output</h4>
-                                    <pre id="quiz-output-pre" class="mt-2 whitespace-pre-wrap text-sm bg-gray-900 text-green-300 rounded p-3 max-h-48 overflow-auto">{stdout or stderr or compile_output or message or status_description}</pre>
-                                    <div class="mt-2 text-xs text-gray-400">⏱️ Run Time: <span class="font-medium">{exec_time}</span></div>
+                                    <h4 class="text-sm font-medium text-gray-800 sm:text-base">📄 Program Output</h4>
+                                    <pre id="quiz-output-pre" class="mt-2 whitespace-pre-wrap text-sm bg-gray-900 text-green-300 font-medium sm:text-base rounded p-3 max-h-48 overflow-auto">{stdout or stderr or compile_output or message or status_description}</pre>
+                                    <div class="mt-2 text-xs font-medium text-gray-800 sm:text-base">⏱️ Run Time: <span class="font-medium">{exec_time}</span></div>
                                   </div>
                                   <div class="mt-3 bg-gradient-to-br from-white to-gray-50 border border-gray-100 rounded-md p-3">
                                     <h4 class="text-sm font-semibold">🤖 AI Feedback</h4>
-                                    <div class="mt-2 text-sm text-gray-700 leading-relaxed" id="quiz-ai-feedback">{feedback_section.replace('-', '<br>')}</div>
+                                    <div class="mt-2 text-sm font-medium text-gray-800 sm:text-base leading-relaxed" id="quiz-ai-feedback">{feedback_section.replace('-', '<br>')}</div>
                                   </div>
                                   <div class="mt-3 flex gap-2">
-                                    <button data-copy-target="quiz-output-pre" class="copy-btn inline-flex items-center gap-2 px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded text-white">Copy Output</button>
-                                    <button id="copy-quiz-feedback" class="inline-flex items-center px-3 py-1 text-xs bg-black text-white rounded">Copy Feedback</button>
+                                    <button data-copy-target="quiz-output-pre" class="copy-btn inline-flex items-center gap-2 px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 rounded text-white font-medium">Copy Output</button>
+                                    <button id="copy-quiz-feedback" class="inline-flex items-center px-3 py-1 text-sm font-medium sm:text-base bg-black text-white rounded">Copy Feedback</button>
                                   </div>
                                 </div>
                               </div>
@@ -201,39 +201,37 @@ class CompilerView(View):
                                   }}
                                 }})();
                               </script>
-                            </div>
                             """
                         else:
                             ai_feedback = evaluate_student_code_with_openai_for_playground(code=code)
 
                             output = f"""
-                            <div class="max-w-5xl mx-auto p-4">
                               <div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
                                 <div class="p-4 md:p-6">
                                   <div class="flex flex-col gap-4">
                                     <div class="w-full">
-                                      <div class="bg-gray-800 text-gray-100 rounded-md p-3">
+                                      <div class="bg-gray-800 font-medium text-gray-800 sm:text-base rounded-md p-3">
                                         <div class="flex items-center justify-between">
-                                          <h3 class="text-sm font-semibold">📄 Program Output</h3>
+                                          <h3 class="text-sm font-medium text-white">📄 Program Output</h3>
                                           <div class="flex items-center gap-2">
-                                            <button data-copy-target="output-pre" class="copy-btn inline-flex items-center gap-2 px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded text-white">Copy</button>
+                                            <button data-copy-target="output-pre" class="copy-btn inline-flex items-center gap-2 px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 rounded text-white font-medium sm:text-base">Copy</button>
                                           </div>
                                         </div>
-                                        <pre id="output-pre" class="mt-3 whitespace-pre-wrap text-sm bg-gray-900 text-green-300 rounded p-3 max-h-64 overflow-auto">{stdout or stderr or compile_output or message or status_description}</pre>
+                                        <pre id="output-pre" class="mt-3 whitespace-pre-wrap text-sm bg-gray-900 text-green-300 font-medium sm:text-base rounded p-3 max-h-64 overflow-auto">{stdout or stderr or compile_output or message or status_description}</pre>
                                       </div>
 
-                                      <div class="mt-3 flex items-center justify-between text-sm text-gray-600">
-                                        <div>⏱️ <span class="font-medium">Run Time:</span> <span class="ml-1">{exec_time}</span></div>
-                                        <div class="text-right">Status: <span class="font-medium">{status_description}</span></div>
+                                      <div class="mt-3 flex items-center justify-between text-sm font-medium text-gray-800 sm:text-base">
+                                        <div>⏱️ <span class="font-medium text-gray-800 sm:text-base">Run Time:</span> <span class="ml-1">{exec_time}</span></div>
+                                        <div class="text-right">Status: <span class="font-medium text-gray-800 sm:text-base">{status_description}</span></div>
                                       </div>
                                     </div>
 
                                     <div class="w-full">
                                       <div class="h-full bg-gradient-to-br from-white to-gray-50 border border-gray-100 rounded-md p-3">
-                                        <h3 class="text-sm font-semibold">🤖 AI Feedback</h3>
-                                        <div class="mt-2 text-sm text-gray-700 space-y-2 leading-relaxed" id="ai-feedback">{ai_feedback.replace('-', '<br>')}</div>
+                                        <h3 class="text-sm font-medium text-gray-800 sm:text-base">🤖 AI Feedback</h3>
+                                        <div class="mt-2 text-sm font-medium text-gray-800 sm:text-base space-y-2 leading-relaxed" id="ai-feedback">{ai_feedback.replace('-', '<br>')}</div>
                                         <div class="mt-3">
-                                          <button id="copy-feedback" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 bg-black text-white rounded-md text-sm">Copy Feedback</button>
+                                          <button id="copy-feedback" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 bg-black text-white rounded-md font-medium text-gray-800 sm:text-base">Copy Feedback</button>
                                         </div>
                                       </div>
                                     </div>
@@ -279,7 +277,6 @@ class CompilerView(View):
                                   }}
                                 }})();
                               </script>
-                            </div>
                             """
 
                         return HttpResponse(output, content_type="text/html")
@@ -329,10 +326,11 @@ class TurnInView(View):
           return response
 
       instruction = activity.description
+      language = activity.language
       examples = get_activity_examples(activity)
       criterias = get_activity_criterias(activity)
 
-      evaluate = evaluate_student_code_with_openai(code, instruction, examples, criterias, activity.max_score)
+      evaluate = evaluate_student_code_with_openai(code, language, instruction, examples, criterias, activity.max_score)
 
       parts = evaluate.split("<grading>")
       raw_grading = parts[0]

@@ -50,7 +50,7 @@ def prompt_to_aimodel_gpt4o(prompt, activity_id):
 
     return saved_examples
 
-def evaluate_student_code_with_openai(code, instruction="", examples="", criterias=None, max_score=100):
+def evaluate_student_code_with_openai(code, language, instruction="", examples="", criterias=None, max_score=100):
     if not criterias or len(criterias) < 3:
         criterias = [0, 0, 0]
 
@@ -65,6 +65,9 @@ def evaluate_student_code_with_openai(code, instruction="", examples="", criteri
 
     Code to evaluate:
     {code}
+
+    Also consider the language of the instruction and the language of the code of the user before giving a score or grade.
+    Language: {language}
 
     Example solutions for reference:
     {examples if examples else "No example solutions provided."}
@@ -156,16 +159,17 @@ class CreateActivityView(View):
         try:
             subject_id = request.POST.get("subject_id")
             activity_type = request.POST.get("type")
+            language_type = request.POST.get("language")
             title = request.POST.get("id_title")
             description = request.POST.get("id_description")
             max_score = request.POST.get("id_max_score")
             due_at_raw = request.POST.get("id_due_at")
             criterias = request.POST.getlist("criteria")
 
-            if (not subject_id or not activity_type or not title or not description or 
+            if (not subject_id or not activity_type or not language_type or not title or not description or 
                 not max_score or not due_at_raw or not criterias or
-                subject_id.strip() == "" or activity_type.strip() == "" or 
-                title.strip() == "" or description.strip() == "" or 
+                subject_id.strip() == "" or activity_type.strip() == "" or language_type.strip() == "" or
+                language_type.strip() == "" or title.strip() == "" or description.strip() == "" or 
                 max_score.strip() == "" or due_at_raw.strip() == ""):
                 
                 messages.error(request, "Missing required fields")
@@ -224,6 +228,7 @@ class CreateActivityView(View):
                 subject=subject,
                 title=title,
                 description=description or "",
+                language=language_type,
                 max_score=float(max_score) if max_score else 0.0,
                 max_attempt=max_attempt,
                 due_at=due_at,

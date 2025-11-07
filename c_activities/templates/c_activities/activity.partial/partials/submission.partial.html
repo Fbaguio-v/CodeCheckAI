@@ -1,7 +1,7 @@
 <!-- Previous-->
 <div class="flex flex-row w-full h-full border-2 border-solid bg-gray-200">
     <!-- Previous -->
-    <div class="flex justify-center items-center border-solid h-full w-[10%] bg-gray-200">
+    <div class="flex justify-center items-center border-solid h-full w-[10%] bg-gray-200 text-sm font-medium text-gray-800 sm:text-base">
         <form hx-get="{% url 'a_classroom:prev_or_next' %}" hx-target="#output" hx-swap="innerHTML">
             <input type="hidden" name="activity_id" value="{{ activity.activity_id }}">
             <input type="hidden" name="index" value="{{ index }}">
@@ -16,22 +16,22 @@
         <!-- Scrollable content area -->
         <div class="h-full overflow-y-auto pt-10 pl-5 pr-5 pb-20">
             {% if submission %}
-                <p class="pb-3 text-xl text-left">
+                <p class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
                     <span class="font-bold">Email Address : </span>{{ submission.student.email }}
                 </p>
 
-                <p class="pb-3 text-xl text-left break-words">
+                <p class="pb-3 text-left break-words text-sm font-medium text-gray-800 sm:text-base">
                     <span class="font-bold">Submitted Code : </span>
-                    <pre class="mt-2 p-3 bg-gray-100 rounded-lg overflow-x-auto">{{ submission.submitted_code }}</pre>
+                    <pre class="mt-2 p-3 bg-gray-100 rounded-lg overflow-x-auto text-sm font-medium text-gray-800 sm:text-base">{{ submission.submitted_code }}</pre>
                 </p>
 
                 <!-- Editable Feedback with scrollable content -->
-                <div class="pb-3 text-xl text-left">
+                <div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
                     <span class="font-bold">Feedback : </span>
                     <div class="mt-2 p-3 bg-gray-100 rounded-lg max-h-32 overflow-y-auto">
                         {{ submission.feedback }}
                     </div>
-                    <button class="ml-3 px-3 py-1 text-sm text-white bg-blue-600 rounded-lg shadow hover:bg-blue-800"
+                    <button class="ml-3 px-3 py-1 text-white bg-blue-600 rounded-lg shadow hover:bg-blue-800 text-sm font-medium text-gray-800 sm:text-base"
                         hx-get="{% url 'c_activities:edit-insight' submission.id %}"
                         hx-swap="outerHTML"
                         hx-target="#feedback-{{ submission.id }}"
@@ -39,16 +39,27 @@
                 </div>
 
                 <!-- Editable Score -->
-                <p id="score-{{ submission.id }}" class="pb-3 text-xl text-left">
+                <p id="score-{{ submission.id }}" class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
                     <span class="font-bold">Score : </span>{{ submission.score }}
-                    <button class="ml-3 px-3 py-1 text-sm text-white bg-green-600 rounded-lg shadow hover:bg-green-800"
+                    <button class="ml-3 px-3 py-1 text-sm text-white bg-green-600 rounded-lg shadow hover:bg-green-800 transition-colors duration-200"
                         hx-get="{% url 'c_activities:edit-grade' submission.id %}" 
                         hx-swap="outerHTML" 
                         hx-target="#score-{{ submission.id }}" 
                         title="Click to edit grade">Edit Grade</button>
                 </p>
+
+                <!-- Return Grade button placed directly under the score -->
+                <form hx-post="{% url 'c_activities:return-grade' submission.id %}" class="mt-2">
+                    {% csrf_token %}
+                    <button type="submit" name="action" value="return" 
+                    class="flex items-center text-sm font-medium text-gray-800 sm:text-base justify-center w-40 h-12 text-white bg-black border-2 border-solid shadow-xl rounded-xl {% if submission.status == 'returned' %}opacity-50 cursor-not-allowed bg-gray-500{% else %}cursor-pointer hover:bg-gray-500{% endif %}" 
+                    title="{% if submission.status == 'returned' %}Grade already returned{% else %}Click to return grade to student{% endif %}" 
+                    {% if submission.status == 'returned' %}disabled onclick="return false;"{% endif %}>
+                        Return Grade
+                    </button>
+                </form>
             {% else %}
-                <p class="text-center text-lg font-semibold">No submission.</p>
+                <p class="text-center text-lg text-sm font-medium text-gray-800 sm:text-base">No submission.</p>
             {% endif %}
         </div>
 
@@ -69,7 +80,7 @@
     </div>
 
     <!-- Next -->
-    <div class="flex justify-center items-center border-solid h-full w-[10%] bg-gray-200">
+    <div class="flex justify-center items-center border-solid h-full w-[10%] bg-gray-200 text-sm font-medium text-gray-800 sm:text-base">
         <form hx-get="{% url 'a_classroom:prev_or_next' %}" hx-target="#output" hx-swap="innerHTML">
             <input type="hidden" name="activity_id" value="{{ activity.activity_id }}">
             <input type="hidden" name="index" value="{{ index }}">

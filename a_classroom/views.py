@@ -130,18 +130,12 @@ class CreateSubjectView(View):
         return render(request, 'a_classroom/create_subject.html', {"form": form})
 
 def user_settings(request):
-    print("MEDIA_ROOT:", settings.MEDIA_ROOT)
-    print("Image path:", os.path.join(settings.MEDIA_ROOT, 'mysite_images/froi_exWVB1H.jpg'))
-    print("File exists:", os.path.exists(os.path.join(settings.MEDIA_ROOT, 'mysite_images/froi_exWVB1H.jpg')))
-
     user_profile = select_user_related(request.user)
     if not user_profile:
         return redirect("a_classoom:index")
     email = request.user.email
     return render(request, 'a_classroom/settings/setting.html', {"user_profile" : user_profile, "email" : email})
 
-def about(request):
-    return render(request, 'a_classroom/about.html')
 
 @never_cache
 def view_subject(request, subject_id):

@@ -82,7 +82,7 @@
                 <div id="sidebar-actions" class="mt-4">
                     {% if request.user.userprofile.role == "Instructor" %}
                             <a href="{% url 'a_classroom:create-subject' %}">
-                                <button class="w-full p-3 text-black bg-gray-200 border-2 border-black rounded-lg hover:bg-gray-300 cursor-pointer">
+                                <button class="w-full p-3 text-black text-sm font-medium text-gray-800 sm:text-base bg-gray-200 border-2 border-black rounded-lg hover:bg-gray-300 cursor-pointer">
                                     Create Subject
                                 </button>
                             </a>
@@ -92,7 +92,7 @@
                                     hx-trigger="click"
                                     hx-target="#main-content"
                                     hx-swap="innerHTML"
-                                    class="w-full p-3 text-black bg-gray-200 border-2 border-black rounded-lg hover:bg-gray-300 cursor-pointer">
+                                    class="w-full p-3 text-black text-sm font-medium text-gray-800 sm:text-base bg-gray-200 border-2 border-black rounded-lg hover:bg-gray-300 cursor-pointer">
                                 Join Class
                             </button>
                     {% endif %}
@@ -101,7 +101,7 @@
             </aside>
         {% endif %}
 
-        <main id="main-content" class="p-8 overflow-auto">
+        <main id="main-content" class="overflow-hidden">
             {% block content %}{% endblock %}
         </main>
     </div>
