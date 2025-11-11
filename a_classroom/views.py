@@ -337,7 +337,7 @@ class HtmxTemplateView(View):
         return render(request, self.template, {self.context_name: data})
 
 def get_admin_dashboard(request):
-    users = User.objects.all()
+    users = User.objects.all()[0:10]
     trigger = request.headers.get("HX-Trigger")
 
     if request.headers.get("HX-Request") == "true" and trigger == "all-user":
@@ -346,11 +346,11 @@ def get_admin_dashboard(request):
     return render(request, 'a_classroom/a.admin/admin.html', {"all_users": users})
 
 def get_pending_users(request):
-    pending_users = User.objects.filter(is_active=False)
+    pending_users = User.objects.filter(is_active=False)[0:10]
     return render(request, 'a_classroom/a.admin/users/pending/pending.users.html', {"pending_users": pending_users})
 
 def get_subject_list(request):
-    subjects = Subject.objects.all()
+    subjects = Subject.objects.all()[0:10]
     return render(request, 'a_classroom/a.admin/users/subject/subjects.html', {"subjects": subjects})
 
 class AdminDashboardView(HtmxTemplateView):
@@ -418,10 +418,9 @@ Admin Team
                 messages.success(request, "Approval email sent successfully")
             except Exception as e:
                 print(f"❌ Email send failed: {e}")
-                messages.error(request, f"Email send failed : {e}")
                 
             pending_users = User.objects.filter(is_active=False)
-            return redirect("a_classroom:get-users")
+            return render(request, "a_classroom/a.admin/users/pending/partial/pending.table.html", {"pending_users" : pending_users})
 
         return redirect("a_classroom:index")
 
@@ -432,4 +431,4 @@ def delete_account_creation(request, user_id):
         return redirect("a_classroom:index")
     user.delete()
     pending_users = User.objects.filter(is_active=False)
-    return render(request, "a_classroom/a.admin/users/pending/pending.users.html", {"pending_users" : pending_users})
+    return render(request, "a_classroom/a.admin/users/pending/partial/pending.table.html", {"pending_users" : pending_users})

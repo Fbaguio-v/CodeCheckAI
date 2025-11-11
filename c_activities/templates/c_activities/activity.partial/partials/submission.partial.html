@@ -22,13 +22,13 @@
 
                 <p class="pb-3 text-left break-words text-sm font-medium text-gray-800 sm:text-base">
                     <span class="font-bold">Submitted Code : </span>
-                    <pre class="mt-2 p-3 bg-gray-100 rounded-lg overflow-x-auto text-sm font-medium text-gray-800 sm:text-base">{{ submission.submitted_code }}</pre>
+                    <pre class="mt-2 p-3 bg-gray-100 rounded-lg overflow-x-auto min-h-48 max-h-80 text-sm font-medium text-gray-800 sm:text-base">{{ submission.submitted_code }}</pre>
                 </p>
 
                 <!-- Editable Feedback with scrollable content -->
                 <div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
                     <span class="font-bold">Feedback : </span>
-                    <div class="mt-2 p-3 bg-gray-100 rounded-lg max-h-32 overflow-y-auto">
+                    <div class="mt-2 p-3 bg-gray-100 rounded-lg min-h-48 max-h-80 overflow-y-auto">
                         {{ submission.feedback }}
                     </div>
                     <button class="ml-3 px-3 py-1 text-white bg-blue-600 rounded-lg shadow hover:bg-blue-800 text-sm font-medium text-gray-800 sm:text-base"

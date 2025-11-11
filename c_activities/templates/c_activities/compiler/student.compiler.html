@@ -27,7 +27,7 @@
                 {% endif %}>{% if submission %}{% if submission.status == "in_progress" %}{{ submission.saved_code }}{% elif submission.status == "submitted" or submission.status == "returned" %}{{ submission.submitted_code }}{% endif %}{% endif %}</textarea>
         </div>
 
-        <div class="border border-solid flex flex-row h-[140px] w-full">
+        <div class="border border-solid flex flex-row h-[200px] w-full">
             <div class="flex flex-row items-center justify-center w-full gap-4 p-4 bg-gray-300 border rounded">
 
                 {% if activity.type == "activity" %}
@@ -83,7 +83,7 @@
                 {% if activity.type == "quiz" %}
                     {% with server_time=current_time|date:'Y-m-d H:i:s' %}
                     <select name="language_id" id="language_id"
-                        class="w-full text-sm sm:text-base md:text-lg sm:w-[150px] px-6 py-2 text-white rounded-lg shadow-md {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
+                        class="w-full cursor-pointer text-sm sm:text-base md:text-lg sm:w-[150px] px-6 py-2 text-white rounded-lg shadow-md {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
                         {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}disabled title="Quiz period has ended"{% else %}required title="Select programming language"{% endif %}>
                         <option value="71">Python</option>
                         <option value="62">Java</option>
@@ -105,7 +105,7 @@
             </div>
         </div>
 
-        <div id="code-output" class="border border-gray-300 bg-gray-100 text-sm font-mono overflow-auto h-[200px]">
+        <div id="code-output" class="border border-gray-300 bg-gray-100 text-sm font-mono overflow-auto h-auto">
         </div>
     </div>
 </div>

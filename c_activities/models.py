@@ -48,7 +48,7 @@ class ActivitySubmission(models.Model):
     saved_code = models.TextField(default="", null=True, blank=True)
     submitted_at = models.DateTimeField(auto_now_add=True)
     feedback = models.TextField(default="", null=True, blank=True)
-    score = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, default=None)
+    score = models.PositiveIntegerField(null=True, blank=True, default=None)
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='in_progress')
     attempt = models.PositiveIntegerField(null=True, blank=True)  # only for quizzes
     evaluator = models.CharField(max_length=10, null=True, blank=True)

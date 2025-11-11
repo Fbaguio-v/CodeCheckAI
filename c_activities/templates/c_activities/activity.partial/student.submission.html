@@ -5,37 +5,42 @@
 
 <div class="flex flex-col md:flex-row min-h-screen w-full overflow-hidden">
 	<!-- Left Panel: Activity Info -->
-	<div class="w-full md:w-1/3 lg:w-2/5 overflow-auto flex flex-col bg-gray-100">
-		<div id="activity-output" class="flex overflow-auto scrollbar-hidden flex-col justify-start border rounded min-h-0 p-4">
+	<div class="w-full md:w-1/3 lg:w-2/5 overflow-auto flex flex-col bg-gray-100 border border-gray-500 border-solid rounded shadow-xl">
+		<div id="activity-output" class="flex h-full overflow-auto scrollbar-hidden flex-col justify-start border bg-gray-100 border-gray-500 rounded min-h-0 p-4">
 			
-			<p class="pt-3 pb-4 text-2xl font-bold text-center">{{ activity.title }}</p>
-			
-			<div class="overflow-auto scrollbar-hidden text-sm font-medium text-gray-800 sm:text-base">
-				<p class="justify-start pb-3 text-left">
-					<span class="font-bold">Instruction:</span> {{ activity.description }}
-				</p>
-			</div>
-			
-			<p class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-				<span class="font-bold">Max score:</span> {{ activity.max_score }}
-			</p>
+			<div class="pb-2">
+				<h4 class="font-bold">Title</h4>
+                <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-80 overflow-y-auto scrollbar-hidden">{{ activity.title }}</div>
+            </div>
 
-			<p class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-				<span class="font-bold">Language:</span> {{ activity.language }}
-			</p>
+			<div class="pb-2">
+                <h4 class="font-bold">Instruction</h4>
+                <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-80 overflow-y-auto scrollbar-hidden">{{ activity.description }}</div>
+            </div>
+
+			<div class="pb-2">
+                <h4 class="font-bold">Max Score</h4>
+                <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-80 overflow-y-auto scrollbar-hidden">{{ activity.max_score }}</div>
+            </div>
+
+			<div class="pb-2">
+                <h4 class="font-bold">Language</h4>
+                <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-80 overflow-y-auto scrollbar-hidden">{{ activity.language }}</div>
+            </div>
+			
 			
 			{% if activity.type == "quiz" %}
-				<p class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-					<span class="font-bold">Max Attempt:</span> {{ activity.max_attempt }}
-				</p>
+				<div class="pb-2">
+					<h4 class="font-bold">Max Attempt</h4>
+					<div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-80 overflow-y-auto scrollbar-hidden">{{ activity.max_attempt }}</div>
+				</div>
 			{% endif %}
-			
-			<p class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-				<span class="font-bold">Due:</span> {{ activity.due_at }}
-			</p>
-		</div>
 
-		<div class="flex items-center justify-center pt-5 pb-5 bg-gray-100 border-t border-gray-200">
+			<div class="pb-8">
+				<h4 class="font-bold">Due</h4>
+				<div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-80 overflow-y-auto scrollbar-hidden">{{ activity.due_at }}</div>
+			</div>
+
 			<button class="h-12 px-8 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200 w-auto min-w-[140px] text-sm font-medium text-gray-800 sm:text-base"
 				hx-get="{% url 'c_activities:edit-activity' activity.activity_id %}?type={{ activity.type }}" 
 				hx-target="#activity-output" 
@@ -67,13 +72,13 @@
 
 						<p class="pb-3 text-left break-words text-sm font-medium text-gray-800 sm:text-base">
 							<span class="font-bold">Submitted Code : </span>
-							<pre class="mt-2 p-3 bg-gray-100 rounded-lg overflow-x-auto text-sm font-medium text-gray-800 sm:text-base">{{ first_submission.submitted_code }}</pre>
+							<pre class="mt-2 p-3 bg-gray-100 rounded-lg overflow-x-auto text-sm min-h-48 max-h-80 font-medium text-gray-800 sm:text-base">{{ first_submission.submitted_code }}</pre>
 						</p>
 
 						<!-- Editable Feedback with scrollable content -->
 						<div id="feedback-{{ first_submission.id }}" class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
 							<span class="font-bold">Feedback : </span>
-							<div class="mt-2 p-3 bg-gray-100 rounded-lg max-h-32 overflow-y-auto" style="scrollbar-gutter: stable;">
+							<div class="mt-2 p-3 bg-gray-100 rounded-lg min-h-48 max-h-80 overflow-y-auto" style="scrollbar-gutter: stable;">
 								{{ first_submission.feedback }}
 							</div>
 							<button class="ml-3 mt-3 md:ml-3 md:mt-0 px-3 py-1 text-sm font-medium sm:text-base text-white bg-blue-600 rounded-lg shadow hover:bg-blue-800 transition-colors duration-200"
