@@ -7,7 +7,7 @@
             {% for subject in subjects %}
                 <li>
                     <a href="{% url 'a_classroom:v' subject.subject_id %}">
-                        <div class="flex flex-col justify-center p-[70px] text-center transition border-2 border-black rounded-lg hover:shadow-lg hover:bg-gray-100 shadow-xl">
+                        <div class="flex flex-col justify-center p-[70px] text-center transition border border-black rounded-lg hover:shadow-lg hover:bg-gray-100 shadow-xl">
                             <h1 class="text-lg font-bold">{{ subject.course_code }}</h1>
                             <p>{{ subject.section.name }}</p>
                             <p>{{ subject.instructor.get_full_name }}</p>
