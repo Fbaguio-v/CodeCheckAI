@@ -1,7 +1,7 @@
 {% extends 'a_classroom/base.html' %}
 {% block content %}
 <div class="h-full w-full">
-    <div class="h-full bg-gray-100 border-2 border-black rounded-lg p-3 sm:p-4 shadow-xl flex flex-col min-h-0">
+    <div class="h-full bg-gray-100 border border-black rounded-lg p-3 sm:p-4 shadow-xl flex flex-col min-h-0">
         <!-- Search input for subjects (keep name and onkeyup) -->
         <div class="mb-3">
             <input id="subjects-search" type="text"
@@ -12,8 +12,8 @@
         </div>
 
         <div class="flex-1 min-h-0 overflow-y-auto">
-            <table id="subjects-table" class="table-fixed w-full border border-solid border-gray-300">
-                <thead class="bg-gray-800 text-white h-[60px] border border-solid border-gray-300 sticky top-0">
+            <table id="subjects-table" class="table-fixed w-full border-b border-gray-300">
+                <thead class="bg-gray-800 text-white h-[60px] sticky top-0">
                     <tr class="text-left">
                         <th class="px-4 py-2">Course Code</th>
                         <th class="px-4 py-2">Subject</th>
@@ -24,7 +24,7 @@
                 </thead>
                 <tbody class="w-full">
                     {% for subject in subjects %}
-                        <tr class="h-[50px] border border-solid border-gray-300">
+                        <tr class="h-[50px]">
                             <td class="px-4 py-2">{{ subject.course_code }}</td>
                             <td class="px-4 py-2">{{ subject.name }}</td>
                             <td class="px-4 py-2">{{ subject.section.name }}</td>

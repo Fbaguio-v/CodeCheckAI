@@ -2,8 +2,8 @@
 {% tailwind_css %}
 <div class="h-full w-full flex flex-col">
     <div class="flex-1 min-h-0 overflow-auto">
-        <table id="users-table" class="table-fixed w-full border border-solid border-gray-300">
-            <thead class="bg-gray-800 text-white h-[60px] border border-solid border-gray-300 sticky top-0">
+        <table id="users-table" class="table-fixed w-full">
+            <thead class="bg-gray-800 text-white h-[60px] sticky top-0">
                 <tr class="text-left">
                     <th class="px-4 py-2">Profile</th>
                     <th class="px-4 py-2">Full Name</th>
@@ -14,7 +14,7 @@
             </thead>
             <tbody class="w-full">
                 {% for user in all_users %}
-                    <tr class="h-[50px] border border-solid border-gray-300">
+                    <tr class="h-[50px] border-b border-gray-300 all-user">
                         <td class="overflow-hidden">
                             <img src="{{ user.userprofile.get_image_url }}"
                                 alt="Profile Image"

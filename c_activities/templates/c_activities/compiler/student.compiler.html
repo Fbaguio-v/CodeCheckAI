@@ -3,7 +3,7 @@
 {% block content %}
 <script src="https://cdn.tailwindcss.com"></script>
 
-<div id="parent" class="flex flex-row w-full h-full bg-gray-100 border border-gray-500 border-solid rounded shadow-xl">
+<div id="parent" class="flex flex-row w-full h-full bg-gray-100 shadow-xl">
     <div id="activity-details"></div>
     <div hx-get="{% url 'a_classroom:view-activity' activity.activity_id %}?subject_id={{ subject_id }}&type=activity&action=activity_details" 
          hx-target="#activity-details" hx-swap="innerHTML" hx-trigger="load"></div>
@@ -14,21 +14,21 @@
         <input name="subject_id" value="{{ subject_id }}" type="hidden">
         <input name="activity_id" value="{{ activity.activity_id }}" type="hidden">
 
-        <div class="h-[500px] w-full flex flex-row overflow-hidden">
+        <div class="h-[500px] w-full flex flex-row overflow-hidden border border-solid border-gray-300">
             <div class="w-auto overflow-hidden border-r border-gray-200">
                 <pre id="div-number" class="h-full pt-1 pr-2 overflow-y-scroll font-mono text-sm leading-5 text-right text-black bg-gray-200 scrollbar-hidden"></pre>
             </div>
             <textarea id="compiler"
                 name="compiler"
-                class="w-full h-full p-2 overflow-y-scroll text-sm leading-5 border resize-none scrollbar-hidden focus:ring focus:ring-black font-medium text-gray-800 sm:text-base"
+                class="w-full h-full p-2 overflow-y-scroll text-sm leading-5 border resize-none scrollbar-hidden focus:ring focus:ring-black font-medium text-gray-800 sm:text-base focus:bg-gray-200"
                 style="resize: none;"
                 {% if submission.status == "submitted" or submission.status == "returned" %}
                     readonly
                 {% endif %}>{% if submission %}{% if submission.status == "in_progress" %}{{ submission.saved_code }}{% elif submission.status == "submitted" or submission.status == "returned" %}{{ submission.submitted_code }}{% endif %}{% endif %}</textarea>
         </div>
 
-        <div class="border border-solid flex flex-row h-[200px] w-full">
-            <div class="flex flex-row items-center justify-center w-full gap-4 p-4 bg-gray-300 border rounded">
+        <div class="flex flex-row h-auto w-full">
+            <div class="flex flex-row items-center justify-center w-full gap-4 p-4 bg-gray-200">
 
                 {% if activity.type == "activity" %}
                     {% if activity_submissions.0.status == "returned" %}
@@ -105,7 +105,7 @@
             </div>
         </div>
 
-        <div id="code-output" class="border border-gray-300 bg-gray-100 text-sm font-mono overflow-auto h-auto">
+        <div id="code-output" class="border border-solid border-gray-300 bg-gray-100 text-sm font-mono overflow-auto h-auto">
         </div>
     </div>
 </div>
