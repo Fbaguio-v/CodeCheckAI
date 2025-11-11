@@ -12,7 +12,7 @@
         </div>
 
         <div class="flex-1 min-h-0 overflow-y-auto">
-            <table id="subjects-table" class="table-fixed w-full border-b border-gray-300">
+            <table id="subjects-table" class="table-fixed w-full">
                 <thead class="bg-gray-800 text-white h-[60px] sticky top-0">
                     <tr class="text-left">
                         <th class="px-4 py-2">Course Code</th>
@@ -24,7 +24,7 @@
                 </thead>
                 <tbody class="w-full">
                     {% for subject in subjects %}
-                        <tr class="h-[50px]">
+                        <tr class="h-[50px] border-b border-gray-300">
                             <td class="px-4 py-2">{{ subject.course_code }}</td>
                             <td class="px-4 py-2">{{ subject.name }}</td>
                             <td class="px-4 py-2">{{ subject.section.name }}</td>
