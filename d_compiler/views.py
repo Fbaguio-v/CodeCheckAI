@@ -158,10 +158,6 @@ class CompilerView(View):
                                     <h4 class="text-sm font-semibold">🤖 AI Feedback</h4>
                                     <div class="mt-2 text-sm font-medium text-gray-800 sm:text-base leading-relaxed" id="quiz-ai-feedback">{feedback_section.replace('-', '<br>')}</div>
                                   </div>
-                                  <div class="mt-3 flex gap-2">
-                                    <button data-copy-target="quiz-output-pre" class="copy-btn inline-flex items-center gap-2 px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 rounded text-white font-medium">Copy Output</button>
-                                    <button id="copy-quiz-feedback" class="inline-flex items-center px-3 py-1 text-sm font-medium sm:text-base bg-black text-white rounded">Copy Feedback</button>
-                                  </div>
                                 </div>
                               </div>
 
@@ -169,38 +165,6 @@ class CompilerView(View):
                                 #quiz-output-pre {{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace; }}
                                 .copy-btn {{ cursor: pointer; }}
                               </style>
-
-                             <script>
-                                (function(){{
-                                  function copyTextFromSelector(selector){{
-                                    const el = document.getElementById(selector);
-                                    if(!el) return;
-                                    const text = el.innerText || el.textContent || '';
-                                    navigator.clipboard?.writeText(text).then(()=>{{
-                                      const btn = document.querySelector('[data-copy-target="' + selector + '"]');
-                                      if(btn){{ btn.textContent = 'Copied'; setTimeout(()=> btn.textContent = 'Copy Output', 1200); }}
-                                    }}).catch(()=>{{}});
-                                  }}
-
-                                  document.querySelectorAll('.copy-btn').forEach(btn=>{{
-                                    btn.addEventListener('click', function(e){{
-                                      const target = this.getAttribute('data-copy-target');
-                                      copyTextFromSelector(target);
-                                    }});
-                                  }});
-
-                                  const fbBtn = document.getElementById('copy-quiz-feedback');
-                                 if(fbBtn){{
-                                    fbBtn.addEventListener('click', function(){{
-                                      const content = document.getElementById('quiz-ai-feedback');
-                                      const text = content ? content.innerText || content.textContent : '';
-                                      navigator.clipboard?.writeText(text).then(()=>{{
-                                        fbBtn.textContent = 'Copied'; setTimeout(()=> fbBtn.textContent = 'Copy Feedback', 1200);
-                                      }}).catch(()=>{{}});
-                                    }});
-                                  }}
-                                }})();
-                              </script>
                             """
                         else:
                             ai_feedback = evaluate_student_code_with_openai_for_playground(code=code)
@@ -213,9 +177,6 @@ class CompilerView(View):
                                       <div class="bg-gray-800 font-medium text-gray-800 sm:text-base rounded-md p-3">
                                         <div class="flex items-center justify-between">
                                           <h3 class="text-sm font-medium text-white">📄 Program Output</h3>
-                                          <div class="flex items-center gap-2">
-                                            <button data-copy-target="output-pre" class="copy-btn inline-flex items-center gap-2 px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 rounded text-white font-medium sm:text-base">Copy</button>
-                                          </div>
                                         </div>
                                         <pre id="output-pre" class="mt-3 whitespace-pre-wrap text-sm bg-gray-900 text-green-300 font-medium sm:text-base rounded p-3 max-h-64 overflow-auto">{stdout or stderr or compile_output or message or status_description}</pre>
                                       </div>
@@ -230,9 +191,6 @@ class CompilerView(View):
                                       <div class="h-full bg-gradient-to-br from-white to-gray-50 border border-gray-100 rounded-md p-3">
                                         <h3 class="text-sm font-medium text-gray-800 sm:text-base">🤖 AI Feedback</h3>
                                         <div class="mt-2 text-sm font-medium text-gray-800 sm:text-base space-y-2 leading-relaxed" id="ai-feedback">{ai_feedback.replace('-', '<br>')}</div>
-                                        <div class="mt-3">
-                                          <button id="copy-feedback" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 bg-black text-white rounded-md font-medium text-gray-800 sm:text-base">Copy Feedback</button>
-                                        </div>
                                       </div>
                                     </div>
                                   </div>
@@ -244,39 +202,6 @@ class CompilerView(View):
                                 #output-pre {{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace; }}
                                 .copy-btn {{ cursor: pointer; }}
                               </style>
-
-                              <script>
-                                (function(){{
-                                  function copyTextFromSelector(selector){{
-                                    const el = document.getElementById(selector);
-                                    if(!el) return;
-                                    const text = el.innerText || el.textContent || '';
-                                    navigator.clipboard?.writeText(text).then(()=>{{
-                                      // flash a tiny toast
-                                      const btn = document.querySelector('[data-copy-target="' + selector + '"]');
-                                      if(btn){{ btn.textContent = 'Copied'; setTimeout(()=> btn.textContent = 'Copy', 1200); }}
-                                    }}).catch(()=>{{}});
-                                  }}
-
-                                  document.querySelectorAll('.copy-btn').forEach(btn=>{{
-                                    btn.addEventListener('click', function(e){{
-                                      const target = this.getAttribute('data-copy-target');
-                                      copyTextFromSelector(target);
-                                    }});
-                                  }});
-
-                                  const fbBtn = document.getElementById('copy-feedback');
-                                  if(fbBtn){{
-                                    fbBtn.addEventListener('click', function(){{
-                                      const content = document.getElementById('ai-feedback');
-                                      const text = content ? content.innerText || content.textContent : '';
-                                      navigator.clipboard?.writeText(text).then(()=>{{
-                                        fbBtn.textContent = 'Copied'; setTimeout(()=> fbBtn.textContent = 'Copy Feedback', 1200);
-                                      }}).catch(()=>{{}});
-                                    }});
-                                  }}
-                                }})();
-                              </script>
                             """
 
                         return HttpResponse(output, content_type="text/html")

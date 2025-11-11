@@ -1,50 +1,69 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 <div class="flex items-center justify-center h-full w-[700px]">
-    <div class="flex flex-col justify-start border bg-gray-100 border-gray-500 rounded h-[95%] w-[95%] p-4 overflow-hidden">
-        <!-- Scrollable content area -->
-        <div class="h-full overflow-y-auto pr-2 leading-5">
-            <p class="pt-3 pb-4 text-3xl font-bold text-center">{{ activity.title }}</p>
+    <div class="flex flex-col justify-start border bg-gray-100 border-gray-500 rounded h-[100%] w-[100%] p-4 overflow-hidden">
+        <div class="h-full overflow-y-auto scrollbar-hidden pr-2 leading-5">
 
-            <div class="overflow-auto scrollbar-hidden">
-                <p class="justify-start pb-3 pr-3 text-sm font-medium text-gray-800 sm:text-base text-left">
-                    <span class="font-bold">Instruction:</span> {{ activity.description }}
-                </p> 
+            <div class="pb-2">
+				<h4 class="font-bold">Title</h4>
+                <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-80 overflow-y-auto scrollbar-hidden">{{ activity.title }}</div>
             </div>
 
-            <p class="pb-3 text-sm font-medium text-gray-800 sm:text-base text-left">
-                <span class="font-bold">Max score:</span>{{ activity.max_score }}
-            </p>
+            <div class="pb-2">
+                <h4 class="font-bold">Instruction</h4>
+                <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-80 overflow-y-auto scrollbar-hidden">{{ activity.description }}</div>
+            </div>
             
-            <p class="pb-3 text-sm font-medium text-gray-800 sm:text-base text-left">
-                <span class="font-bold">Language:</span>{{ activity.language }}
-            </p>
+            <div class="pb-2">
+                <h4 class="font-bold">Max Score</h4>
+                <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ activity.max_score }}</div>
+            </div>
 
-            <p class="pb-3 text-sm font-medium text-gray-800 sm:text-base text-left">
-                <span class="font-bold">Due:</span>{{ activity.due_at }}
-            </p>
+            <div class="pb-2">
+                <h4 class="font-bold">Language</h4>
+                <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ activity.language }}</div>
+            </div>
+
+
+            <div class="pb-2">
+                <h4 class="font-bold">Due</h4>
+                <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ activity.due_at }}</div>
+            </div>
 
             {% if activity.type == "quiz" %}
-                <p class="pb-2 text-sm font-medium text-gray-800 sm:text-base text-left">
-                    <span class="font-bold">Max Attempt : </span>{{ activity.max_attempt }}
-                </p>
 
-                <p class="pb-2 text-sm font-medium text-gray-800 sm:text-base text-left">
-                    <span class="font-bold">Attempt Number : </span>{{ submission_count }}
-                </p>
+                <div class="pb-2">
+                    <h4 class="font-bold">Max Attempt</h4>
+                    <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ activity.max_attempt }}</div>
+                </div>
 
-                <p class="pb-2 text-sm font-medium text-gray-800 sm:text-base text-left">
-                    <span class="font-bold">Highest Score : </span>{{ highest_score }}
-                </p>
+                <div class="pb-2">
+                    <h4 class="font-bold">Attempt Number</h4>
+                    <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ submission_count }}</div>
+                </div>
 
-                {% if activity_submissions.0.status == "returned" %}
-                    <p class="pb-2 text-sm font-medium text-gray-800 sm:text-base text-left">{{ highest_feedback }}</p>
+                <div class="pb-2">
+                    <h4 class="font-bold">Highest Score</h4>
+                    <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ highest_score }}</div>
+                </div>
+
+                {% if activity_submissions.0.status == "returned" and activity.type == "quiz" %}
+                    <div class="pb-2">
+                        <h4 class="font-bold">Feedback</h4>
+                        <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto scrollbar-hidden">
+                            {{ highest_feedback }}
+                        </div>
+                    </div>
                 {% endif %}
             {% endif %}
             
             {% if activity_submissions.0.status == "returned" and activity.type == "activity" %}
-                <br><br>
-                <p class="pb-2 text-sm font-medium text-gray-800 sm:text-base text-left">{{ activity_submissions.0.feedback }}</p>
+                <div>
+                    <h4 class="font-bold">Feedback</h4>
+                    <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto">
+                        {{ activity_submissions.0.feedback }}
+                    </div>
+                </div>
             {% endif %}
         </div>
     </div>

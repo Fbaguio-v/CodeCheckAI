@@ -9,11 +9,12 @@ from django.utils.decorators import method_decorator
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.contrib import messages
 from django.conf import settings
-from django.utils import timezone
 from openai import OpenAI
 import google.generativeai as genai
 from datetime import datetime
 import re, json, requests, time
+from django.utils.timezone import localtime, make_aware
+from django.utils import timezone
 import traceback
 
 # Create your views here.
@@ -120,13 +121,16 @@ class CreateActivityView(View):
     def get(self, request):
         action_type = request.GET.get("action")
         if action_type == "create-activity":
+            
             subject_id = request.GET.get("subject_id")
             if not subject_id:
                 return HttpResponse("Missing subject ID", status=400)
             return render(
                 request,
                 "c_activities/activity/create_activity.html",
-                {"subject_id": subject_id},
+                {"subject_id": subject_id,
+                "current_time" : localtime(timezone.now()),
+                "server_time": localtime(timezone.now())},
             )
         return redirect("a_classroom:index")
 
@@ -134,6 +138,8 @@ class CreateActivityView(View):
         action_type = request.POST.get("action")
         criterias = request.POST.getlist("criteria")
         subject_id = request.POST.get("subject_id")
+        due_at_raw = request.POST.get("id_due_at")
+
         values = []
         for val in criterias:
             try:
@@ -148,6 +154,27 @@ class CreateActivityView(View):
             response = HttpResponse()
             response["HX-Redirect"] = f"/c/subject/{subject_id}/"
             return response
+
+        due_at = None
+        if due_at_raw:
+            try:
+                due_at = datetime.strptime(due_at_raw, "%Y-%m-%dT%H:%M")
+                due_at = make_aware(due_at)
+
+                due_at_local = localtime(due_at)
+                current_local = localtime(timezone.now())
+
+                if due_at_local <= current_local:
+                    messages.error(request, "Due date must be from today/now onwards")
+                    response = HttpResponse()
+                    response["HX-Redirect"] = f"/c/subject/{subject_id}/"
+                    return response
+
+            except ValueError:
+                messages.error(request, "Invalid date format. Use YYYY-MM-DDTHH:MM")
+                response = HttpResponse()
+                response["HX-Redirect"] = f"/c/subject/{subject_id}/"
+                return response
 
         if not request.POST.get("processing"):
             return render(request, "c_activities/activity/partial/progress_bar.html")
@@ -174,6 +201,23 @@ class CreateActivityView(View):
                 
                 messages.error(request, "Missing required fields")
                 return redirect(f"/c/subject/{subject_id}")
+            
+            due_at = None
+            if due_at_raw:
+                try:
+                    due_at = datetime.strptime(due_at_raw, "%Y-%m-%dT%H:%M")
+                    due_at = make_aware(due_at)
+
+                    due_at_local = localtime(due_at)
+                    current_local = localtime(timezone.now())
+
+                    if due_at_local <= current_local:
+                        messages.error(request, "Due date must be in the future")
+                        return redirect(f"/a/?action=create-activity&subject_id={subject_id}")
+
+                except ValueError:
+                    messages.error(request, "Invalid date format. Use YYYY-MM-DDTHH:MM")
+                    return redirect(f"/a/?action=create-activity&subject_id={subject_id}")
 
             values = []
             for val in criterias:
@@ -205,14 +249,6 @@ class CreateActivityView(View):
             if not subject:
                 messages.error(request, "Subject not found")
                 return redirect("a_classroom:index")
-
-            due_at = None
-            if due_at_raw:
-                try:
-                    due_at = datetime.strptime(due_at_raw, "%Y-%m-%dT%H:%M")
-                except ValueError:
-                    messages.error(request, "Invalid date format. Use YYYY-MM-DDTHH:MM")
-                    return redirect(f"/a/?action=create-activity&subject_id={subject_id}")
 
             filters = {
                 "subject": subject,
@@ -307,32 +343,65 @@ def get_activity_criterias(activity):
 	return criterias
 
 class EditActivityView(View):
-	def get(self, request, activity_id):
-		activity = select_activity_by_id(activity_id)
-		if not activity:
-			return redirect("a_classroom:index")
+    def get(self, request, activity_id):
+        activity = select_activity_by_id(activity_id)
+        if not activity:
+            messages.error(request, "Activity not found")
+            return redirect("a_classroom:index")
 
-		return render(request, "c_activities/edit.activity/edit.activity.html", {"activity" : activity})
+        return render(request, "c_activities/edit.activity/edit.activity.html", {"activity": activity})
 
-	def post(self, request, activity_id):
-		activity = select_activity_by_id(activity_id)
-		if not activity:
-			return redirect("a_classroom:index")
+    def post(self, request, activity_id):
+        activity = select_activity_by_id(activity_id)
+        if not activity:
+            messages.error(request, "Activity not found")
+            return redirect("a_classroom:index")
 
-		activity.title = request.POST.get("title")
-		description = request.POST.get("description")
-		if description != activity.description:
-			activity.description = description
-			ActivityExample.objects.filter(activity=activity).delete()
-			prompt_to_aimodel_gpt4o(description, activity.activity_id)
-		else:
-			activity.description = description
+        title = request.POST.get("title")
+        description = request.POST.get("description")
+        max_score = request.POST.get("max_score")
+        max_attempt = request.POST.get("max_attempt")
+        due_at_raw = request.POST.get("due_at")
+        
+        if not all([title, description, max_score, due_at_raw]):
+            messages.error(request, "All fields are required")
+            return redirect(f"/a/edit-activity/{activity_id}/")
 
-		activity.max_score = request.POST.get("max_score")
-		activity.due_at = request.POST.get("due_at")
-		activity.save()
+        due_at = None
+        try:
+            due_at = datetime.strptime(due_at_raw, "%Y-%m-%dT%H:%M")
+            due_at = make_aware(due_at)
+            
+            if due_at <= timezone.now():
+                messages.error(request, "Due date must be in the future")
+                return redirect(f"/a/edit-activity/{activity_id}/")
+                
+        except ValueError:
+            messages.error(request, "Invalid date format. Use YYYY-MM-DDTHH:MM")
+            return redirect(f"/a/edit-activity/{activity_id}/")
+        
+        if activity.type == "quiz" and max_attempt:
+            activity.max_attempt = int(max_attempt)
+            
+        activity.title = title
+        activity.max_score = max_score
+        activity.due_at = due_at
 
-		return redirect(f"/c/activity/{activity.activity_id}/?subject_id={activity.subject.subject_id}")
+        if description != activity.description:
+            activity.description = description
+            activity.save()
+            
+            try:
+                ActivityExample.objects.filter(activity=activity).delete()
+                prompt_to_aimodel_gpt4o(description, activity.activity_id)
+            except Exception as e:
+                print(f"AI model failed: {e}")
+        else:
+            activity.description = description
+            activity.save()
+
+        messages.success(request, "Activity updated successfully!")
+        return redirect(f"/c/activity/{activity.activity_id}/?subject_id={activity.subject.subject_id}")
 
 class EditInsightView(View):
 	def get(self, request, submission_id):

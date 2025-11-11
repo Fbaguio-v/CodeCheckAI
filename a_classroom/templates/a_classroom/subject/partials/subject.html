@@ -84,8 +84,7 @@
             
             <!-- Updated subject_id with copy functionality -->
             <div class="p-2 border border-gray-300 rounded-md shadow-md cursor-pointer w-50 flex items-center justify-center gap-2 relative group" 
-                 title="Click to copy Class Code" 
-                 onclick="copySubjectId('{{ subject.subject_id }}', this)">
+                 title="Click to copy Class Code">
                 <span class="subject-id-text">{{ subject.subject_id }}</span>
             </div>
         </div>
@@ -106,44 +105,4 @@
             }
         });
     });
-
-    // Copy subject_id function
-    function copySubjectId(text, element) {
-        navigator.clipboard.writeText(text).then(() => {
-            // Show visual feedback by changing background color
-            const originalBg = element.style.backgroundColor;
-            const originalBorder = element.style.borderColor;
-            
-            element.style.backgroundColor = '#d1fae5'; // light green
-            element.style.borderColor = '#10b981'; // green border
-            
-            // Reset after 1.5 seconds
-            setTimeout(() => {
-                element.style.backgroundColor = originalBg;
-                element.style.borderColor = originalBorder;
-            }, 1500);
-            
-        }).catch(err => {
-            console.error('Failed to copy: ', err);
-            // Fallback for older browsers
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            
-            // Show feedback even with fallback
-            const originalBg = element.style.backgroundColor;
-            const originalBorder = element.style.borderColor;
-            
-            element.style.backgroundColor = '#d1fae5';
-            element.style.borderColor = '#10b981';
-            
-            setTimeout(() => {
-                element.style.backgroundColor = originalBg;
-                element.style.borderColor = originalBorder;
-            }, 1500);
-        });
-    }
 </script>

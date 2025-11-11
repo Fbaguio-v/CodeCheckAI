@@ -1,7 +1,7 @@
 {% load static tailwind_tags %}
 {% tailwind_css %}
 
-<div class="flex flex-col items-center justify-center h-screen w-full">
+<div class="flex flex-col items-center justify-center h-full w-full">
     <div class="w-full max-w-xl border border-gray-300 p-6 rounded-lg shadow-sm">
     	<form class="flex flex-col space-y-4" method="post" action="{% url 'c_activities:create-activity' %}"
 			hx-post="{% url 'c_activities:create-activity' %}"
@@ -10,25 +10,44 @@
     		{% csrf_token %}
     		<input id="subject_id" name="subject_id" hidden value="{{ subject_id }}">
 			
-			<label for="id_type" class="block font-semibold">Type</label>
-			<select id="id_type" name="type" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" required>
-				<option value="" disabled selected>Select type</option>
-				<option value="activity">Activity</option>
-				<option value="quiz">Quiz</option>
-			</select>
-
-			<label for="id_language" class="block font-semibold">Language</label>
-			<select id="id_language" name="language" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" required>
-				<option value="" disabled selected>Select type</option>
-				<option value="Python">Python</option>
-				<option value="Java">Java</option>
-			</select>
+			<div style="display: flex; gap: 10px;">
+				<div style="width: 50%; ">			
+					<label for="id_type" class="block font-semibold">Type</label>
+					<select id="id_type" name="type" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" required>
+						<option value="" disabled selected>Select type</option>
+						<option value="activity">Activity</option>
+						<option value="quiz">Quiz</option>
+					</select>
+				</div>
+				<div style="width: 50%;">
+					<label for="id_language" class="block font-semibold">Language</label>
+					<select id="id_language" name="language" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" required>
+						<option value="" disabled selected>Select type</option>
+						<option value="Python">Python</option>
+						<option value="Java">Java</option>
+					</select>
+				</div>
+			</div>
 
     		<label for="id_title" class="block font-semibold">Title</label>
-			<input id="id_title" name="id_title" type="text" placeholder="Activity or Quiz Title" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
+			<textarea 
+				id="id_title" 
+				name="id_title" 
+				placeholder="Activity or Quiz Title" 
+				rows="2"
+				style="resize: none;"
+				class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" 
+				required></textarea>
 
 			<label for="id_description" class="block font-semibold">Description</label>
-            <input id="id_description" name="id_description" type="text" placeholder="Description" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" required>
+			<textarea 
+				id="id_description" 
+				name="id_description" 
+				placeholder="Description" 
+				rows="4"
+				style="resize: none;"
+				class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" 
+				required></textarea>
 
 			<label for="id_max_score" class="block font-semibold">Max Score</label>
             <input id="id_max_score" name="id_max_score" type="number" min="1" placeholder="Maximum Score" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" required>
@@ -37,7 +56,7 @@
     		<input id="id_max_attempt" name="id_max_attempt" value="3" type="number" min="1" placeholder="Maximum Attempt" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
 
 			<label for="id_due_at" class="block font-semibold">Due</label>
-            <input id="id_due_at" name="id_due_at" type="datetime-local" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" required>
+            <input id="id_due_at" name="id_due_at" type="datetime-local" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" min="{% now 'Y-m-d\TH:i' %}" required>
 
 			<div>
 				<h5 class="text-lg font-semibold mb-2">
