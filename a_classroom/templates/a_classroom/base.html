@@ -70,19 +70,19 @@
             </nav>
 
         {% if request.user.is_authenticated and request.path != '/p/' %}
-            <aside id="sidebar" class="relative flex flex-col justify-between p-4 overflow-y-auto text-white bg-gray-100 border-r border-gray-500 border-solid shadow-xl">
-                <div
-                    id="subjects"
+            <aside id="sidebar" class="relative flex flex-col justify-between overflow-y-auto text-white bg-gray-200 border-r border-gray-500 border-solid shadow-xl">
+                <div id="subjects"
+                    class="w-full h-full"
                     hx-get="{% url 'a_classroom:index' %}" 
                     hx-target="#subjects" 
                     hx-swap="innerHTML"
                     hx-trigger="load">
                 </div>
 
-                <div id="sidebar-actions" class="mt-4">
+                <div id="sidebar-actions" class="p-4">
                     {% if request.user.userprofile.role == "Instructor" %}
                             <a href="{% url 'a_classroom:create-subject' %}">
-                                <button class="w-full p-3 text-black text-sm font-medium text-gray-800 sm:text-base bg-gray-200 border border-black rounded-lg hover:bg-gray-300 cursor-pointer">
+                                <button class="w-full p-3 text-black text-sm font-medium text-gray-800 sm:text-base bg-gray-100 border border-black rounded-lg hover:bg-gray-300 cursor-pointer">
                                     Create Subject
                                 </button>
                             </a>
@@ -92,7 +92,7 @@
                                     hx-trigger="click"
                                     hx-target="#main-content"
                                     hx-swap="innerHTML"
-                                    class="w-full p-3 text-black text-sm font-medium text-gray-800 sm:text-base bg-gray-200 border border-black rounded-lg hover:bg-gray-300 cursor-pointer">
+                                    class="w-full p-3 text-black text-sm font-medium text-gray-800 sm:text-base bg-gray-100 border border-black rounded-lg hover:bg-gray-300 cursor-pointer">
                                 Join Class
                             </button>
                     {% endif %}

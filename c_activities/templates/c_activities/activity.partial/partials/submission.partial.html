@@ -12,41 +12,49 @@
     </div>
 
     <!-- Submission Details -->
-    <div class="relative w-full h-full bg-gray-200">
+    <div class="relative w-full h-full bg-gray-200 min-h-0">
         <!-- Scrollable content area -->
-        <div class="h-full overflow-y-auto pt-10 pl-5 pr-5 pb-20">
+        <div class="h-full overflow-y-auto pt-6 pl-4 pr-4 pb-28 min-h-0" style="scrollbar-gutter: stable;">
             {% if submission %}
-                <p class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-                    <span class="font-bold">Email Address : </span>{{ submission.student.email }}
-                </p>
 
-                <p class="pb-3 text-left break-words text-sm font-medium text-gray-800 sm:text-base">
-                    <span class="font-bold">Submitted Code : </span>
-                    <pre class="mt-2 p-3 bg-gray-100 rounded-lg overflow-x-auto min-h-48 max-h-80 text-sm font-medium text-gray-800 sm:text-base">{{ submission.submitted_code }}</pre>
+                <div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
+                    <span class="font-bold">Email Address</span>
+                    <div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-80 overflow-y-auto" style="scrollbar-gutter: stable;">
+                        {{ submission.student.email }}
+                    </div>
+                </div>
+
+                <p class="b-3 text-left text-sm font-medium text-gray-800 sm:text-base">
+                    <span class="font-bold">Submitted Code</span>
+                    <pre class="mb-4 p-3 bg-gray-100 rounded-lg min-h-24 max-h-80 overflow-y-auto">{{ submission.submitted_code }}</pre>
                 </p>
 
                 <!-- Editable Feedback with scrollable content -->
-                <div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-                    <span class="font-bold">Feedback : </span>
-                    <div class="mt-2 p-3 bg-gray-100 rounded-lg min-h-48 max-h-80 overflow-y-auto">
+                <div id="feedback-{{ submission.id }}" class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
+                    <span class="font-bold">Feedback</span>
+                    <div class="mb-4 p-3 bg-gray-100 rounded-lg min-h-48 max-h-80 overflow-y-auto" style="scrollbar-gutter: stable;">
                         {{ submission.feedback }}
+                        <button class="ml-3 mt-3 md:ml-3 md:mt-0 px-3 py-1 text-sm font-medium sm:text-base text-white bg-blue-600 rounded-lg shadow hover:bg-blue-800 transition-colors duration-200 {% if first_submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
+                            hx-get="{% url 'c_activities:edit-insight' submission.id %}"
+                            hx-swap="outerHTML"
+                            hx-target="#feedback-{{ submission.id }}"
+                            title="Click to edit feedback"
+                            {% if submission.status == 'returned' %} disabled {% endif %}>Edit Feedback</button>
                     </div>
-                    <button class="ml-3 px-3 py-1 text-white bg-blue-600 rounded-lg shadow hover:bg-blue-800 text-sm font-medium text-gray-800 sm:text-base"
-                        hx-get="{% url 'c_activities:edit-insight' submission.id %}"
-                        hx-swap="outerHTML"
-                        hx-target="#feedback-{{ submission.id }}"
-                        title="Click to edit feedback">Edit Feedback</button>
                 </div>
 
-                <!-- Editable Score -->
-                <p id="score-{{ submission.id }}" class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-                    <span class="font-bold">Score : </span>{{ submission.score }}
-                    <button class="ml-3 px-3 py-1 text-sm text-white bg-green-600 rounded-lg shadow hover:bg-green-800 transition-colors duration-200"
-                        hx-get="{% url 'c_activities:edit-grade' submission.id %}" 
-                        hx-swap="outerHTML" 
-                        hx-target="#score-{{ submission.id }}" 
-                        title="Click to edit grade">Edit Grade</button>
-                </p>
+                <div id="score-{{ submission.id }}" class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
+                    <span class="font-bold">Score</span>
+                    <div class="p-3 bg-gray-100 rounded-lg max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;"> 
+                        {{ submission.score }}
+                        <button class="ml-3 px-3 py-1 text-sm text-sm font-medium sm:text-base text-white bg-green-600 rounded-lg shadow hover:bg-green-800 transition-colors duration-200 {% if submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
+                            hx-get="{% url 'c_activities:edit-grade' submission.id %}" 
+                            hx-swap="outerHTML" 
+                            hx-target="#score-{{ submission.id }}" 
+                            title="Click to edit grade"
+                            {% if submission.status == 'returned' %} disabled {% endif %}>Edit Grade</button>
+                    </div>
+                </div>
 
                 <!-- Return Grade button placed directly under the score -->
                 <form hx-post="{% url 'c_activities:return-grade' submission.id %}" class="mt-2">
