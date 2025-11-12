@@ -34,7 +34,7 @@
                     <span class="font-bold">Feedback</span>
                     <div class="mb-4 p-3 bg-gray-100 rounded-lg min-h-48 max-h-80 overflow-y-auto" style="scrollbar-gutter: stable;">
                         {{ submission.feedback }}
-                        <button class="ml-3 mt-3 md:ml-3 md:mt-0 px-3 py-1 text-sm font-medium sm:text-base text-white bg-blue-600 rounded-lg shadow hover:bg-blue-800 transition-colors duration-200 {% if first_submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
+                        <button class="ml-3 mt-3 md:ml-3 md:mt-0 px-3 py-1 text-sm font-medium sm:text-base text-white bg-blue-600 rounded-lg shadow hover:bg-blue-800 transition-colors duration-200 {% if submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
                             hx-get="{% url 'c_activities:edit-insight' submission.id %}"
                             hx-swap="outerHTML"
                             hx-target="#feedback-{{ submission.id }}"
