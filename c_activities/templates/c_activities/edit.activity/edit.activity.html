@@ -1,42 +1,41 @@
-<form method="POST" action="{% url 'c_activities:edit-activity' activity.activity_id %}" class="flex flex-col gap-4 p-6 bg-white rounded-lg shadow-sm border border-gray-200 w-full mx-auto">
+<form method="POST" action="{% url 'c_activities:edit-activity' activity.activity_id %}" 
+class="flex flex-col gap-4 bg-gray-200 rounded-lg border border-gray-200 w-full mx-auto">
   {% csrf_token %}
-  <div>
-    <h3 class="text-lg font-semibold text-gray-800">Edit Activity</h3>
-    <p class="text-sm text-gray-600">Update the details below and click Save when finished.</p>
+  <div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
+    <span class="font-bold">Edit Activity</span>
+    <p class="text-sm text-gray-800">Update the details below and click Save when finished.</p>
   </div>
 
-  <div class="flex flex-col">
-    <label class="mb-1 text-sm font-medium text-gray-800">Title</label>
-    <input class="border border-solid border-gray-300 w-full p-2 rounded bg-gray-50 text-sm font-medium text-gray-800 sm:text-base" type="text" name="title" value="{{ activity.title }}" required>
+  <div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
+    <label for="title" class="font-bold">Title</label>
+    <input class="border border-solid border-black w-full p-2 rounded bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200" type="text" name="title" id="title" value="{{ activity.title }}" required>
   </div>
 
-  <div class="flex flex-col">
-    <label class="mb-1 text-sm font-medium text-gray-800">Description</label>
-    <textarea class="border border-solid border-gray-300 w-full p-2 rounded bg-gray-50 h-32 text-sm font-medium text-gray-800 sm:text-base" name="description" style="resize: none;" required>{{ activity.description }}</textarea>
+  <div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
+    <label for="description" class="font-bold">Description</label>
+    <textarea class="border border-solid w-full p-2 rounded h-32 text-sm font-medium text-gray-800 sm:text-base border-black bg-gray-100 focus:bg-gray-200" name="description" id="description" style="resize: none;" required>{{ activity.description }}</textarea>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div class="flex flex-col">
-      <label class="mb-1 text-sm font-medium text-gray-800">Max score</label>
-      <input class="border border-solid border-gray-300 w-full p-2 rounded bg-gray-50 text-sm font-medium text-gray-800 sm:text-base" type="number" name="max_score" value="{{ activity.max_score }}" required>
+    <div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
+      <label for="max_score" class="font-bold">Max score</label>
+      <input class="border border-solid border-black w-full p-2 rounded bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200" type="number" name="max_score" id="max_score" value="{{ activity.max_score }}" required>
     </div>
 
     {% if activity.type == "quiz" %}
-    <div class="flex flex-col">
-      <label class="mb-1 text-sm font-medium text-gray-800">Max attempt</label>
-      <input class="border border-solid border-gray-300 w-full p-2 rounded bg-gray-50 text-sm font-medium text-gray-800 sm:text-base" type="number" name="max_attempt" value="{{ activity.max_attempt }}" required>
+    <div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
+      <label for="max_attempt" class="font-bold">Max attempt</label>
+      <input class="border border-solid border-black w-full p-2 rounded bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200" type="number" name="max_attempt" id="max_attempt" value="{{ activity.max_attempt }}" required>
     </div>
     {% endif %}
   </div>
 
-  <div class="flex flex-col">
-    <label class="mb-1 text-sm font-medium text-gray-700">Due</label>
-    <input class="border border-solid border-gray-300 w-full p-2 rounded bg-gray-50 text-sm font-medium text-gray-800 sm:text-base" type="datetime-local" name="due_at" value="{{ activity.due_at|date:'Y-m-d\TH:i' }}" min="{% now 'Y-m-d\TH:i' %}" required>
+  <div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
+    <label for="due_at" class="font-bold">Due</label>
+    <input class="border border-solid border-black w-full p-2 rounded bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200" type="datetime-local" name="due_at" id="due_at" value="{{ activity.due_at|date:'Y-m-d\TH:i' }}" min="{% now 'Y-m-d\TH:i' %}" required>
   </div>
 
-  <div class="pt-2 border-t border-gray-100" />
-
-  <div class="flex-none">
-    <button class="w-full h-12 text-white bg-black border-2 border-solid shadow-xl rounded-xl hover:bg-gray-700 transition-colors duration-200 text-sm font-medium sm:text-base" type="submit">Save</button>
+  <div class="flex justify-center items-center w-full h-12">
+    <button class="w-[30%] min-w-[15%] h-full text-white bg-black border border-solid rounded-xl hover:bg-gray-700 transition-colors duration-200 text-sm font-medium sm:text-base" type="submit">Save</button>
   </div>
 </form>

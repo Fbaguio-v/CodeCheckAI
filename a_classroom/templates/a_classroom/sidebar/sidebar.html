@@ -7,12 +7,12 @@
             <!-- Responsive Scrollable Subjects (updated to match Admin card style) -->
             <div class="flex-1 overflow-y-auto scrollbar-hidden 
                         max-h-[500px] sm:max-h-[600px] md:max-h-[700px] lg:max-h-[750px] 
-                        px-2 sm:px-3 md:px-4">
+                        p-4 sm:px-3 md:px-4">
                 <ul class="space-y-2 text-center" id="subjects-ul">
                     {% for subject in subjects %}
                         <li class="block w-full">
                             <a href="{% url 'a_classroom:v' subject.subject_id %}?from={{ request.path }}"
-                               class="block text-black text-sm font-medium text-gray-800 sm:text-base border border-black rounded-lg hover:shadow-lg hover:bg-gray-300 p-2 sm:p-3 md:p-4 m-1 sm:m-2">
+                               class="block text-black text-sm font-medium text-gray-800 bg-gray-100 sm:text-base border border-black rounded-lg hover:shadow-lg hover:bg-gray-300 sm:p-3 md:p-4 m-1">
                                 <h1 class="text-base font-bold sm:text-lg md:text-xl">
                                     {{ subject.course_code }}
                                 </h1>
@@ -25,7 +25,7 @@
         {% endif %}
     {% elif request.user.userprofile.role == "Admin" %}
 
-        <div class="mt-2">
+        <div class="mt-2 p-4">
             <ul class="space-y-3">
                 <li class="pb-4">
                     <a href="{% url 'a_classroom:get-users' %}?from={{ request.path }}" 
