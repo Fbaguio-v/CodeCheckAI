@@ -66,7 +66,7 @@ def index(request):
         if request.headers.get("HX-Request") == "true":
             return render(request, 'a_classroom/sidebar/sidebar.html', {"subjects" : subjects})
 
-        return render(request, 'a_classroom/c.student/student.html', {"subjects" : subjects})
+        return render(request, 'a_classroom/b.instructor/instructor.html', {"subjects" : subjects})
 
     return render(request, 'a_classroom/index.html')
 
