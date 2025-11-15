@@ -10,9 +10,9 @@
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     {% tailwind_css %}
 </head>
-<body>
+<body class="h-screen">
     {% if messages %}
-    <div id="message-container" class="fixed z-50 space-y-2 transform -translate-x-1/2 top-4 left-1/2">
+    <div class="fixed top-4 left-1/2 z-50 space-y-2 transform -translate-x-1/2">
         {% for message in messages %}
         <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative shadow-md w-[300px] text-center" role="alert">
             <span class="block sm:inline">{{ message }}</span>
@@ -27,15 +27,16 @@
     </div>
     {% endif %}
 
-    <div id="layout" class="grid grid-rows-[auto_1fr] min-h-screen max-h-screen font-normal
-        {% if request.user.is_authenticated and request.path != '/p/' and request.user.userprofile.role != 'Admin' %}
-            grid-cols-[200px_1fr]
+    <div id="layout" class="grid grid-rows-[4rem_1fr] h-full w-full font-normal
+        {% if request.user.is_authenticated %}
+            {% if request.user.userprofile.role == 'Admin' or request.path != '/p/' %}
+                grid-cols-[200px_1fr]
+            {% endif %}
         {% else %}
             grid-cols-1
         {% endif %}">
-    <!-- Navbar -->
-            <nav class="flex flex-row items-center justify-between h-[75px] col-span-2 p-6 space-x-6 text-white bg-gray-800 shadow-xl">
-                <ul class="flex flex-row items-center space-x-6">
+            <nav class="flex flex-row items-center justify-between w-full col-span-2 p-6 text-white bg-gray-800 shadow-xl">
+                <ul class="flex flex-row items-center">
                     {% if request.user.is_authenticated %}
                     <li>
                         <button id="toggle-sidebar" 
@@ -59,7 +60,7 @@
                     {% endif %}
                 </ul>
 
-                <ul class="flex space-x-12">
+                <ul class="flex">
                     {% if request.user.is_authenticated %}
                         <li><a href="{% url 'a_classroom:setting' %}?from={{ request.path }}" class="p-4 rounded-lg hover:bg-gray-500">Settings</a></li>
                     {% else %}
@@ -69,20 +70,24 @@
                 </ul>
             </nav>
 
-        {% if request.user.is_authenticated and request.path != '/p/' %}
-            <aside id="sidebar" class="relative flex flex-col justify-between overflow-y-auto text-white bg-gray-200 border-r border-gray-500 border-solid shadow-xl">
-                <div id="subjects"
-                    class="w-full h-full"
+        {% if request.user.is_authenticated %}
+            <aside id="sidebar" class="overflow-auto flex flex-col justify-between h-full w-full text-white bg-gray-200 border-r border-gray-500 border-solid shadow-xl">
+                <div id="subjects" 
+                    class="flex-1 overflow-auto"
                     hx-get="{% url 'a_classroom:index' %}" 
                     hx-target="#subjects" 
                     hx-swap="innerHTML"
                     hx-trigger="load">
+                    <!-- Loading state -->
+                    <div class="flex items-center justify-center h-full text-gray-500">
+                        <p>Loading subjects...</p>
+                    </div>
                 </div>
 
-                <div id="sidebar-actions" class="p-4">
+                <div id="sidebar-actions">
                     {% if request.user.userprofile.role == "Instructor" %}
                             <a href="{% url 'a_classroom:create-subject' %}">
-                                <button class="w-full p-3 text-black text-sm font-medium text-gray-800 sm:text-base bg-gray-100 border border-black rounded-lg hover:bg-gray-300 cursor-pointer">
+                                <button class="w-full p-4 text-black text-sm font-medium text-gray-800 sm:text-base bg-gray-100 border border-black rounded-lg hover:bg-gray-300 cursor-pointer">
                                     Create Subject
                                 </button>
                             </a>
@@ -99,9 +104,12 @@
                 </div>
 
             </aside>
+        {% else %}
+            <aside class="h-full w-full hidden">
+            </aside>
         {% endif %}
 
-        <main id="main-content" class="overflow-hidden">
+        <main id="main-content" class="overflow-hidden h-full">
             {% block content %}{% endblock %}
         </main>
     </div>

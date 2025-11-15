@@ -2,12 +2,13 @@
 {% load static tailwind_tags %}
 {% tailwind_css %}
 {% block content %}
+<div class="h-full overflow-auto overflow-x-hidden">
     {% if subjects %}
-        <ul class="grid grid-cols-4 gap-4 p-4">
+        <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 p-4">
             {% for subject in subjects %}
                 <li>
                     <a href="{% url 'a_classroom:v' subject.subject_id %}">
-                        <div class="flex flex-col justify-center p-[70px] text-center transition border border-black rounded-lg hover:shadow-lg hover:bg-gray-100 shadow-xl">
+                        <div class="flex flex-col justify-center p-[50px] text-center transition border border-black rounded-lg hover:shadow-lg hover:bg-gray-100 shadow-xl">
                             <h1 class="text-lg font-bold">{{ subject.course_code }}</h1>
                             <p>{{ subject.section.name }}</p>
                             <p>{{ subject.instructor.get_full_name }}</p>
@@ -17,8 +18,17 @@
             {% endfor %}
         </ul>
     {% else %}
-        <div class="flex items-center justify-center w-full h-full">
-            <img src="{% static 'mysite_images/noclassv5.png' %}" alt="No Class available" class="object-contain opacity-75 w-100 h-100">
-        </div>
+        {% if request.user.is_authenticated %}
+            {% if request.user.userprofile.role == "Instructor" %}
+                <div class="flex items-center justify-center w-full h-full">
+                    <img src="{% static 'mysite_images/noclassv5.png' %}" alt="No Class available" class="object-contain opacity-75 w-100 h-100">
+                </div>
+            {% elif request.user.userprofile.role == "Student" %}
+                <div class="flex items-center justify-center w-full h-full">
+                    <img src="{% static 'mysite_images/noclassv4.png' %}" alt="No subject available" class="object-contain opacity-75 w-100 h-100">
+                </div>
+            {% endif %}
+        {% endif %}
     {% endif %}
+</div>
 {% endblock %}
