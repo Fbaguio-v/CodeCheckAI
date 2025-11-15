@@ -1,5 +1,4 @@
 {% load static %}
-{% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %} CodeCheckAI {% endblock %}</title>
     <link rel="icon" type="image/x-icon" href="{% static 'mysite_images/logo.png' %}">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
-    {% tailwind_css %}
 </head>
 <body class="h-screen">
     {% if messages %}
@@ -83,20 +82,8 @@
             </nav>
 
         {% if request.user.is_authenticated %}
-            <aside id="sidebar" class="overflow-auto flex flex-col justify-between h-full w-full text-white bg-gray-200 border-r border-gray-500 border-solid shadow-xl">
-                <div id="subjects" 
-                    class="flex-1 overflow-auto"
-                    hx-get="{% url 'a_classroom:index' %}" 
-                    hx-target="#subjects" 
-                    hx-swap="innerHTML"
-                    hx-trigger="load">
-                    <!-- Loading state -->
-                    <div class="flex items-center justify-center h-full text-gray-500">
-                        <p>Loading subjects...</p>
-                    </div>
-                </div>
-
-                <div id="sidebar-actions">
+            <aside id="sidebar" class="flex flex-col h-full w-full text-white bg-gray-200 border-r border-gray-500 border-solid shadow-xl">
+                <div id="sidebar-actions p-4">
                     {% if request.user.userprofile.role == "Instructor" %}
                             <a href="{% url 'a_classroom:create-subject' %}">
                                 <button class="w-full p-4 text-black text-sm font-medium text-gray-800 sm:text-base bg-gray-100 border border-black rounded-lg hover:bg-gray-300 cursor-pointer">
@@ -113,6 +100,17 @@
                                 Join Class
                             </button>
                     {% endif %}
+                </div>
+                <div id="subjects" 
+                    class="flex-1 overflow-auto"
+                    hx-get="{% url 'a_classroom:index' %}" 
+                    hx-target="#subjects" 
+                    hx-swap="innerHTML"
+                    hx-trigger="load">
+                    <!-- Loading state -->
+                    <div class="flex items-center justify-center h-full text-gray-500">
+                        <p>Loading subjects...</p>
+                    </div>
                 </div>
 
             </aside>
