@@ -11,7 +11,7 @@
 </head>
 <body class="h-screen">
     {% if messages %}
-    <div class="fixed top-4 left-1/2 z-50 space-y-2 transform -translate-x-1/2">
+    <div style="position: fixed; top: 20px; right: 50px; z-index: 50;">
         {% for message in messages %}
         <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative shadow-md w-[300px] text-center" role="alert">
             <span class="block sm:inline">{{ message }}</span>
