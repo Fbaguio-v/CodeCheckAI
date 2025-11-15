@@ -2,7 +2,7 @@
 {% load static tailwind_tags %}
 {% tailwind_css %}
 {% block content %}
-<div class="h-full overflow-y-auto overflow-x-hidden">
+<div class="h-full overflow-auto overflow-x-hidden">
     {% if subjects %}
         <ul class="grid grid-cols-1 grid-rows-[auto_1fr] gap-4 overflow-auto p-4">
             {% for subject in subjects %}
