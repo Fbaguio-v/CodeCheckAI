@@ -31,7 +31,13 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', 'localhost', '3.106.60.140'] # also allow the domain here
+ALLOWED_HOSTS = [
+    'codechecksai.loan',
+    'www.codechecksai.loan',
+    '3.106.60.140',
+    'localhost',
+    '127.0.0.1',
+]
 
 SITE_ID = 1
 DOMAIN = os.environ.get('DOMAIN')
