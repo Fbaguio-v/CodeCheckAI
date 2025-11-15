@@ -27,7 +27,7 @@
     </div>
     {% endif %}
 
-    <div id="layout" class="grid grid-rows-[4rem_1fr] h-full w-full font-normal
+    <div id="layout" class="grid grid-rows-[1rem_1fr] h-full w-full font-normal
         {% if request.user.is_authenticated %}
             {% if request.user.userprofile.role == 'Admin' or request.path != '/p/' %}
                 grid-cols-[200px_1fr]
@@ -35,37 +35,49 @@
         {% else %}
             grid-cols-1
         {% endif %}">
-            <nav class="flex flex-row items-center justify-between w-full col-span-2 p-6 text-white bg-gray-800 shadow-xl">
-                <ul class="flex flex-row items-center">
+            <nav class="flex flex-col sm:flex-row sm:items-center justify-between w-full col-span-2 p-4 sm:p-6 text-white bg-gray-800 shadow-xl gap-3 sm:gap-0">
+                <ul class="flex flex-row items-center flex-wrap gap-2 sm:gap-0">
                     {% if request.user.is_authenticated %}
-                    <li>
+                    <li class="mr-2 sm:mr-4">
                         <button id="toggle-sidebar" 
-                            class="px-3 py-2 text-white transition bg-gray-800 rounded hover:bg-gray-500 cursor-pointer">
+                            class="px-3 py-2 text-white transition bg-gray-800 rounded hover:bg-gray-500 cursor-pointer text-sm sm:text-base">
                                 ☰
-                            </button>
-                        </li>
+                        </button>
+                    </li>
                     {% endif %}
-                    <li>
+                    <li class="mr-4 sm:mr-6">
                         <a href="{% url 'a_classroom:index' %}">
-                            <img class="h-10" src="{% static 'mysite_images/logo.png' %}" alt="logo.png">
+                            <img class="h-8 sm:h-10" src="{% static 'mysite_images/logo.png' %}" alt="logo.png">
                         </a>
                     </li>
                     {% if request.user.is_authenticated %}
-                        <li><a href="{% url 'a_classroom:index' %}" class="p-4 rounded-lg hover:bg-gray-500">Home</a></li>
+                        <li class="mr-2 sm:mr-4">
+                            <a href="{% url 'a_classroom:index' %}" class="p-2 sm:p-3 rounded-lg hover:bg-gray-500 text-sm sm:text-base whitespace-nowrap">Home</a>
+                        </li>
                         {% if request.user.userprofile.role == "Student" %}
-                            <li><a href="{% url 'd_compiler:index' %}" class="p-4 rounded-lg hover:bg-gray-500">Playground</a></li>
+                            <li class="mr-2 sm:mr-4">
+                                <a href="{% url 'd_compiler:index' %}" class="p-2 sm:p-3 rounded-lg hover:bg-gray-500 text-sm sm:text-base whitespace-nowrap">Playground</a>
+                            </li>
                         {% endif %}
                     {% else %}
-                        <li><a href="{% url 'd_compiler:index' %}" class="p-4 rounded-lg hover:bg-gray-500">Playground</a></li>
+                        <li class="mr-2 sm:mr-4">
+                            <a href="{% url 'd_compiler:index' %}" class="p-2 sm:p-3 rounded-lg hover:bg-gray-500 text-sm sm:text-base whitespace-nowrap">Playground</a>
+                        </li>
                     {% endif %}
                 </ul>
 
-                <ul class="flex">
+                <ul class="flex flex-wrap gap-2 sm:gap-4">
                     {% if request.user.is_authenticated %}
-                        <li><a href="{% url 'a_classroom:setting' %}?from={{ request.path }}" class="p-4 rounded-lg hover:bg-gray-500">Settings</a></li>
+                        <li>
+                            <a href="{% url 'a_classroom:setting' %}?from={{ request.path }}" class="p-2 sm:p-3 rounded-lg hover:bg-gray-500 text-sm sm:text-base whitespace-nowrap">Settings</a>
+                        </li>
                     {% else %}
-                        <li><a href="{% url 'register:register' %}" class="p-4 rounded-lg hover:bg-gray-500">Register</a></li>
-                        <li><a href="{% url 'register:login' %}" class="p-4 rounded-lg hover:bg-gray-500">Login</a></li>
+                        <li>
+                            <a href="{% url 'register:register' %}" class="p-2 sm:p-3 rounded-lg hover:bg-gray-500 text-sm sm:text-base whitespace-nowrap">Register</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register:login' %}" class="p-2 sm:p-3 rounded-lg hover:bg-gray-500 text-sm sm:text-base whitespace-nowrap">Login</a>
+                        </li>
                     {% endif %}
                 </ul>
             </nav>
