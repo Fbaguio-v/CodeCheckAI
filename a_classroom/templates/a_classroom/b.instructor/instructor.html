@@ -1,7 +1,7 @@
 {% extends 'a_classroom/base.html' %}
-{% load static tailwind_tags %}
-{% tailwind_css %}
+{% load static %}
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <div class="h-full overflow-auto overflow-x-hidden">
     {% if subjects %}
         <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 p-4">
