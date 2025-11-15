@@ -4,7 +4,7 @@
 {% tailwind_css %}
 {% block content %}
 
-<div class="@container h-screen flex items-center justify-center bg-white overflow-auto">
+<div class="h-screen flex items-center justify-center bg-white overflow-auto">
   <!-- Constrain width so it never becomes too wide on large screens -->
   <div class="w-full ml-[15px] mr-[15px] sm:w-[540px] bg-white border border-gray-300 shadow-xl rounded-xl">
     <form action="{% url 'register:login' %}?next={{ request.path }}" method="post"
