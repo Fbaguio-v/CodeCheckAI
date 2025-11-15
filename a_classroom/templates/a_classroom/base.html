@@ -27,7 +27,7 @@
     </div>
     {% endif %}
 
-    <div id="layout" class="grid grid-rows-[1rem_1fr] h-full w-full font-normal
+    <div id="layout" class="grid grid-rows-[auto_1fr] h-full w-full font-normal
         {% if request.user.is_authenticated %}
             {% if request.user.userprofile.role == 'Admin' or request.path != '/p/' %}
                 grid-cols-[200px_1fr]
@@ -35,7 +35,7 @@
         {% else %}
             grid-cols-1
         {% endif %}">
-            <nav class="flex flex-col sm:flex-row sm:items-center justify-between w-full col-span-2 p-4 sm:p-6 text-white bg-gray-800 shadow-xl gap-3 sm:gap-0">
+            <nav class="flex flex-row sm:flex-row sm:items-center justify-between w-full col-span-2 p-4 sm:p-6 text-white bg-gray-800 shadow-xl gap-3 sm:gap-0">
                 <ul class="flex flex-row items-center flex-wrap gap-2 sm:gap-0">
                     {% if request.user.is_authenticated %}
                     <li class="mr-2 sm:mr-4">
@@ -47,7 +47,7 @@
                     {% endif %}
                     <li class="mr-4 sm:mr-6">
                         <a href="{% url 'a_classroom:index' %}">
-                            <img class="h-8 sm:h-10" src="{% static 'mysite_images/logo.png' %}" alt="logo.png">
+                            <img class="h-6 sm:h-10" src="{% static 'mysite_images/logo.png' %}" alt="logo.png">
                         </a>
                     </li>
                     {% if request.user.is_authenticated %}
@@ -66,7 +66,7 @@
                     {% endif %}
                 </ul>
 
-                <ul class="flex flex-wrap gap-2 sm:gap-4">
+                <ul class="flex flex-wrap items-center gap-2 sm:gap-4">
                     {% if request.user.is_authenticated %}
                         <li>
                             <a href="{% url 'a_classroom:setting' %}?from={{ request.path }}" class="p-2 sm:p-3 rounded-lg hover:bg-gray-500 text-sm sm:text-base whitespace-nowrap">Settings</a>
