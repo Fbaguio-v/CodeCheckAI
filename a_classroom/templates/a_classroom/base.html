@@ -11,7 +11,7 @@
 </head>
 <body class="h-screen">
     {% if messages %}
-    <div style="position: fixed; top: 20px; right: 50px; z-index: 50;">
+    <div style="position: fixed; top: 5px; right: 30%; z-index: 50;">
         {% for message in messages %}
         <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative shadow-md w-[300px] text-center" role="alert">
             <span class="block sm:inline">{{ message }}</span>
@@ -83,6 +83,18 @@
 
         {% if request.user.is_authenticated %}
             <aside id="sidebar" class="flex flex-col h-full w-full text-white bg-gray-200 border-r border-gray-500 border-solid shadow-xl">
+                <div id="subjects" 
+                    class="flex-1 overflow-auto"
+                    hx-get="{% url 'a_classroom:index' %}" 
+                    hx-target="#subjects" 
+                    hx-swap="innerHTML"
+                    hx-trigger="load">
+                    <!-- Loading state -->
+                    <div class="flex items-center justify-center h-full text-gray-500">
+                        <p>Loading subjects...</p>
+                    </div>
+                </div>
+
                 <div id="sidebar-actions p-4">
                     {% if request.user.userprofile.role == "Instructor" %}
                             <a href="{% url 'a_classroom:create-subject' %}">
@@ -100,17 +112,6 @@
                                 Join Class
                             </button>
                     {% endif %}
-                </div>
-                <div id="subjects" 
-                    class="flex-1 overflow-auto"
-                    hx-get="{% url 'a_classroom:index' %}" 
-                    hx-target="#subjects" 
-                    hx-swap="innerHTML"
-                    hx-trigger="load">
-                    <!-- Loading state -->
-                    <div class="flex items-center justify-center h-full text-gray-500">
-                        <p>Loading subjects...</p>
-                    </div>
                 </div>
 
             </aside>

@@ -3,7 +3,7 @@
 {% block content %}
 <script src="https://cdn.tailwindcss.com"></script>
 
-<div id="parent" class="flex flex-row w-full h-full bg-gray-100 shadow-xl">
+<div id="parent" class="flex flex-row w-full h-full shadow-xl">
     <div id="activity-details"></div>
     <div hx-get="{% url 'a_classroom:view-activity' activity.activity_id %}?subject_id={{ subject_id }}&type=activity&action=activity_details" 
          hx-target="#activity-details" hx-swap="innerHTML" hx-trigger="load"></div>
@@ -28,7 +28,7 @@
         </div>
 
         <div class="flex flex-row h-auto w-full">
-            <div class="flex flex-row items-center justify-center w-full gap-4 p-4 bg-gray-200">
+            <div class="flex flex-row items-center justify-center w-full gap-4 p-4">
 
                 {% if activity.type == "activity" %}
                     {% if activity_submissions.0.status == "returned" %}

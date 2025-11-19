@@ -1,14 +1,13 @@
 {% extends 'a_classroom/base.html' %}
-{% load static tailwind_tags %}
-{% tailwind_css %}
+{% load static %}
 {% block content %}
 <div class="h-full overflow-auto overflow-x-hidden">
     {% if subjects %}
-        <ul class="grid grid-cols-1 grid-rows-[auto_1fr] gap-4 overflow-auto p-4">
+        <ul class="grid grid-cols-5 gap-3 p-4">
             {% for subject in subjects %}
                 <li>
                     <a href="{% url 'a_classroom:v' subject.subject_id %}?from={{ request.path }}">
-                        <div class="flex flex-col justify-center p-[10px] text-center transition border border-black rounded-lg hover:shadow-lg hover:bg-gray-100 shadow-xl">
+                        <div class="flex flex-col justify-center p-[50px] text-center transition border border-black rounded-lg hover:shadow-lg hover:bg-gray-100 shadow-xl">
                             <h1 class="text-lg font-bold">{{ subject.course_code }}</h1>
                             <p>{{ subject.section.name }}</p>
                             <p>{{ subject.instructor.get_full_name }}</p>
