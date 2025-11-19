@@ -6,7 +6,7 @@
         <ul class="grid grid-cols-5 gap-3 p-4">
             {% for subject in subjects %}
                 <li>
-                    <a href="{% url 'a_classroom:v' subject.subject_id %}">
+                    <a href="{% url 'a_classroom:v' subject.subject_id %}?from={{ request.path }}">
                         <div class="flex flex-col justify-center p-[50px] text-center transition border border-black rounded-lg hover:shadow-lg hover:bg-gray-100 shadow-xl">
                             <h1 class="text-lg font-bold">{{ subject.course_code }}</h1>
                             <p>{{ subject.section.name }}</p>
@@ -17,17 +17,9 @@
             {% endfor %}
         </ul>
     {% else %}
-        {% if request.user.is_authenticated %}
-            {% if request.user.userprofile.role == "Instructor" %}
-                <div class="flex items-center justify-center w-full h-full">
-                    <img src="{% static 'mysite_images/noclassv5.png' %}" alt="No Class available" class="object-contain opacity-75 w-100 h-100">
-                </div>
-            {% elif request.user.userprofile.role == "Student" %}
-                <div class="flex items-center justify-center w-full h-full">
-                    <img src="{% static 'mysite_images/noclassv4.png' %}" alt="No subject available" class="object-contain opacity-75 w-100 h-100">
-                </div>
-            {% endif %}
-        {% endif %}
+        <div class="flex items-center justify-center w-full h-full">
+            <img src="{% static 'mysite_images/noclassv5.png' %}" alt="No Class available" class="object-contain opacity-75 w-100 h-100">
+        </div>
     {% endif %}
 </div>
 {% endblock %}
