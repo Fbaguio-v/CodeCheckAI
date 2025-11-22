@@ -299,33 +299,6 @@ class StudentGradeView(View):
 
 		return render(request, "c_activities/activity.partial/student.sumission.html", {"sumission" : submission})
 
-class EditGradeView(View):
-    def get(self, request, submission_id):
-        submission = get_submission_by_id(submission_id)
-        if not submission:
-            return redirect("a_classroom:index")
-        return render(request, 'c_activities/activity.partial/partials/edit_score.html', {
-			"submission": submission
-		})
-
-    def post(self, request, submission_id):
-        button_type = request.POST.get("action")
-        new_score = request.POST.get("new_score")
-
-        submission = get_submission_by_id(submission_id)
-        if not submission:
-            return redirect("a_classroom:index")
-
-        if button_type == "confirm":
-            submission.score = new_score
-            submission.save()
-            return HttpResponse(new_score)
-
-        elif button_type == "cancel":
-            return HttpResponse(submission.score)
-        else:
-            return redirect("a_classroom:index")
-
 def get_activity_examples(activity):
 	examples = []
 	example_text = ActivityExample.objects.filter(activity=activity)
@@ -403,6 +376,38 @@ class EditActivityView(View):
         messages.success(request, "Activity updated successfully!")
         return redirect(f"/c/activity/{activity.activity_id}/?subject_id={activity.subject.subject_id}")
 
+class EditGradeView(View):
+    def get(self, request, submission_id):
+        submission = get_submission_by_id(submission_id)
+        if not submission:
+            return redirect("a_classroom:index")
+        return render(request, 'c_activities/activity.partial/partials/edit_score.html', {
+			"submission": submission
+		})
+
+    def post(self, request, submission_id):
+        button_type = request.POST.get("action")
+        new_score = request.POST.get("new_score")
+        subject_id = request.POST.get("subject_id")
+        activity_id = request.POST.get("activity_id")
+
+        submission = get_submission_by_id(submission_id)
+        if not submission:
+            return redirect("a_classroom:index")
+
+        if button_type == "confirm":
+            submission.score = new_score
+            submission.save()
+            response = HttpResponse()
+            response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}"
+            return response
+        elif button_type == "cancel":
+            response = HttpResponse()
+            response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}"
+            return response
+        else:
+            return redirect("a_classroom:index")
+
 class EditInsightView(View):
 	def get(self, request, submission_id):
 		submission = get_submission_by_id(submission_id)
@@ -414,6 +419,8 @@ class EditInsightView(View):
 	def post(self, request, submission_id):
 		button_type = request.POST.get("action")
 		new_insight = request.POST.get("new_insight")
+        subject_id = request.POST.get("subject_id")
+        activity_id = request.POST.get("activity_id")
 
 		submission = get_submission_by_id(submission_id)
 		if not submission:
@@ -422,10 +429,14 @@ class EditInsightView(View):
 		if button_type == "confirm":
 			submission.feedback = new_insight
 			submission.save()
-			return HttpResponse(new_insight)
+            response = HttpResponse()
+            response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}"
+            return response
 
 		elif button_type == "cancel":
-			return HttpResponse(submission.feedback)
+            response = HttpResponse()
+            response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}"
+            return response
 		else:
 			return redirect("a_classroom:index")
 

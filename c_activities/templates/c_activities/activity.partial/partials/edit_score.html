@@ -1,11 +1,10 @@
 <form 
   class="w-full max-w-xs"
   hx-post="{% url 'c_activities:edit-grade' submission.id %}?type=activity" 
-  hx-target="this"
-  hx-swap="outerHTML"
 >
   {% csrf_token %}
-  
+  <input type="hidden" name="subject_id" value="{{ submission.activity.subject.subject_id }}">
+  <input type="hidden" name="activity_id" value="{{ submission.activity.activity_id }}">
   <input 
     type="number" 
     name="new_score" 

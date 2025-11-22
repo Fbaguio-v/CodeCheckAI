@@ -5,8 +5,9 @@
   hx-swap="outerHTML"
 >
   {% csrf_token %}
+  <input type="hidden" name="subject_id" value="{{ submission.activity.subject.subject_id }}">
+  <input type="hidden" name="activity_id" value="{{ submission.activity.activity_id }}">
   
-  <span class="font-bold">Feedback : </span>
   <textarea 
     name="new_insight"
     class="mt-2 p-3 bg-gray-100 rounded-lg w-full h-32 resize-none overflow-y-auto"
