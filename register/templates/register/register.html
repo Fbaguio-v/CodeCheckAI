@@ -137,6 +137,37 @@
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const t1 = document.getElementById('id-for-password');
+  const t2 = document.getElementById('id-for-confirm');
+  const i1 = document.getElementById('id_password1');
+  const i2 = document.getElementById('id_password2');
+  if (t1) {
+    t1.addEventListener('click', function(e){
+      e.preventDefault();
+      togglePassword('id_password1','toggle_password1');
+      if(i1.type === "password") {
+        i1.type = "text";
+        t1.textContent = "Hide";
+      } else {
+        i1.type = "password";
+        t1.textContent = "Show";
+      }
+    });
+  }
+  if (t2) {
+    t2.addEventListener('click', function(e){
+      e.preventDefault();
+      togglePassword('id_password2','toggle_password2');
+      if(i2.type === "password") {
+        i2.type = "text";
+        t2.textContent = "Hide";
+      } else {
+        i2.type = "password";
+        t2.textContent = "Show";
+      }
+    });
+  }
 const termsContent = `
     <h4 class="mb-4 text-lg font-semibold">CodeCheckAI Terms and Conditions</h4>
     
@@ -379,37 +410,6 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-  const t1 = document.getElementById('id-for-password');
-  const t2 = document.getElementById('id-for-confirm');
-  const i1 = document.getElementById('id_password1');
-  const i2 = document.getElementById('id_password2');
-  if (t1) {
-    t1.addEventListener('click', function(e){
-      e.preventDefault();
-      togglePassword('id_password1','toggle_password1');
-      if(i1.type === "password") {
-        i1.type = "text";
-        t1.textContent = "Hide";
-      } else {
-        i1.type = "password";
-        t1.textContent = "Show";
-      }
-    });
-  }
-  if (t2) {
-    t2.addEventListener('click', function(e){
-      e.preventDefault();
-      togglePassword('id_password2','toggle_password2');
-      if(i2.type === "password") {
-        i2.type = "text";
-        t2.textContent = "Hide";
-      } else {
-        i2.type = "password";
-        t2.textContent = "Show";
-      }
-    });
-  }
 });
 </script>
 
