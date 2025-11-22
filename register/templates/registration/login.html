@@ -34,13 +34,8 @@
               <input type="password" name="password" id="id_password"
                     class="w-full h-10 sm:h-12 px-3 sm:px-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black pr-12"
                     placeholder="Password" required>
+              <span id="id-for-password" style="position: absolute; top: 10px; right: -25px; transform: translate(-50%); border-left: 0.1rem solid; padding: 0 10px; cursor: pointer;">Show</span>
           </div>
-      </div>
-
-      <!-- Show password checkbox -->
-      <div class="flex items-center gap-2 text-sm">
-        <input id="show_password_checkbox" type="checkbox" class="h-4 w-4 text-black focus:ring-black border-gray-300" />
-        <label for="show_password_checkbox" class="text-gray-700 select-none">Show Password</label>
       </div>
 
       <!-- Button -->
@@ -64,51 +59,18 @@
   </div>
 </div>
 <script>
-// Toggle password visibility (keeps template variables unchanged)
-function togglePassword(inputId, btnId) {
-  const input = document.getElementById(inputId);
-  const btn = document.getElementById(btnId);
-  if (!input || !btn) return;
-  const showIcon = btn.querySelector('.icon-show');
-  const hideIcon = btn.querySelector('.icon-hide');
-  if (input.type === 'password') {
-    input.type = 'text';
-    if (showIcon) showIcon.classList.add('hidden');
-    if (hideIcon) hideIcon.classList.remove('hidden');
-  } else {
-    input.type = 'password';
-    if (showIcon) showIcon.classList.remove('hidden');
-    if (hideIcon) hideIcon.classList.add('hidden');
-  }
-}
-
 document.addEventListener('DOMContentLoaded', function () {
-  const btn = document.getElementById('toggle_password_login');
-  const cb = document.getElementById('show_password_checkbox');
+  const toggle = document.getElementById('id-for-password');
   const input = document.getElementById('id_password');
-  if (btn) {
-    btn.setAttribute('type','button');
-    btn.classList.add('z-10');
-    btn.addEventListener('click', function (e) {
+  if (toggle) {
+    toggle.addEventListener('click', function (e) {
       e.preventDefault();
-      togglePassword('id_password','toggle_password_login');
-      if (cb && input) cb.checked = (input.type === 'text');
-    });
-  }
-  if (cb && input) {
-    cb.addEventListener('change', function () {
-      if (cb.checked) {
-        input.type = 'text';
-        const showIcon = btn?.querySelector('.icon-show');
-        const hideIcon = btn?.querySelector('.icon-hide');
-        if (showIcon) showIcon.classList.add('hidden');
-        if (hideIcon) hideIcon.classList.remove('hidden');
+      if(input.type === "password") {
+        input.type = "text";
+        toggle.textContent = "Hide";
       } else {
-        input.type = 'password';
-        const showIcon = btn?.querySelector('.icon-show');
-        const hideIcon = btn?.querySelector('.icon-hide');
-        if (showIcon) showIcon.classList.remove('hidden');
-        if (hideIcon) hideIcon.classList.add('hidden');
+        input.type = "password";
+        toggle.textContent = "Show";
       }
     });
   }
