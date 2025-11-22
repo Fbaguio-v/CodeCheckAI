@@ -145,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function () {
   if (t1) {
     t1.addEventListener('click', function(e){
       e.preventDefault();
-      togglePassword('id_password1','toggle_password1');
       if(i1.type === "password") {
         i1.type = "text";
         t1.textContent = "Hide";
@@ -158,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function () {
   if (t2) {
     t2.addEventListener('click', function(e){
       e.preventDefault();
-      togglePassword('id_password2','toggle_password2');
       if(i2.type === "password") {
         i2.type = "text";
         t2.textContent = "Hide";
@@ -409,7 +407,6 @@ document.addEventListener('keydown', function(event) {
         closeModal('privacyModal');
     }
 });
-
 });
 </script>
 
