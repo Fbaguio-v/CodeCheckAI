@@ -409,36 +409,38 @@ class EditGradeView(View):
             return redirect("a_classroom:index")
 
 class EditInsightView(View):
-	def get(self, request, submission_id):
-		submission = get_submission_by_id(submission_id)
-		if not submission:
-			return redirect("a_classroom:index")
+    def get(self, request, submission_id):
+        submission = get_submission_by_id(submission_id)
+        if not submission:
+            return redirect("a_classroom:index")
 
-		return render(request, "c_activities/activity.partial/partials/edit_insight.html", {"submission" : submission})
+        return render(request, "c_activities/activity.partial/partials/edit_insight.html", {"submission": submission})
 
-	def post(self, request, submission_id):
-		button_type = request.POST.get("action")
-		new_insight = request.POST.get("new_insight")
+    def post(self, request, submission_id):
+        button_type = request.POST.get("action")
+        new_insight = request.POST.get("new_insight")
         subject_id = request.POST.get("subject_id")
         activity_id = request.POST.get("activity_id")
 
-		submission = get_submission_by_id(submission_id)
-		if not submission:
-			return redirect("a_classroom:index")
-		
-		if button_type == "confirm":
-			submission.feedback = new_insight
-			submission.save()
+        submission = get_submission_by_id(submission_id)
+        if not submission:
+            return redirect("a_classroom:index")
+        
+        if button_type == "confirm":
+            submission.feedback = new_insight
+            submission.save()
+            # return HttpResponse(new_insight)
             response = HttpResponse()
             response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}"
             return response
 
-		elif button_type == "cancel":
+        elif button_type == "cancel":
+            # return HttpResponse(submission.feedback)
             response = HttpResponse()
             response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}"
             return response
-		else:
-			return redirect("a_classroom:index")
+        else:
+            return redirect("a_classroom:index")
 
 def return_submission(request, submission_id):
     action_type = request.POST.get("action")
