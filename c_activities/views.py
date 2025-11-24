@@ -149,8 +149,8 @@ class CreateActivityView(View):
         
         total = sum(values)
 
-        if total > 100:
-            messages.error(request, f"Criteria total cannot exceed 100%")
+        if total < 100 or total > 100:
+            messages.error(request, f"Criteria total cannot be less than or exceed 100%")
             response = HttpResponse()
             response["HX-Redirect"] = f"/c/subject/{subject_id}/"
             return response
@@ -228,8 +228,8 @@ class CreateActivityView(View):
             
             total = sum(values)
 
-            if total > 100:
-                messages.error(request, f"Criteria total cannot exceed 100%")
+            if total < 100 or total > 100:
+                messages.error(request, f"Criteria total cannot be less than or exceed 100%")
                 response = HttpResponse()
                 response["HX-Redirect"] = f"/c/subject/{subject_id}/"
                 return response
@@ -249,16 +249,6 @@ class CreateActivityView(View):
             if not subject:
                 messages.error(request, "Subject not found")
                 return redirect("a_classroom:index")
-
-            filters = {
-                "subject": subject,
-                "title": title,
-                "type": activity_type,
-            }
-            existing_activity = Activity.objects.filter(**filters).first()
-            if existing_activity:
-                messages.error(request, "Activity with this title already exists for this subject.")
-                return redirect(f"/a/?action=create-activity&subject_id={subject_id}")
 
             activity = Activity.objects.create(
                 subject=subject,

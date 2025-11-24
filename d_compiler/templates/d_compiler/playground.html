@@ -42,14 +42,13 @@
                         <form class="w-full sm:w-auto">
                             {% csrf_token %}
                             <button name="action"
-                value="run_code"
-                hx-post="{% url 'd_compiler:index' %}?type=playground"
-                hx-include="#compiler, #language_id"
-                hx-target="#code-output"
-                hx-swap="innerHTML"
-                class="w-full sm:w-auto px-6 py-2 text-white transition-colors bg-black rounded-lg shadow-md hover:bg-gray-600 text-sm sm:text-base md:text-lg">Run Code</button>
+                                value="run_code"
+                                hx-post="{% url 'd_compiler:index' %}?type=playground"
+                                hx-include="#compiler, #language_id"
+                                hx-target="#code-output"
+                                hx-swap="innerHTML"
+                                class="w-full sm:w-auto px-6 py-2 text-white transition-colors bg-black rounded-lg shadow-md hover:bg-gray-600 text-sm sm:text-base md:text-lg">Run Code</button>
                         </form>
-                        <div class="flex-1"></div>
                     </div>
                 </div>
             </div>
