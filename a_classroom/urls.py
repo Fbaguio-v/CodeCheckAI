@@ -4,6 +4,7 @@ from . import views
 app_name = "a_classroom"
 urlpatterns = [
     path("", views.index, name="index"),
+    path("test/", views.test, name='test'),
     #
     path("subject/<str:subject_id>/", views.view_subject, name="v"),
     #

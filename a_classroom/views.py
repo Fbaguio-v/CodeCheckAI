@@ -44,6 +44,9 @@ def get_student_submission_by_id(student, activity):
 def get_submission_by_id(submission_id):
     return ActivitySubmission.objects.filter(id=submission_id).first()
 
+def test(request):
+    return render(request, 'a_classroom/test.html')
+
 def index(request):
     if not hasattr(request.user, 'userprofile'):
         messages.error(request, "Your account is incomplete. Please contact the administrator.")
