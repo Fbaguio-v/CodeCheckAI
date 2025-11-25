@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const privacyDialog = document.getElementById("myPrivacy");
 
     // below is for login html
-    const loginToggle = document.getElementById('id_for_password');
+    const loginToggle = document.getElementById('id_for_login_toggle');
     const loginInput = document.getElementById('id_password');
 
     function getCookie(name) {
