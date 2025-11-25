@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %} CodeCheckAI {% endblock %}</title>
     <link rel="icon" type="image/x-icon" href="{% static 'mysite_images/logo.png' %}">
+    <link rel="stylesheet" href="{% static 'custom_css/mystyle.css' %}">
+    <script src="{% static 'js/myjs.js' %}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
@@ -34,6 +36,7 @@
         {% else %}
             grid-cols-1
         {% endif %}">
+
             <nav class="flex flex-row sm:flex-row sm:items-center justify-between w-full col-span-2 p-4 sm:p-6 text-white bg-gray-800 shadow-xl gap-3 sm:gap-0">
                 <ul class="flex flex-row items-center flex-wrap gap-2 sm:gap-0">
                     {% if request.user.is_authenticated %}
@@ -89,7 +92,6 @@
                     hx-target="#subjects" 
                     hx-swap="innerHTML"
                     hx-trigger="load">
-                    <!-- Loading state -->
                     <div class="flex items-center justify-center h-full text-gray-500">
                         <p>Loading subjects...</p>
                     </div>
@@ -124,37 +126,5 @@
             {% block content %}{% endblock %}
         </main>
     </div>
-
-<script>
-    const toggleBtn = document.getElementById("toggle-sidebar");
-    const sidebar = document.getElementById("sidebar");
-    const layout = document.getElementById("layout");
-
-    function setSidebarState(isHidden) {
-        if (isHidden) {
-            sidebar.classList.add("hidden");
-            layout.classList.remove("grid-cols-[200px_1fr]");
-            layout.classList.add("grid-cols-1");
-        } else {
-            sidebar.classList.remove("hidden");
-            layout.classList.remove("grid-cols-1");
-            layout.classList.add("grid-cols-[200px_1fr]");
-        }
-    }
-
-    if (toggleBtn && sidebar && layout) {
-        const savedState = localStorage.getItem("sidebarHidden");
-        if (savedState !== null) {
-            setSidebarState(savedState === "true");
-        }
-
-        toggleBtn.addEventListener("click", () => {
-            const isHidden = sidebar.classList.toggle("hidden");
-            setSidebarState(isHidden);
-
-            localStorage.setItem("sidebarHidden", isHidden);
-        });
-    }
-</script>
 </body>
 </html>

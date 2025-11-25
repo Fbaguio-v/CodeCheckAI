@@ -1,0 +1,38 @@
+dialog {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 600px;
+    width: auto;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid;
+    form {
+        position: relative;
+        h4 {
+            border-bottom: 5px solid;
+            text-align: center;
+        }
+
+        > div {
+            border: 1px solid;
+            padding: 10px;
+        }
+        button {
+            background-color: hsl(0, 0%, 75%);
+            padding: 10px 20px;
+            cursor: pointer;
+            position: absolute;
+            left: 50%;
+            bottom: -60px;
+            transform: translate(-50%);
+            border-radius: 5px;
+
+            &:hover, &:focus {
+                background-color: black;
+                color: white;
+            }
+        }
+    }
+}
