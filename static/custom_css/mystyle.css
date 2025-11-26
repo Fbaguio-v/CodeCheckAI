@@ -1,3 +1,17 @@
+.after {
+    position: relative;
+        &::after {
+        content: '';
+        background-image: url('/static/mysite_images/logo.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+        height: 32px;
+        width: 32px;
+        position: absolute;
+        top: 0;
+    }
+}
 dialog {
     position: absolute;
     top: 35%;
@@ -35,4 +49,11 @@ dialog {
             }
         }
     }
+}
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
