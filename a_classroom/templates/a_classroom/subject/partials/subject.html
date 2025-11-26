@@ -42,6 +42,7 @@
                         {% if request.user.userprofile.role == "Instructor" %}
                             <div class="relative inline-block text-left">
                                 <button 
+                                    id="toggleDropdown"
                                     class="text-gray-700 font-bold text-xl focus:outline-none cursor-pointer px-2 rounded-md hover:bg-gray-100"
                                     onclick="event.stopPropagation(); toggleDropdown(this)">
                                     ⋮

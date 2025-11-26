@@ -1,4 +1,5 @@
 {% extends 'a_classroom/base.html' %}
+{% load static %}
 {% block content %}
 <div class="h-full w-full">
     <div class="grid grid-cols-1 h-full gap-4 w-full">
@@ -6,10 +7,10 @@
             <div class="h-full bg-gray-100 p-4 shadow-xl flex flex-col">
                 <div class="mb-4">
                     <input type="text" 
+                            id="search_user"
                            name="search_user" 
                            placeholder="Search user..."
-                           class="w-full h-10 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-                           onkeyup="filterTable('users-table', this.value, [1, 2, 3, 4])">
+                           class="w-full h-10 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white">
                 </div>
 
                 <div class="flex-1 min-h-0 flex flex-col">
@@ -38,112 +39,4 @@
         </div>
     </div>
 </div>
-
-<script>
-// Client-side filter + pagination for the users table
-(function(){
-    const pageSizeDefault = 10;
-    const usersContainer = document.getElementById('users-container');
-    const prevBtn = document.getElementById('users-prev-btn');
-    const nextBtn = document.getElementById('users-next-btn');
-    const pageIndicator = document.getElementById('users-page-indicator');
-
-    let state = {
-        pageSize: pageSizeDefault,
-        currentPage: 1,
-        rows: []
-    };
-
-    function initPagination() {
-        const table = usersContainer.querySelector('#users-table');
-        if (!table) return;
-        const tbody = table.querySelector('tbody');
-        if (!tbody) return;
-
-        state.rows = Array.from(tbody.querySelectorAll('tr'));
-        // mark all rows as matching initially
-        state.rows.forEach(r => r.dataset.matches = '1');
-        state.currentPage = 1;
-        renderPage();
-
-        // wire buttons
-        prevBtn.onclick = () => { if (state.currentPage > 1) { state.currentPage--; renderPage(); } };
-        nextBtn.onclick = () => { const totalPages = Math.max(1, Math.ceil(getMatchedRows().length / state.pageSize)); if (state.currentPage < totalPages) { state.currentPage++; renderPage(); } };
-    }
-
-    function getMatchedRows() {
-        return state.rows.filter(r => r.dataset.matches !== '0');
-    }
-
-    function renderPage() {
-        const matched = getMatchedRows();
-        const totalPages = Math.max(1, Math.ceil(matched.length / state.pageSize));
-        if (state.currentPage > totalPages) state.currentPage = totalPages;
-
-        // hide all rows
-        state.rows.forEach(r => r.style.display = 'none');
-
-        // show current page slice
-        const start = (state.currentPage - 1) * state.pageSize;
-        const end = start + state.pageSize;
-        const pageRows = matched.slice(start, end);
-        pageRows.forEach(r => r.style.display = '');
-
-        // update controls
-        pageIndicator.textContent = `Page ${state.currentPage} of ${totalPages}`;
-        prevBtn.disabled = state.currentPage <= 1;
-        nextBtn.disabled = state.currentPage >= totalPages;
-        prevBtn.classList.toggle('opacity-50', prevBtn.disabled);
-        nextBtn.classList.toggle('opacity-50', nextBtn.disabled);
-        prevBtn.classList.toggle('cursor-not-allowed', prevBtn.disabled);
-        nextBtn.classList.toggle('cursor-not-allowed', nextBtn.disabled);
-    }
-
-    // Filter function integrates with pagination; called by input keyup
-    window.filterTable = function(tableId, searchText, searchColumns) {
-        const table = document.getElementById(tableId);
-        if (!table) return;
-        const tbody = table.getElementsByTagName('tbody')[0];
-        const rows = Array.from(tbody.getElementsByTagName('tr'));
-        const searchLower = (searchText || '').toLowerCase();
-
-        rows.forEach(row => {
-            if (!searchLower) {
-                row.dataset.matches = '1';
-            } else {
-                let found = false;
-                for (let colIndex of searchColumns) {
-                    const cell = row.cells[colIndex];
-                    if (cell && cell.textContent.toLowerCase().includes(searchLower)) {
-                        found = true;
-                        break;
-                    }
-                }
-                row.dataset.matches = found ? '1' : '0';
-            }
-        });
-
-        // reset to first page on new filter
-        state.currentPage = 1;
-        renderPage();
-    };
-
-    // Re-init pagination when HTMX replaces content inside users-container
-    if (usersContainer) {
-        const observer = new MutationObserver((mutationsList) => {
-            for (const m of mutationsList) {
-                if (m.type === 'childList') {
-                    // small timeout to allow HTMX to finish inserting nodes
-                    setTimeout(initPagination, 50);
-                    break;
-                }
-            }
-        });
-        observer.observe(usersContainer, { childList: true, subtree: true });
-    }
-
-    // initialize on DOM ready
-    document.addEventListener('DOMContentLoaded', () => setTimeout(initPagination, 100));
-})();
-</script>
 {% endblock %}

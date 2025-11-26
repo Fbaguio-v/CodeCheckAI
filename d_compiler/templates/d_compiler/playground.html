@@ -1,16 +1,9 @@
 {% extends 'a_classroom/base.html' %}
+{% load static tailwind_tags %}
 {% block title %} Playground {% endblock %}
+{% tailwind_css %}
 {% block content %}
 <script src="https://cdn.tailwindcss.com"></script>
-    <style> 
-        .scrollbar-hidden::webkit-scrollbar{
-            display: none;
-        }
-            .scrollbar-hidden{
-                -ms-overflow-style: none;
-                scrollbar-width: none;
-        }
-    </style>
     <div id="parent" class="flex flex-col lg:flex-row h-full w-full">
         <div class="flex-1">
             {% csrf_token %}

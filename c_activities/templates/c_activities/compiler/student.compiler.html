@@ -1,5 +1,7 @@
 {% extends 'a_classroom/base.html' %}
+{% load static tailwind_tags %}
 {% block title %} {{ activity.subject.course_code }} - {{ activity.title }} {% endblock %}
+{% tailwind_css %}
 {% block content %}
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -109,74 +111,4 @@
         </div>
     </div>
 </div>
-
-<style>
-.scrollbar-hidden::-webkit-scrollbar {
-    display: none;
-}
-.scrollbar-hidden {
-    -ms-overflow-style: none;
-    scrollbar-width: none;    
-}
-</style>
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const compiler = document.getElementById("compiler");
-        const div = document.getElementById("div-number");
-
-        const updateLineNumbers = () => {
-            const lines = compiler.value.split("\n").length;
-            let lineNumbers = "";
-            for (let i = 1; i <= lines; i++) {
-                lineNumbers += `${i}\n`;
-            }
-            div.textContent = lineNumbers;
-        };
-
-        if (compiler && div) {
-            updateLineNumbers();
-
-            compiler.addEventListener("input", updateLineNumbers);
-
-            compiler.addEventListener("scroll", () => {
-                div.scrollTop = compiler.scrollTop;
-            });
-
-            compiler.addEventListener("keydown", (e) => {
-                if (e.key === "Tab") {
-                    e.preventDefault();
-                    const start = compiler.selectionStart;
-                    const end = compiler.selectionEnd;
-                    const indent = "    ";
-                    compiler.value = compiler.value.substring(0, start) + indent + compiler.value.substring(end);
-                    compiler.selectionStart = compiler.selectionEnd = start + indent.length;
-                    updateLineNumbers();
-                }
-            });
-        }
-
-        function checkActivityAvailability() {
-            const serverTime = new Date("{{ server_time }}");
-            const dueAt = new Date("{{ activity.due_at|date:'c' }}");
-            
-            if (!dueAt) return; // No due date set
-            
-            const now = new Date(serverTime.getTime() + (Date.now() - new Date("{{ server_time }}").getTime()));
-            
-            if (now > dueAt) {
-                document.querySelectorAll('button[name="action"], #language_id, select').forEach(element => {
-                    if (element.name === "action" || element.id === "language_id") {
-                        element.disabled = true;
-                        element.classList.add('bg-gray-500', 'cursor-not-allowed', 'opacity-60');
-                        element.classList.remove('bg-black', 'hover:bg-gray-500', 'hover:bg-blue-700');
-                    }
-                });
-            }
-        }
-
-        setInterval(checkActivityAvailability, 30000);
-        checkActivityAvailability();
-    });
-</script>
 {% endblock %}
