@@ -33,6 +33,7 @@ dialog {
             border: 1px solid;
             padding: 10px;
         }
+        
         button {
             background-color: hsl(0, 0%, 75%);
             padding: 10px 20px;
@@ -50,6 +51,14 @@ dialog {
         }
     }
 }
+.show {
+    display: none;
+}
+
+.password-input:focus + .show, .show:hover, .show:focus {
+    display: block;
+}
+
 .scrollbar-hidden::-webkit-scrollbar {
     display: none;
 }
