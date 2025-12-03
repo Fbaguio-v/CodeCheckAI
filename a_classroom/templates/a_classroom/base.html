@@ -7,13 +7,14 @@
     <title>{% block title %} CodeCheckAI {% endblock %}</title>
     <link rel="icon" type="image/x-icon" href="{% static 'mysite_images/logo.png' %}">
     <link rel="stylesheet" href="{% static 'custom_css/mystyle.css' %}">
+    <link rel="stylesheet" href="{% static 'src/output.css' %}">
     <script src="{% static 'js/myjs.js' %}" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
-<body class="h-screen">
+<body>
+
     {% if messages %}
-    <div style="position: fixed; top: 5px; right: 30%; z-index: 50;">
+    <div style="position: absolute; top: 1rem; right: 50%; z-index: 999;">
         {% for message in messages %}
         <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative shadow-md w-[300px] text-center" role="alert">
             <span class="block sm:inline">{{ message }}</span>
@@ -28,7 +29,8 @@
     </div>
     {% endif %}
 
-    <div id="layout" class="grid grid-rows-[auto_1fr] h-full w-full font-normal
+
+    <div id="layout" class="grid grid-rows-[auto_1fr] h-full w-full
         {% if request.user.is_authenticated %}
             {% if request.user.userprofile.role == 'Admin' or request.path != '/p/' %}
                 grid-cols-[200px_1fr]
@@ -38,7 +40,7 @@
         {% endif %}">
 
             <nav class="flex flex-row sm:flex-row sm:items-center justify-between w-full col-span-2 p-4 sm:p-6 text-white bg-gray-800 shadow-xl gap-3 sm:gap-0">
-                <ul class="flex flex-row items-center flex-wrap gap-2 sm:gap-0">
+                <ul class="flex flex-row items-center flex-wrap gap-2">
                     {% if request.user.is_authenticated %}
                     <li class="mr-2 sm:mr-4">
                         <button id="toggle-sidebar" 
@@ -122,7 +124,7 @@
             </aside>
         {% endif %}
 
-        <main id="main-content" class="overflow-hidden h-full">
+        <main id="main-content" class="overflow-hidden h-full w-full">
             {% block content %}{% endblock %}
         </main>
     </div>
