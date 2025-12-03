@@ -17,23 +17,23 @@
         {% endif %}
     {% elif request.user.userprofile.role == "Admin" %}
 
-        <div class="mt-2 p-4">
-            <ul class="space-y-3">
-                <li class="pb-4">
+        <div class="mt-2 p-2">
+            <ul class="space-y-2">
+                <li>
                     <a href="{% url 'a_classroom:get-users' %}?from={{ request.path }}" 
                        class="block p-3 text-black border border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
                         <h1 class="text-base font-bold">Users</h1>
                         <p class="text-sm text-gray-600">Manage all users</p>
                     </a>
                 </li>
-                <li class="pb-4">
+                <li>
                     <a href="{% url 'a_classroom:pending-users' %}?from={{ request.path }}" 
                        class="block p-3 text-black border border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
                         <h1 class="text-base font-bold">Pending Users</h1>
                         <p class="text-sm text-gray-600">Approve pending accounts</p>
                     </a>
                 </li>
-                <li class="pb-4">
+                <li>
                     <a href="{% url 'a_classroom:get-subjects' %}?from={{ request.path }}" 
                        class="block p-3 text-black border border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
                         <h1 class="text-base font-bold">Subjects</h1>

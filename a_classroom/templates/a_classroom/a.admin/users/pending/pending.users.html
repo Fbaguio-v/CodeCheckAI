@@ -1,74 +1,68 @@
 {% extends 'a_classroom/base.html' %}
 {% block content %}
-<div class="w-full h-full">
-    <!-- Card-style wrapper to match admin UI -->
-    <div class="h-full bg-gray-100 p-3 sm:p-4 shadow-xl flex flex-col min-h-0">
-        <!-- Search -->
-        <div class="mb-3">
-            <input id="pending-search" type="text" placeholder="Search pending users..." 
-                   class="w-full h-10 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-                   onkeyup="filterTable('pending-table', this.value, [0,1,2])">
-        </div>
+<div class="h-full w-full bg-gray-100 p-3 sm:p-4 shadow-xl flex flex-col min-h-0">
+    <!-- Search -->
+    <div class="mb-3">
+        <input id="pending-search" type="text" placeholder="Search pending users..." 
+                class="w-full h-10 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                onkeyup="filterTable('pending-table', this.value, [0,1,2])">
+    </div>
 
-        <!-- Table (scrollable) -->
-        <div class="flex-1 min-h-0 overflow-y-auto">
-            <table id="pending-table" class="w-full table-fixed">
-                <thead class="bg-gray-800 text-white h-[60px] sticky top-0">
-                    <tr class="text-left">
-                        <th class="px-4 py-2">Full Name</th>
-                        <th class="px-4 py-2">Email Address</th>
-                        <th class="px-4 py-2">User Role</th>
-                        <th class="px-4 py-2">Action</th>
-                    </tr>
-                </thead>
-                <tbody class="w-full">
-                    {% for pending in pending_users %}
-                        <tr class="h-[50px] border-b border-gray-300">
-                            <td class="px-4 py-2">{{ pending.get_full_name }}</td>
-                            <td class="px-4 py-2">{{ pending.email }}</td>
-                            <td class="px-4 py-2">{{ pending.userprofile.role }}</td>
-                            <td class="px-4 py-2">
-                                <div class="flex items-center gap-3">
-                                    <form class="m-0">
-                                        {% csrf_token %}
-                                        <button class="border border-solid border-gray-300 cursor-pointer rounded-xl p-2 bg-black hover:bg-gray-200 text-white hover:text-black"
-                                                id="approve-button"
-                                                hx-post="{% url 'a_classroom:approve' pending.id %}"
-                                                hx-trigger="click"
-                                                hx-target="#pending-table"
-                                                hx-swap="innerHTML">Approve</button>
-                                    </form>
+    <table id="pending-table" class="h-auto w-full table-fixed">
+        <thead class="bg-gray-800 text-white h-[60px] sticky top-0">
+            <tr class="text-left">
+                <th class="px-4 py-2">Full Name</th>
+                <th class="px-4 py-2">Email Address</th>
+                <th class="px-4 py-2">User Role</th>
+                <th class="px-4 py-2">Action</th>
+            </tr>
+        </thead>
+        <tbody class="w-full">
+            {% for pending in pending_users %}
+                <tr class="h-[50px] border-b border-gray-300">
+                    <td class="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{{ pending.get_full_name }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{{ pending.email }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{{ pending.userprofile.role }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
+                        <div class="flex flex-col items-center gap-3">
+                            <form class="m-0">
+                                {% csrf_token %}
+                                <button class="border border-solid border-gray-300 cursor-pointer rounded-xl p-2 bg-black hover:bg-gray-200 text-white hover:text-black"
+                                        id="approve-button"
+                                        hx-post="{% url 'a_classroom:approve' pending.id %}"
+                                        hx-trigger="click"
+                                        hx-target="#pending-table"
+                                        hx-swap="innerHTML">Approve</button>
+                            </form>
 
-                                    <form class="m-0">
-                                        {% csrf_token %}
-                                        <button class="border border-solid border-gray-300 cursor-pointer rounded-xl p-2 bg-red-600 hover:bg-red-500 text-black hover:text-black"
-                                                hx-post="{% url 'a_classroom:delete-pending' pending.id %}"
-                                                hx-trigger="click"
-                                                hx-target="#pending-table"
-                                                hx-swap="innerHTML">Delete</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="4" class="py-4 text-center">No pending user available.</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                            <form class="m-0">
+                                {% csrf_token %}
+                                <button class="border border-solid border-gray-300 cursor-pointer rounded-xl p-2 bg-red-600 hover:bg-red-500 text-black hover:text-black"
+                                        hx-post="{% url 'a_classroom:delete-pending' pending.id %}"
+                                        hx-trigger="click"
+                                        hx-target="#pending-table"
+                                        hx-swap="innerHTML">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4" class="py-4 text-center">No pending user available.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-        <!-- Pagination controls (matches admin design) -->
-        <div id="pending-pagination" class="flex items-center justify-between mt-3">
-            <button id="pending-prev-btn" class="w-32 h-10 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200 opacity-50 cursor-not-allowed" disabled>
-                Previous
-            </button>
-            <div id="pending-page-indicator" class="text-sm text-gray-600">Page 1</div>
-            <button id="pending-next-btn" class="w-32 h-10 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200 opacity-50 cursor-not-allowed" disabled>
-                Next
-            </button>
-        </div>
+    <!-- Pagination controls (matches admin design) -->
+    <div id="pending-pagination" class="flex items-center justify-between mt-3">
+        <button id="pending-prev-btn" class="w-32 h-10 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200 opacity-50 cursor-not-allowed" disabled>
+            Previous
+        </button>
+        <div id="pending-page-indicator" class="text-sm text-gray-600">Page 1</div>
+        <button id="pending-next-btn" class="w-32 h-10 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200 opacity-50 cursor-not-allowed" disabled>
+            Next
+        </button>
     </div>
 </div>
 
