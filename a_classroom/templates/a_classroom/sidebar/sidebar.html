@@ -1,6 +1,3 @@
-{% load static tailwind_tags %}
-{% tailwind_css %}
-
 {% if request.user.is_authenticated %}
     {% if request.user.userprofile.role == "Instructor" or request.user.userprofile.role == "Student" %}
         {% if subjects %}

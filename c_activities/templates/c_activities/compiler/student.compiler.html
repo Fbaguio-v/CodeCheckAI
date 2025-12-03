@@ -1,9 +1,6 @@
 {% extends 'a_classroom/base.html' %}
-{% load static tailwind_tags %}
 {% block title %} {{ activity.subject.course_code }} - {{ activity.title }} {% endblock %}
-{% tailwind_css %}
 {% block content %}
-<script src="https://cdn.tailwindcss.com"></script>
 
 <div id="parent" class="flex flex-row w-full h-full shadow-xl">
     <div id="activity-details"></div>

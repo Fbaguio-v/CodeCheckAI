@@ -50,9 +50,6 @@ SITE_NAME = os.environ.get('SITE_NAME', 'CodeCheckAI')
 
 INSTALLED_APPS = [
     'django_user_agents',
-    'tailwind',
-    'theme',
-    'django_browser_reload',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -82,8 +79,6 @@ MIDDLEWARE = [
     # below is the middleware from register app
     'register.middleware.NoCacheMiddleware',
     'register.middleware.RedirectAuthenticatedUserMiddleware',
-    # below is the middleware for the django browser reload
-    'django_browser_reload.middleware.BrowserReloadMiddleware',
     # below is the middleware for the whitenoise
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'd_compiler.middleware.RestrictPlaygroundViewMiddleware',
