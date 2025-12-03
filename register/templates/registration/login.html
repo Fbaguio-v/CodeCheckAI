@@ -3,7 +3,7 @@
 {% block content %}
 <div class="h-full w-full form-class">
   <form action="{% url 'register:login' %}?next={{ request.path }}" method="post"
-        class="w-full flex flex-col gap-4 p-4 h-[500px] w-[500px]" novalidate>
+        class="flex flex-col gap-4 p-4 h-[500px] w-[500px]" novalidate>
     {% csrf_token %}
 
     <h1 class="text-center text-2xl font-semibold text-gray-900 after">Login to CodeCheckAI</h1>
