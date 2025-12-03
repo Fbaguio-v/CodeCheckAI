@@ -11,7 +11,7 @@
     </div>
 
     <div class="flex-1 flex flex-col">
-        <div id="users-container" class="flex-1 grow overflow-auto">
+        <div id="users-container" class="grow overflow-auto">
             <div id="all-user"
                     hx-get="{% url 'a_classroom:get-users' %}"
                     hx-target="#users-container"
@@ -22,7 +22,7 @@
         </div>
 
         <!-- Pagination controls -->
-        <div id="users-pagination" class="flex items-center justify-between mt-3">
+        <div id="users-pagination" class="flex items-center justify-between">
             <button id="users-prev-btn" class="w-32 h-10 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200" disabled>
                 Previous
             </button>
