@@ -1,38 +1,26 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const toggleBtn = document.getElementById("toggle-sidebar");
-    const sidebar = document.getElementById("sidebar");
-    const layout = document.getElementById("layout");
-
-    // below is for register html
-    const registerToggle1 = document.getElementById('id-for-password');
-    const registerToggle2 = document.getElementById('id-for-confirm');
-    const registerInput1 = document.getElementById('id_password1');
-    const registerInput2 = document.getElementById('id_password2');
-
-    // below is for register html but for terms and condition
-    const terms = document.getElementById("terms");
-    const privacy = document.getElementById("privacy");
-    const termsDialog = document.getElementById("myTerms");
-    const privacyDialog = document.getElementById("myPrivacy");
-
-    // below is for login html
-    const loginToggle = document.getElementById('id_for_login_toggle');
-    const loginInput = document.getElementById('id_password');
-
-    // below is for joining a class or subject
-    const joinClassButton = document.getElementById("join-class");
-
-    // below is for student compiler html
-    const compiler = document.getElementById("compiler");
-    const div = document.getElementById("div-number");
-
-    // below is for admin html
-    const pageSizeDefault = 10;
-    const usersContainer = document.getElementById("users-container");
-    const prevBtn = document.getElementById("users-prev-btn");
-    const nextBtn = document.getElementById("users-next-btn");
-    const pageIndicator = document.getElementById("users-page-indicator");
-    const searchUser = document.getElementById("search_user");
+    const toggleBtn = document.getElementById("toggle-sidebar"),
+    sidebar = document.getElementById("sidebar"),
+    layout = document.getElementById("layout"),
+    registerToggle1 = document.getElementById('id-for-password'),
+    registerToggle2 = document.getElementById('id-for-confirm'),
+    registerInput1 = document.getElementById('id_password1'),
+    registerInput2 = document.getElementById('id_password2'),
+    terms = document.getElementById("terms"),
+    privacy = document.getElementById("privacy"),
+    termsDialog = document.getElementById("myTerms"),
+    privacyDialog = document.getElementById("myPrivacy"),
+    loginToggle = document.getElementById('id_for_login_toggle'),
+    loginInput = document.getElementById('id_password'),
+    joinClassButton = document.getElementById("join-class"),
+    compiler = document.getElementById("compiler"),
+    div = document.getElementById("div-number"),
+    pageSizeDefault = 10,
+    usersContainer = document.getElementById("users-container"),
+    prevBtn = document.getElementById("users-prev-btn"),
+    nextBtn = document.getElementById("users-next-btn"),
+    pageIndicator = document.getElementById("users-page-indicator"),
+    searchUser = document.getElementById("search_user");
 
     // below is for subjects html in admin
     // const tableId = 'subjects-table';

@@ -1,59 +1,45 @@
-<div class="flex justify-center h-screen">
-    <div class="border-t border-b border-gray-300 border-solid ">
-        <div class="mt-4 mb-4">
-            <h1 class="text-2xl font-semibold">Instructor</h1>
-        </div>
+<div class="flex flex-col justify-start items-center h-screen w-full gap-2 overflow-auto">
+    <div class="h-full w-full people">
+        <h1 class="text-2xl font-semibold">Instructor</h1>
 
         {% if instructor %}
-            <div class="mt-4 mb-4">
-                <a href="#">
-                    <div class="flex items-center justify-start text-left h-21 w-[800px] border-t border-solid border-gray-300 rounded-md shadow-md leading-none px-4 overflow-hidden">
-                        <img src="{% if instructor.userprofile.image %}{{ instructor.userprofile.image.url }}{% else %}/static/mysite_images/logo.png{% endif %}"
-                        alt="Profile Image"
-                        class="flex object-cover w-20 h-20 m-2 border-2 border-black border-solid rounded-full shadow-lg rounded-circle">
-                        <h1>{{ instructor.get_full_name }}</h1>
-                    </div>  
-                </a>                      
-            </div>
+            <a href="#">
+                <div class="flex items-center justify-start text-left h-21 border-t border-solid border-gray-300 rounded-md shadow-md leading-none px-4 overflow-hidden">
+                    <img src="{% if instructor.userprofile.image %}{{ instructor.userprofile.image.url }}{% else %}/static/mysite_images/logo.png{% endif %}"
+                    alt="Profile Image"
+                    class="flex object-cover w-20 h-20 m-2 border-2 border-black border-solid rounded-full shadow-lg rounded-circle">
+                    <h1>{{ instructor.get_full_name }}</h1>
+                </div>  
+            </a>                      
         {% endif %}
 
         {% if students|length > 1 %}
             {% if request.user.is_authenticated %}
                 {% if request.user.userprofile.role == "Instructor" %}
-                    <div>
-                        <h1 class="text-2xl font-semibold">Students</h1>
-                    </div>
+                    <h1 class="text-2xl font-semibold">Students</h1>
                 {% elif request.user.userprofile.role == "Student" %}
-                    <div>
-                        <h1 class="text-2xl font-semibold">Classmates</h1>
-                    </div>
+                    <h1 class="text-2xl font-semibold">Classmates</h1>
                 {% endif %}
             {% endif %}
         {% else %}
             {% if request.user.is_authenticated %}
                 {% if request.user.userprofile.role == "Instructor" %}
-                    <div>
-                        <h1 class="text-2xl font-semibold">Student</h1>
-                    </div>
+                    <h1 class="text-2xl font-semibold">Student</h1>
                 {% elif request.user.userprofile.role == "Student" %}
-                    <div>
-                        <h1 class="text-2xl font-semibold">Classmate</h1>
-                    </div>
+                    <h1 class="text-2xl font-semibold">Classmate</h1>
                 {% endif %}
             {% endif %}
         {% endif %}
 
         {% if students %}
-            <div class="mt-4 mb-4">
-                {% for student in students %}
-                    <div class="flex items-center justify-start text-left h-21 w-[800px] border-t border-solid border-gray-300 rounded-md shadow-md leading-none px-4 overflow-hidden">
-                        <img src="{{ student.userprofile.get_image_url|default_if_none:'/media/mysite_images/default.jpg' }}"
-                        alt="Profile Image"
-                        class="flex object-cover w-20 h-20 m-2 border-2 border-black border-solid rounded-full shadow-lg rounded-circle">
-                        <h1>{{ student.get_full_name }}</h1>
-                    </div>                    
-                {% endfor %}
-            </div>
+            {% for student in students %}
+                <div class="flex items-center justify-start text-left h-21 border-t border-solid border-gray-300 rounded-md shadow-md leading-none px-4 overflow-hidden">
+                    <img src="{{ student.userprofile.get_image_url|default_if_none:'/media/mysite_images/default.jpg' }}"
+                    alt="Profile Image"
+                    class="flex object-cover w-20 h-20 m-2 border-2 border-black border-solid rounded-full shadow-lg rounded-circle">
+                    <h1>{{ student.get_full_name }}</h1>
+                </div>                    
+            {% endfor %}
         {% else %}
             <h1>No students enrolled yet</h1>
         {% endif %}

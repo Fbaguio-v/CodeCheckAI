@@ -1,11 +1,11 @@
 <div class="flex items-center justify-center w-full h-full overflow-hidden">
-    <div id="parent-element" class="h-full w-[700px] gap-4">
+    <div id="parent-element" class="h-full w-full gap-4">
             <div class="flex items-center justify-center text-white bg-gray-800">
                 <h2 class="p-4 text-3xl">Upload Profile</h2>
             </div>
         <hr>
         <div class="flex items-center justify-center w-full h-full">
-            <div class="border border-gray-300 rounded-lg shadow-lg w-[400px] bg-white">
+            <div class="border border-gray-300 rounded-lg shadow-lg w-full bg-white">
             <form method="post" action="{% url 'b_enrollment:upload-profile' %}" enctype="multipart/form-data"
              class="flex flex-col items-center justify-center gap-4 p-6">
                 {% csrf_token %}
@@ -20,11 +20,11 @@
 
                 <div class="flex flex-col items-center justify-center w-full gap-3">
                     <button type="submit" 
-                        class="border border-solid border-gray-300 w-[70%] p-2 rounded bg-black text-white cursor-pointer hover:bg-gray-600">
+                        class="border border-solid border-gray-300 w-[50%] p-2 rounded text-white cursor-pointer bg-gray-800 hover:bg-black transition-colors">
                         Upload
                     </button>
                     <a href="{% url 'a_classroom:setting' %}?from={{ request.path }}" 
-                       class="border border-solid border-gray-300 w-[70%] p-2 rounded bg-black text-white cursor-pointer hover:bg-gray-600 text-center">
+                       class="border border-solid border-gray-300 w-[50%] p-2 rounded text-white cursor-pointer text-center bg-gray-800 hover:bg-black transition-colors">
                         Back
                     </a>
                 </div>
