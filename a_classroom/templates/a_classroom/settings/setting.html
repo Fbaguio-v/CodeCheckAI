@@ -2,7 +2,7 @@
 {% block title %} Settings {% endblock %}
 {% block content %}
 <div class="flex items-center justify-center h-full w-full p-4">
-	<div id="parent-element" class="h-full w-[700px] bg-gray-100 border border-black rounded-lg p-4 shadow-xl overflow-auto">
+	<div id="parent-element" class="h-full w-[700px] bg-gray-100 border-2 border-black rounded-lg p-4 shadow-xl overflow-auto">
 		<div class="flex items-center justify-center text-white bg-gray-800 rounded-t-lg w-full">
 			<h2 class="p-4 text-3xl">Account Settings</h2>
 		</div>
@@ -30,7 +30,7 @@
 
 		<div class="flex items-center justify-center w-full pt-5">
 		<button
-			class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-black text-white cursor-pointer hover:bg-gray-500"
+			class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-gray-800 hover:bg-black transition-colors text-white cursor-pointer"
 			id="upload-profile"
 			hx-get="{% url 'b_enrollment:upload-profile' %}"
 			hx-trigger="click"
@@ -40,7 +40,7 @@
 
 		<div class="flex items-center justify-center w-full pt-3">
 		<button
-			class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-black text-white cursor-pointer hover:bg-gray-500"
+			class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-gray-800 hover:bg-black transition-colors text-white cursor-pointer"
 			id="edit-account"
 			hx-get="{% url 'a_classroom:edit-account' %}"
 			hx-trigger="click"

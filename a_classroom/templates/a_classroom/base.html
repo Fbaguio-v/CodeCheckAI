@@ -50,9 +50,13 @@
                     </li>
                     {% endif %}
                     <li class="mr-4 sm:mr-6">
-                        <a href="{% url 'a_classroom:index' %}">
+                        {% if request.user.is_authenticated %}
+                            <a href="{% url 'a_classroom:index' %}">
+                                <img class="h-6 sm:h-10" src="{% static 'mysite_images/logo.png' %}" alt="logo.png">
+                            </a>
+                        {% else %}
                             <img class="h-6 sm:h-10" src="{% static 'mysite_images/logo.png' %}" alt="logo.png">
-                        </a>
+                        {% endif %}
                     </li>
                     {% if request.user.is_authenticated %}
                         <li class="mr-2 sm:mr-4">
@@ -70,7 +74,7 @@
                     {% endif %}
                 </ul>
 
-                <ul class="flex flex-wrap items-center gap-2 sm:gap-4">
+                <ul class="flex flex-wrap items-center gap-2">
                     {% if request.user.is_authenticated %}
                         <li>
                             <a href="{% url 'a_classroom:setting' %}?from={{ request.path }}" class="p-2 sm:p-3 rounded-lg hover:bg-gray-500 text-sm sm:text-base whitespace-nowrap">Settings</a>
@@ -87,7 +91,7 @@
             </nav>
 
         {% if request.user.is_authenticated %}
-            <aside id="sidebar" class="flex flex-col h-full w-full text-white bg-gray-200 border-r border-gray-500 border-solid shadow-xl">
+            <aside id="sidebar" class="flex flex-col h-full w-full text-white bg-gray-200 border-2 border-black border-solid shadow-xl">
                 <div id="subjects" 
                     class="flex-1 overflow-auto"
                     hx-get="{% url 'a_classroom:index' %}" 
@@ -99,10 +103,10 @@
                     </div>
                 </div>
 
-                <div id="sidebar-actions p-4">
+                <div id="sidebar-actions" class="p-2">
                     {% if request.user.userprofile.role == "Instructor" %}
                             <a href="{% url 'a_classroom:create-subject' %}">
-                                <button class="w-full p-4 text-black text-sm font-medium text-gray-800 sm:text-base bg-gray-100 border border-black rounded-lg hover:bg-gray-300 cursor-pointer">
+                                <button class="w-full p-4 text-black text-sm font-medium text-gray-800 sm:text-base md:text-lg text-white shadow-lg bg-gray-800 border border-black transition-colors rounded-lg hover:bg-gray-950 cursor-pointer">
                                     Create Subject
                                 </button>
                             </a>
@@ -112,7 +116,7 @@
                                     hx-trigger="click"
                                     hx-target="#main-content"
                                     hx-swap="innerHTML"
-                                    class="w-full p-3 text-black text-sm font-medium text-gray-800 sm:text-base bg-gray-100 border border-black rounded-lg hover:bg-gray-300 cursor-pointer">
+                                    class="w-full p-4 text-black text-sm font-medium text-gray-800 sm:text-base md:text-lg text-white shadow-lg bg-gray-800 border border-black transition-colors rounded-lg hover:bg-gray-950 cursor-pointer">
                                 Join Class
                             </button>
                     {% endif %}
