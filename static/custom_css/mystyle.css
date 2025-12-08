@@ -50,11 +50,9 @@ dialog {
     top: 35%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: 600px;
-    width: auto;
     padding: 20px;
     border-radius: 5px;
-    border: 1px solid;
+
     form {
         position: relative;
         h4 {
@@ -63,12 +61,15 @@ dialog {
         }
 
         > div {
-            border: 1px solid;
+            border: 2px solid;
             padding: 10px;
+            height: 50%;
+            width: 95%;
+            margin: auto;
         }
         
         button {
-            background-color: hsl(0, 0%, 75%);
+            background-color: black;
             padding: 10px 20px;
             cursor: pointer;
             position: absolute;
@@ -77,10 +78,6 @@ dialog {
             transform: translate(-50%);
             border-radius: 5px;
 
-            &:hover, &:focus {
-                background-color: black;
-                color: white;
-            }
         }
     }
 }
@@ -98,6 +95,21 @@ dialog {
 .scrollbar-hidden {
     -ms-overflow-style: none;
     scrollbar-width: none;
+}
+.dialog {
+    height: 50%;
+    width: 90%;
+    backdrop-filter: blur(5rem);
+    background-color: transparent;
+    border: 0.15rem solid;
+}
+.myTerms, .myPrivacy {
+    height: 50%;
+    width: 95%;
+    margin: auto;
+}
+.dialogButton {
+    width: 75%;
 }
 @media screen and (min-width: 500px) and (max-width: 809px) {
     .class-grid {
@@ -124,6 +136,34 @@ dialog {
     }
     .people {
         width: 90%;
+    }
+
+    .dialog {
+        height: 50%;
+        width: 80%;
+        backdrop-filter: blur(5rem);
+        background-color: transparent;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 50%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 40%;
+        }
+        
+        > div:nth-child(2) {
+            flex-grow: 1;
+        }
     }
 }
 @media screen and (min-width: 810px) and (max-width: 1023px) {
@@ -153,6 +193,37 @@ dialog {
     .people {
         width: 70%;
     }
+    .dialog {
+        height: 50%;
+        width: 80%;
+        backdrop-filter: blur(5rem);
+        background-color: transparent;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 50%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 40%;
+        }
+
+        > div:nth-child(2) {
+            flex-grow: 1;
+
+            .max-height {
+                max-height: 15rem;
+            }
+        }
+    }
 }
 @media screen and (min-width: 1024px) and (max-width: 1439px) {
     .class-grid {
@@ -179,6 +250,37 @@ dialog {
     }
     .people {
         width: 50%;
+    }
+    .dialog {
+        height: 50%;
+        width: 70%;
+        backdrop-filter: blur(5rem);
+        background-color: transparent;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 40%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 40%;
+        }
+
+        > div:nth-child(2) {
+            flex-grow: 1;
+
+            .max-height {
+                max-height: 15rem;
+            }
+        }
     }
 }
 @media screen and (min-width: 1440px) and (max-width: 1749px) {
@@ -207,6 +309,37 @@ dialog {
     .people {
         width: 40%;
     }
+    .dialog {
+        height: 50%;
+        width: 60%;
+        backdrop-filter: blur(5rem);
+        background-color: transparent;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 40%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 50%;
+        }
+
+        > div:nth-child(2) {
+            flex-grow: 1;
+
+            .max-height {
+                max-height: 15rem;
+            }
+        }
+    }
 }
 @media screen and (min-width: 1750px) and (max-width: 1949px) {
     .class-grid {
@@ -233,6 +366,37 @@ dialog {
     }
     .people {
         width: 40%;
+    }
+    .dialog {
+        height: 50%;
+        width: 50%;
+        backdrop-filter: blur(5rem);
+        background-color: transparent;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 30%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 50%;
+        }
+
+        > div:nth-child(2) {
+            flex-grow: 1;
+
+            .max-height {
+                max-height: 15rem;
+            }
+        }
     }
 }
 @media screen and (min-width: 1950px) and (max-width: 2149px) {
@@ -261,6 +425,37 @@ dialog {
     .people {
         width: 40%;
     }
+    .dialog {
+        height: 50%;
+        width: 40%;
+        backdrop-filter: blur(5rem);
+        background-color: transparent;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 250%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 50%;
+        }
+
+        > div:nth-child(2) {
+            flex-grow: 1;
+
+            .max-height {
+                max-height: 15rem;
+            }
+        }
+    }
 }
 @media screen and (min-width: 2150px) and (max-width: 2349px) {
     .class-grid {
@@ -287,6 +482,37 @@ dialog {
     }
     .people {
         width: 30%;
+    }
+    .dialog {
+        height: 50%;
+        width: 35%;
+        backdrop-filter: blur(5rem);
+        background-color: transparent;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 20%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 50%;
+        }
+
+        > div:nth-child(2) {
+            flex-grow: 1;
+
+            .max-height {
+                max-height: 15rem;
+            }
+        }
     }
 }
 @media screen and (min-width: 2350px) and (max-width: 2549px) {
@@ -315,6 +541,37 @@ dialog {
     .people {
         width: 30%;
     }
+    .dialog {
+        height: 50%;
+        width: 30%;
+        backdrop-filter: blur(5rem);
+        background-color: transparent;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 20%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 50%;
+        }
+
+        > div:nth-child(2) {
+            flex-grow: 1;
+
+            .max-height {
+                max-height: 15rem;
+            }
+        }
+    }
 }
 @media screen and (min-width: 2550px) and (max-width: 2749px) {
     .class-grid {
@@ -341,5 +598,36 @@ dialog {
     }
     .people {
         width: 30%;
+    }
+        .dialog {
+        height: 50%;
+        width: 30%;
+        backdrop-filter: blur(5rem);
+        background-color: transparent;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 20%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 50%;
+        }
+
+        > div:nth-child(2) {
+            flex-grow: 1;
+
+            .max-height {
+                max-height: 15rem;
+            }
+        }
     }
 }

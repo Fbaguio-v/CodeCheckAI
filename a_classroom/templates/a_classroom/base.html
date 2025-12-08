@@ -91,7 +91,7 @@
             </nav>
 
         {% if request.user.is_authenticated %}
-            <aside id="sidebar" class="flex flex-col h-full w-full text-white bg-gray-200 border-2 border-black border-solid shadow-xl">
+            <aside id="sidebar" class="flex flex-col h-full w-full text-white bg-gray-200 border-2 border-black border-solid overflow-auto">
                 <div id="subjects" 
                     class="flex-1 overflow-auto"
                     hx-get="{% url 'a_classroom:index' %}" 
@@ -103,10 +103,10 @@
                     </div>
                 </div>
 
-                <div id="sidebar-actions" class="p-2">
+                <div id="sidebar-actions" class="p-2 h-16">
                     {% if request.user.userprofile.role == "Instructor" %}
                             <a href="{% url 'a_classroom:create-subject' %}">
-                                <button class="w-full p-4 text-black text-sm font-medium text-gray-800 sm:text-base md:text-lg text-white shadow-lg bg-gray-800 border border-black transition-colors rounded-lg hover:bg-gray-950 cursor-pointer">
+                                <button class="w-full h-12 text-white bg-gray-800 rounded hover:bg-gray-950 cursor-pointer">
                                     Create Subject
                                 </button>
                             </a>
@@ -116,7 +116,7 @@
                                     hx-trigger="click"
                                     hx-target="#main-content"
                                     hx-swap="innerHTML"
-                                    class="w-full p-4 text-black text-sm font-medium text-gray-800 sm:text-base md:text-lg text-white shadow-lg bg-gray-800 border border-black transition-colors rounded-lg hover:bg-gray-950 cursor-pointer">
+                                    class="w-full h-12 text-white bg-gray-800 rounded hover:bg-gray-950 cursor-pointer">
                                 Join Class
                             </button>
                     {% endif %}

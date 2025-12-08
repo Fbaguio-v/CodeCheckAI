@@ -1,43 +1,36 @@
 {% extends 'a_classroom/base.html' %}
 {% block content %}
-<div class="h-full w-full bg-gray-100 p-3 sm:p-4 shadow-xl flex flex-col min-h-0">
-    <!-- Search input for subjects (keep name and onkeyup) -->
-    <div class="mb-3">
+<div class="h-full w-full flex flex-col p-4">
+    <div class="flex-1 mb-3 overflow-auto">
         <input id="subjects-search" type="text"
                 name="search_subject"
                 placeholder="Search subjects..."
                 class="w-full h-10 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                 onkeyup="filterTable('subjects-table', this.value, [0, 1, 2, 3])">
+        <table id="subjects-table" class="w-full border border-solid table-fixed">
+            <thead class="h-16 bg-gray-800 text-white"> 
+                <tr>
+                    <th class="border-r border-solid">Course Code</th>
+                    <th class="border-r border-solid">Subject</th>
+                    <th class="border-r border-solid">Section</th>
+                    <th class="border-r border-solid">Instructor</th>
+                    <th>Activities</th>
+                </tr>
+            </thead>
+            <tbody class="flex-1">
+                {% for subject in subjects %}
+                    <tr class="grow text-center border border-solid h-20">
+                        <td class="whitespace-nowrap overflow-hidden text-ellipsis">{{ subject.course_code }}</td>
+                        <td class="whitespace-nowrap overflow-hidden text-ellipsis">{{ subject.name }}</td>
+                        <td class="whitespace-nowrap overflow-hidden text-ellipsis">{{ subject.section.name }}</td>
+                        <td class="whitespace-nowrap overflow-hidden text-ellipsis">{{ subject.instructor.get_full_name }}</td>
+                        <td class="whitespace-nowrap overflow-hidden text-ellipsis">{{ subject.activities.count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
-    <table id="subjects-table" class="h-full w-full table-fixed">
-        <thead class="bg-gray-800 text-white h-[60px] sticky top-0">
-            <tr class="text-left">
-                <th class="px-4 py-2">Course Code</th>
-                <th class="px-4 py-2">Subject</th>
-                <th class="px-4 py-2">Section</th>
-                <th class="px-4 py-2">Instructor</th>
-                <th class="px-4 py-2">Activities</th>
-            </tr>
-        </thead>
-        <tbody class="w-full">
-            {% for subject in subjects %}
-                <tr class="h-[50px] border-b border-gray-300">
-                    <td class="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{{ subject.course_code }}</td>
-                    <td class="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{{ subject.name }}</td>
-                    <td class="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{{ subject.section.name }}</td>
-                    <td class="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{{ subject.instructor.get_full_name }}</td>
-                    <td class="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{{ subject.activities.count }}</td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center py-4">No subject available.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <!-- Pagination controls for subjects -->
     <div id="subjects-pagination" class="flex items-center justify-between mt-3">
         <button id="subjects-prev-btn" class="w-32 h-10 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200 opacity-50 cursor-not-allowed" disabled>
             Previous
@@ -50,7 +43,6 @@
 </div>
 
 <script>
-// Local filter + pagination for subjects table. Preserves template variables.
 (function(){
     const pageSizeDefault = 10;
     const tableId = 'subjects-table';
@@ -103,7 +95,6 @@
         nextBtn.classList.toggle('cursor-not-allowed', nextBtn.disabled);
     }
 
-    // Shared filterTable function
     window.filterTable = function(tableId, searchText, searchColumns) {
         const table = document.getElementById(tableId);
         if (!table) return;
@@ -131,7 +122,6 @@
         renderPage();
     };
 
-    // Re-init when HTMX updates this fragment (if used as HTMX target)
     const container = document.querySelector('#' + tableId) ? document.getElementById(tableId).parentElement : null;
     if (container) {
         const observer = new MutationObserver((mutations) => { setTimeout(init, 50); });

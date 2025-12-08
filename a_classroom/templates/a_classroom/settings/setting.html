@@ -30,7 +30,7 @@
 
 		<div class="flex items-center justify-center w-full pt-5">
 		<button
-			class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-gray-800 hover:bg-black transition-colors text-white cursor-pointer"
+			class="flex items-center justify-center py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950"
 			id="upload-profile"
 			hx-get="{% url 'b_enrollment:upload-profile' %}"
 			hx-trigger="click"
@@ -40,7 +40,7 @@
 
 		<div class="flex items-center justify-center w-full pt-3">
 		<button
-			class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-gray-800 hover:bg-black transition-colors text-white cursor-pointer"
+			class="flex items-center justify-center py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950"
 			id="edit-account"
 			hx-get="{% url 'a_classroom:edit-account' %}"
 			hx-trigger="click"
@@ -51,7 +51,7 @@
 		<form action="{% url 'logout' %}" method="post" class="flex items-center justify-center w-full pt-3">
 		{% csrf_token %}
 		<button type="submit" 
-			class="border border-solid border-gray-300 w-[50%] p-2 rounded bg-gray-500 text-black cursor-pointer hover:bg-gray-600">
+			class="flex items-center justify-center py-2 w-32 bg-gray-500 cursor-pointer rounded transition-colors hover:bg-gray-650">
 			Logout
 		</button>
 		</form>
