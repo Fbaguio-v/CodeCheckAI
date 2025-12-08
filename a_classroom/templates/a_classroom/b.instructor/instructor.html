@@ -1,8 +1,6 @@
 {% extends 'a_classroom/base.html' %}
 {% load static %}
 {% block content %}
-    <link rel="stylesheet" href="{% static 'custom_css/mystyle.css' %}">
-    <link rel="stylesheet" href="{% static 'src/output.css' %}">
 <div class="h-full overflow-auto overflow-x-hidden">
     {% if subjects %}
         <ul class="class-grid">
@@ -20,7 +18,7 @@
         </ul>
     {% else %}
         <div class="flex items-center justify-center w-full h-full">
-            <img src="{% static 'mysite_images/noclassv5.png' %}" alt="No Class available" class="object-contain opacity-75 w-100 h-100">
+            <img src="{% static 'mysite_images/noclassv5.png' %}" alt="No class available" class="object-contain opacity-75 w-100 h-100">
         </div>
     {% endif %}
 </div>

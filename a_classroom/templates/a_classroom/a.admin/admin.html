@@ -1,36 +1,35 @@
 {% extends 'a_classroom/base.html' %}
 {% load static %}
 {% block content %}
-<div class="h-full w-full p-4 flex flex-col">
-    <div class="mb-4">
-        <input type="text" 
-                id="search_user"
-                name="search_user" 
-                placeholder="Search user..."
-                class="w-full h-10 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white">
-    </div>
-
-    <div class="flex-1 flex flex-col">
-        <div id="users-container" class="grow overflow-auto">
-            <div id="all-user"
-                    hx-get="{% url 'a_classroom:get-users' %}"
-                    hx-target="#users-container"
-                    hx-swap="innerHTML"
-                    hx-trigger="load delay:500ms">
+<div class="h-full w-full p-4 flex flex-col border-2 border-solid">
+    <div class="flex-1 flex flex-col overflow-auto">
+        <div class="flex-1">
+            <input type="text" 
+                    id="search_user"
+                    name="search_user" 
+                    placeholder="Search user..."
+                    class="w-full h-10 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white">
+            
+            <div id="users-container" class="flex-1 w-full">
+                <div id="all-user"
+                        hx-get="{% url 'a_classroom:get-users' %}"
+                        hx-target="#users-container"
+                        hx-swap="innerHTML"
+                        hx-trigger="load delay:500ms">
+                </div>
+                <p class="text-gray-500 mt-3">Loading users...</p>
             </div>
-            <p class="text-gray-500 mt-3">Loading users...</p>
         </div>
-
-        <!-- Pagination controls -->
-        <div id="users-pagination" class="flex items-center justify-between">
-            <button id="users-prev-btn" class="w-32 h-10 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200" disabled>
-                Previous
-            </button>
-            <div id="users-page-indicator" class="text-sm text-gray-600">Page 1</div>
-            <button id="users-next-btn" class="w-32 h-10 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200" disabled>
-                Next
-            </button>
-        </div>
+    </div>
+            <!-- Pagination controls -->
+    <div id="users-pagination" class="flex items-center justify-between">
+        <button id="users-prev-btn" class="w-32 h-10 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200" disabled>
+            Previous
+        </button>
+        <div id="users-page-indicator" class="text-sm text-gray-600">Page 1</div>
+        <button id="users-next-btn" class="w-32 h-10 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200" disabled>
+            Next
+        </button>
     </div>
 </div>
 {% endblock %}

@@ -1,35 +1,21 @@
-<table id="users-table" class="table-fixed h-full w-full">
-    <thead class="bg-gray-800 text-white h-[60px] sticky top-0">
-        <tr class="text-left">
-            <th class="px-4 py-2">Profile</th>
-            <th class="px-4 py-2">Full Name</th>
-            <th class="px-4 py-2">Email Address</th>
-            <th class="px-4 py-2">User Role</th>
-            <th class="px-4 py-2">User Status</th>
+<table id="users-table" class="w-full border border-solid table-fixed">
+    <thead class="h-16 bg-gray-800 text-white">
+        <tr class="text-center">
+            <th class="border-r border-solid">Profile</th>
+            <th class="border-r border-solid">Email Address</th>
+            <th class="border-r border-solid">User Role</th>
         </tr>
     </thead>
-    <tbody class="h-full w-full">
+    <tbody class="flex-1">
         {% for user in all_users %}
-            <tr class="h-[50px] border-b border-gray-300 all-user">
+            <tr class="grow text-center border border-solid h-20">
                 <td class="overflow-hidden">
                     <img src="{{ user.userprofile.get_image_url }}"
                         alt="Profile Image"
-                        class="flex rounded-circle shadow-lg h-[50px] w-[50px] object-cover border-2 border-solid border-blue-500 rounded-full m-2">
+                        class="flex rounded-circle shadow-lg h-10 w-10 object-cover border-2 border-solid border-blue-500 rounded-full m-2">
                 </td>
-                <td class="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{{ user.get_full_name }}</td>
-                <td class="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{{ user.email }}</td>
-                <td class="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{{ user.userprofile.role }}</td>
-                <td class="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
-                    {% if user.is_active %}
-                        Active
-                    {% else %}
-                        Inactive
-                    {% endif %}
-                </td>
-            </tr>
-        {% empty %}
-            <tr>
-                <td colspan="5" class="text-center py-4">No user available.</td>
+                <td class="whitespace-nowrap overflow-hidden text-ellipsis">{{ user.email }}</td>
+                <td class="whitespace-nowrap overflow-hidden text-ellipsis">{{ user.userprofile.role }}</td>
             </tr>
         {% endfor %}
     </tbody>

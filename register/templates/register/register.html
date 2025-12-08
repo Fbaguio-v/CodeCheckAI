@@ -85,11 +85,11 @@
   </form>
 
 
-      <dialog id="myTerms">
+      <dialog id="myTerms" class="dialog">
         <form method="dialog">
               <h4 class="mb-4 text-lg font-semibold">CodeCheckAI Terms and Conditions</h4>
   
-              <div class="min-h-[400px] h-[450px] overflow-y-auto pr-2 space-y-4 text-sm">
+              <div class="min-h-[400px] overflow-y-auto text-sm myTerms">
                   <div>
                       <h5 class="font-semibold mb-2">1. Acceptance of Terms</h5>
                       <p>Welcome to CodeCheckAI. By accessing our website at https://codecheckai.loan and using our educational platform, you agree to be bound by these Terms and Conditions. If you disagree with any part of these terms, you must discontinue use of our Services immediately.</p>
@@ -178,14 +178,14 @@
                   </div>
               </div>
 
-              <button>Close Terms and Condition</button>
+              <button class="dialogButton">Close Terms and Condition</button>
         </form>
       </dialog>
-      <dialog id="myPrivacy">
-        <form method="dialog">
+      <dialog id="myPrivacy" class="dialog">
+        <form method="dialog" class="flex flex-col">
             <h4 class="mb-4 text-lg font-semibold">CodeCheckAI Privacy Policy</h4>
             
-            <div class="min-h-[400px] h-[450px] overflow-y-auto pr-2 space-y-4 text-sm">
+            <div class="min-h-[400px] overflow-y-auto text-sm myPrivacy">
                 <div>
                     <h5 class="font-semibold mb-2">1. Introduction</h5>
                     <p>Welcome to CodeCheckAI. We are committed to protecting your privacy and providing a safe online learning environment. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our free educational platform at https://codecheckai.loan.</p>
@@ -304,7 +304,7 @@
                 </div>
             </div>
 
-            <button>Close Privacy Policy</button>
+            <button class="dialogButton">Close Privacy Policy</button>
         </form>
       </dialog>
 </div>

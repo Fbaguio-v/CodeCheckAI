@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(usersContainer && prevBtn && nextBtn && pageIndicator && searchUser) {
 
         searchUser.addEventListener("keyup", (e) => {
-            filterTable("users-table", e.target.value, [1, 2, 3, 4]);
+            filterTable("users-table", e.target.value, [1, 2]);
         });
 
         let state = {

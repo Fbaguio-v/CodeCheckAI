@@ -2,148 +2,138 @@
 {% block title %} {{ activity.subject.course_code }} - {{ activity.title }} {% endblock %}
 {% block content %}
 
-<div class="flex flex-col md:flex-row min-h-screen w-full overflow-hidden">
-	<!-- Left Panel: Activity Info -->
-	<div class="w-full md:w-1/3 lg:w-2/5 overflow-auto flex flex-col border-r border-gray-500 shadow-xl">
-		<div id="activity-output" class="flex h-full overflow-auto scrollbar-hidden flex-col justify-start border-r bg-gray-200 min-h-0 p-4">
+<div class="flex flex-col h-full w-full overflow-auto student-submission">
+	<div id="activity-output" class="border-r bg-gray-200 p-4">
 
-			<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-				<span class="font-bold">Title</span>
-				<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-80 overflow-y-auto" style="scrollbar-gutter: stable;">
-					{{ activity.title }}
-				</div>
+		<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
+			<span class="font-bold">Title</span>
+			<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
+				{{ activity.title }}
 			</div>
+		</div>
 
-			<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-				<span class="font-bold">Instructions</span>
-				<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-80 overflow-y-auto" style="scrollbar-gutter: stable;">
-					{{ activity.description }}
-				</div>
+		<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
+			<span class="font-bold">Instructions</span>
+			<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-32 overflow-y-auto" style="scrollbar-gutter: stable;">
+				{{ activity.description }}
 			</div>
+		</div>
 
-			<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-				<span class="font-bold">Max Score</span>
-				<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-80 overflow-y-auto" style="scrollbar-gutter: stable;">
-					{{ activity.max_score }}
-				</div>
+		<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
+			<span class="font-bold">Max Score</span>
+			<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
+				{{ activity.max_score }}
 			</div>
+		</div>
 
-			<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-				<span class="font-bold">Language</span>
-				<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-80 overflow-y-auto" style="scrollbar-gutter: stable;">
-					{{ activity.language }}
+		<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
+			<span class="font-bold">Language</span>
+			<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
+				{{ activity.language }}
+			</div>
+		</div>
+		
+		
+		{% if activity.type == "quiz" %}
+			<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
+				<span class="font-bold">Max Attempt</span>
+				<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
+					{{ activity.max_attempt }}
 				</div>
 			</div>
-			
-			
-			{% if activity.type == "quiz" %}
-				<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-					<span class="font-bold">Max Attempt</span>
-					<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-80 overflow-y-auto" style="scrollbar-gutter: stable;">
-						{{ activity.max_attempt }}
-					</div>
-				</div>
-			{% endif %}
+		{% endif %}
 
-			<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-				<span class="font-bold">Due</span>
-				<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-80 overflow-y-auto" style="scrollbar-gutter: stable;">
-					{{ activity.due_at }}
-				</div>
+		<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
+			<span class="font-bold">Due</span>
+			<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-16 overflow-y-auto" style="scrollbar-gutter: stable;">
+				{{ activity.due_at }}
 			</div>
-			
-			<div class="flex justify-center items-center w-full h-12">
-				<button class="h-12 w-[25%] min-w-[15%] px-8 text-white bg-black border-2 border-solid shadow-xl cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200 min-w-[15%] text-sm font-medium text-gray-800 sm:text-base"
-					hx-get="{% url 'c_activities:edit-activity' activity.activity_id %}?type={{ activity.type }}" 
-					hx-target="#activity-output" 
-					hx-swap="innerHTML" 
-					title="Click to edit activity">Edit Activity</button>
-			</div>
+		</div>
+		
+		<div class="flex justify-center items-center w-full">
+			<button class="py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950"
+				hx-get="{% url 'c_activities:edit-activity' activity.activity_id %}?type={{ activity.type }}" 
+				hx-target="#activity-output" 
+				hx-swap="innerHTML" 
+				title="Click to edit activity">Edit Activity</button>
 		</div>
 	</div>
 
 	<!-- Right Panel: Submissions & Controls -->
-	<div id="output" class="flex flex-col md:flex-row w-full md:w-2/3 lg:w-3/5 border border-solid bg-gray-200 min-h-0">
-		<!-- Previous (mobile top / md side) -->
-		<div class="flex justify-center items-center border-solid h-auto md:h-full w-full md:w-16 lg:w-1/12 bg-gray-200 text-sm font-medium text-gray-800 sm:text-base">
-			<form hx-get="{% url 'a_classroom:prev_or_next' %}" hx-target="#output" hx-swap="innerHTML" class="w-full flex justify-center py-3 md:py-0">
+	<div id="output" class="flex flex-1 flex-col w-full bg-gray-200 p-4">
+
+		<div class="overflow-y-auto" style="scrollbar-gutter: stable;">
+			{% if activity_submissions %}
+				{% with first_submission=activity_submissions.first %}
+
+					<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
+						<span class="font-bold">Email Address</span>
+						<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
+							{{ first_submission.student.email }}
+						</div>
+					</div>
+
+					<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
+						<span class="font-bold">Submitted Code</span>
+						<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-32 overflow-y-auto" style="scrollbar-gutter: stable;">{{ first_submission.submitted_code }}</div>
+					</div>
+
+					<!-- Editable Feedback with scrollable content -->
+					<div id="feedback-{{ first_submission.id }}" class="text-left text-sm font-medium text-gray-800 sm:text-base">
+						<span class="font-bold">Feedback</span>
+						<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-32 overflow-y-auto" style="scrollbar-gutter: stable;">
+							{{ first_submission.feedback }}
+							<button class="cursor-pointer py-1 px-2 text-white bg-gray-800 rounded hover:bg-gray-950 {% if first_submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
+								hx-get="{% url 'c_activities:edit-insight' first_submission.id %}"
+								hx-swap="outerHTML"
+								hx-target="#feedback-{{ first_submission.id }}"
+								title="Click to edit feedback"
+								{% if first_submission.status == 'returned' %} disabled {% endif %}>Edit Feedback</button>
+						</div>
+					</div>
+
+					<!-- Editable Score -->
+					<div id="score-{{ first_submission.id }}" class="text-left text-sm font-medium text-gray-800 sm:text-base">
+						<span class="font-bold">Score</span>
+						<div class="p-3 bg-gray-100 rounded-lg max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;"> 
+							{{ first_submission.score }}
+							<button class="cursor-pointer py-1 px-2 text-white bg-gray-800 rounded hover:bg-gay-950 {% if first_submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
+								hx-get="{% url 'c_activities:edit-grade' first_submission.id %}" 
+								hx-swap="outerHTML" 
+								hx-target="#score-{{ first_submission.id }}" 
+								title="Click to edit grade"
+								{% if first_submission.status == 'returned' %} disabled {% endif %}>Edit Grade</button>
+						</div>
+					</div>
+
+					<!-- Return Grade button placed directly under the score -->
+					<form hx-post="{% url 'c_activities:return-grade' first_submission.id %}" class="mt-2">
+						{% csrf_token %}
+						<button type="submit" name="action" value="return" 
+						class="py-2 w-32 text-white bg-gray-800 rounded hover:bg-gray-950 {% if first_submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% else %} cursor-pointer hover:bg-gray-950 {% endif %}" 
+						title="{% if first_submission.status == 'returned' %} Grade already returned {% else %} Click to return grade to student {% endif %}" 
+						{% if first_submission.status == 'returned' %}disabled onclick="return false;"{% endif %}>
+							Return Grade
+						</button>
+					</form>
+				{% endwith %}
+			{% else %}
+				<p class="text-center text-sm font-medium text-gray-800 sm:text-base">No submission.</p>
+			{% endif %}
+		</div>
+		<div class="flex justify-between items-center border-solid h-auto w-full bg-gray-200 text-sm font-medium text-gray-800 sm:text-base">
+			<form hx-get="{% url 'a_classroom:prev_or_next' %}" hx-target="#output" hx-swap="innerHTML" class="w-full flex justify-center py-3">
 				<input type="hidden" name="activity_id" value="{{ activity.activity_id }}">
 				<input type="hidden" name="index" value="{{ index|default:0 }}">
 				<button type="submit" name="action" value="previous" 
-				class="w-20 h-12 text-white bg-black border-2 border-solid cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200"
+				class="flex items-center justify-center py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950"
 				title="Go to previous page">Previous</button> 
 			</form>
-		</div>
-
-		<div class="relative flex-1 h-full bg-gray-200 min-h-0">
-			<div class="h-full overflow-y-auto pt-6 pl-4 pr-4 pb-28 min-h-0" style="scrollbar-gutter: stable;">
-				{% if activity_submissions %}
-					{% with first_submission=activity_submissions.first %}
-
-						<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-							<span class="font-bold">Email Address</span>
-							<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-80 overflow-y-auto" style="scrollbar-gutter: stable;">
-								{{ first_submission.student.email }}
-							</div>
-						</div>
-
-						<p class="b-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-							<span class="font-bold">Submitted Code</span>
-							<pre class="mb-4 p-3 bg-gray-100 rounded-lg min-h-24 max-h-80 overflow-y-auto">{{ first_submission.submitted_code }}</pre>
-						</p>
-
-						<!-- Editable Feedback with scrollable content -->
-						<div id="feedback-{{ first_submission.id }}" class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-							<span class="font-bold">Feedback</span>
-							<div class="mb-4 p-3 bg-gray-100 rounded-lg min-h-48 max-h-80 overflow-y-auto" style="scrollbar-gutter: stable;">
-								{{ first_submission.feedback }}
-								<button class="ml-3 mt-3 md:ml-3 md:mt-0 px-3 py-1 text-sm font-medium sm:text-base text-white bg-blue-600 rounded-lg shadow hover:bg-blue-800 transition-colors duration-200 {% if first_submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
-									hx-get="{% url 'c_activities:edit-insight' first_submission.id %}"
-									hx-swap="outerHTML"
-									hx-target="#feedback-{{ first_submission.id }}"
-									title="Click to edit feedback"
-									{% if first_submission.status == 'returned' %} disabled {% endif %}>Edit Feedback</button>
-							</div>
-						</div>
-
-						<!-- Editable Score -->
-						<div id="score-{{ first_submission.id }}" class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-							<span class="font-bold">Score</span>
-							<div class="p-3 bg-gray-100 rounded-lg max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;"> 
-								{{ first_submission.score }}
-								<button class="ml-3 px-3 py-1 text-sm text-sm font-medium sm:text-base text-white bg-green-600 rounded-lg shadow hover:bg-green-800 transition-colors duration-200 {% if first_submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
-									hx-get="{% url 'c_activities:edit-grade' first_submission.id %}" 
-									hx-swap="outerHTML" 
-									hx-target="#score-{{ first_submission.id }}" 
-									title="Click to edit grade"
-									{% if first_submission.status == 'returned' %} disabled {% endif %}>Edit Grade</button>
-							</div>
-						</div>
-
-						<!-- Return Grade button placed directly under the score -->
-						<form hx-post="{% url 'c_activities:return-grade' first_submission.id %}" class="mt-2">
-							{% csrf_token %}
-							<button type="submit" name="action" value="return" 
-							class="w-40 h-12 text-white bg-black border-2 border-solid rounded-xl {% if first_submission.status == 'returned' %}opacity-50 cursor-not-allowed bg-gray-500{% else %}cursor-pointer hover:bg-gray-500 transition-colors duration-200{% endif %}" 
-							title="{% if first_submission.status == 'returned' %}Grade already returned{% else %}Click to return grade to student{% endif %}" 
-							{% if first_submission.status == 'returned' %}disabled onclick="return false;"{% endif %}>
-								Return Grade
-							</button>
-						</form>
-					{% endwith %}
-				{% else %}
-					<p class="text-center text-sm font-medium text-gray-800 sm:text-base">No submission.</p>
-				{% endif %}
-			</div>
-		</div>
-
-		<!-- Next (mobile bottom / md side) -->
-		<div class="flex justify-center items-center border-solid h-auto md:h-full w-full md:w-16 lg:w-1/12 bg-gray-200 text-sm font-medium text-gray-800 sm:text-base">
-			<form hx-get="{% url 'a_classroom:prev_or_next' %}" hx-target="#output" hx-swap="innerHTML" class="w-full flex justify-center py-3 md:py-0">
+			<form hx-get="{% url 'a_classroom:prev_or_next' %}" hx-target="#output" hx-swap="innerHTML" class="w-full flex justify-center py-3">
 				<input type="hidden" name="activity_id" value="{{ activity.activity_id }}">
 				<input type="hidden" name="index" value="{{ index|default:0 }}">
 				<button type="submit" name="action" value="next" 
-				class="w-20 h-12 text-white bg-black border-2 border-solid cursor-pointer rounded-xl hover:bg-gray-500 transition-colors duration-200"
+				class="flex items-center justify-center py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950"
 				title="Go to next page">Next</button> 
 			</form>
 		</div>
