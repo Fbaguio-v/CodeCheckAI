@@ -4,7 +4,8 @@
 
         {% if instructor %}
             <a href="#">
-                <div class="flex items-center justify-start text-left h-21 border-t border-solid border-gray-300 rounded-md shadow-md leading-none px-4 overflow-hidden">
+                <div class="flex items-center justify-start text-left h-21 border-t border-solid border-gray-300 rounded-md shadow-md leading-none px-4 overflow-hidden"
+                    style="border-left: 5px solid; border-right: 5px solid;">
                     <img src="{% if instructor.userprofile.image %}{{ instructor.userprofile.image.url }}{% else %}/static/mysite_images/logo.png{% endif %}"
                     alt="Profile Image"
                     class="flex object-cover w-20 h-20 m-2 border-2 border-black border-solid rounded-full shadow-lg rounded-circle">
@@ -33,7 +34,8 @@
 
         {% if students %}
             {% for student in students %}
-                <div class="flex items-center justify-start text-left h-21 border-t border-solid border-gray-300 rounded-md shadow-md leading-none px-4 overflow-hidden">
+                <div class="flex items-center justify-start text-left h-21 border-t border-solid border-gray-300 rounded-md shadow-md leading-none px-4 overflow-hidden"
+                    style="border-left: 5px solid; border-right: 5px solid;">
                     <img src="{{ student.userprofile.get_image_url|default_if_none:'/media/mysite_images/default.jpg' }}"
                     alt="Profile Image"
                     class="flex object-cover w-20 h-20 m-2 border-2 border-black border-solid rounded-full shadow-lg rounded-circle">

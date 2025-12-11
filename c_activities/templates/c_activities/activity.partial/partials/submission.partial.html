@@ -4,19 +4,19 @@
 
             <div class="text-left text-sm font-medium text-gray-800 sm:text-base">
                 <span class="font-bold">Email Address</span>
-                <div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
+                <div class="mb-4 p-3 bg-gray-100 rounded max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
                     {{ submission.student.email }}
                 </div>
             </div>
 
             <div class="text-left text-sm font-medium text-gray-800 sm:text-base">
                 <span class="font-bold">Submitted Code</span>
-                <div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-32 overflow-y-auto">{{ submission.submitted_code }}</div>
+                <span class="block mb-4 p-3 bg-gray-100 rounded max-h-32 overflow-y-auto">{{ submission.submitted_code }}</span>
             </div>
 
             <div id="feedback-{{ submission.id }}" class="text-left text-sm font-medium text-gray-800 sm:text-base">
                 <span class="font-bold">Feedback</span>
-                <div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-32 overflow-y-auto" style="scrollbar-gutter: stable;">
+                <span class="block mb-4 p-3 bg-gray-100 rounded max-h-32 overflow-y-auto" style="scrollbar-gutter: stable;">
                     {{ submission.feedback }}
                     <button class="cursor-pointer py-1 px-2 text-white bg-gray-800 rounded hover:bg-gray-950 {% if submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
                         hx-get="{% url 'c_activities:edit-insight' submission.id %}"
@@ -24,11 +24,11 @@
                         hx-target="#feedback-{{ submission.id }}"
                         title="Click to edit feedback"
                         {% if submission.status == 'returned' %} disabled {% endif %}>Edit Feedback</button>
-                </div>
+                </span>
             </div>
             <div id="score-{{ submission.id }}" class="text-left text-sm font-medium text-gray-800 sm:text-base">
                 <span class="font-bold">Score</span>
-                <div class="p-3 bg-gray-100 rounded-lg max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;"> 
+                <div class="p-3 bg-gray-100 rounded max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;"> 
                     {{ submission.score }}
                     <button class="cursor-pointer py-1 px-2 text-white bg-gray-800 rounded hover:bg-gay-950 {% if submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
                         hx-get="{% url 'c_activities:edit-grade' submission.id %}" 

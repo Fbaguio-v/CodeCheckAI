@@ -1,42 +1,40 @@
 {% extends 'a_classroom/base.html' %}
 {% block title %} Login {% endblock %}
 {% block content %}
-<div class="h-full w-full form-class">
-  <form action="{% url 'register:login' %}?next={{ request.path }}" method="post"
-        class="flex flex-col gap-4 p-4 h-[500px] w-[500px]" novalidate>
+<div class="h-full w-full div-form">
+  <form action="{% url 'register:login' %}?next={{ request.path }}" method="post" class="flex flex-col gap-4 register-form" novalidate>
     {% csrf_token %}
 
     <h1 class="text-center text-2xl font-semibold text-gray-900 after">Login to CodeCheckAI</h1>
 
-    <div class="grid grid-cols-1 gap-4 w-full">
-      <div class="flex flex-col grow w-full gap-1">
-        <label for="id_email" class="text-sm font-medium text-gray-800 sm:text-base">
+      <div class="flex flex-col gap-1">
+        <label for="id_email">
           CCA Email Address
         </label>
-        <input type="email" name="email" id="id_email"
-                class="w-full h-10 sm:h-12 px-3 sm:px-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black login-input"
-                value="{{ form.email.value|default:'' }}"
-                placeholder="Email Address" required>
+          <input type="email" name="email" id="id_email"
+                  class="w-full h-12 px-3 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
+                  value="{{ form.email.value|default:'' }}"
+                  placeholder="Email Address" autocomplete="off" required>
       </div>
 
-      <div class="flex flex-col w-full gap-1">
-          <label for="id_password" class="text-sm font-medium text-gray-800 sm:text-base">
+      <div class="flex flex-col gap-1">
+          <label for="id_password">
               Password
           </label>
           <div class="relative border-black">
               <input type="password" name="password" id="id_password"
-                    class="w-full h-10 sm:h-12 px-3 sm:px-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black pr-12 password-input"
+                    class="w-full h-12 px-3 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-black password-input"
                     placeholder="Password" required>
               <span id="id_for_login_toggle" style="position: absolute; top: 10px; right: -25px; transform: translate(-50%); border-left: 0.1rem solid; padding: 0 10px; cursor: pointer;" class="show">Show</span>
           </div>
       </div>
 
-        <div class="flex justify-center items-center w-full">
-          <button type="submit"
-                class="w-[50%] px-4 py-2 text-sm sm:text-base md:text-lg text-white bg-black rounded-md shadow-lg hover:bg-gray-800 transition-colors cursor-pointer">
-            Login
-          </button>
-        </div>
+      <div class="flex justify-center items-center">
+        <button type="submit"
+              class="w-[50%] px-4 py-2 text-sm sm:text-base md:text-lg text-white bg-black rounded-md shadow-lg hover:bg-gray-800 transition-colors cursor-pointer">
+          Login
+        </button>
+      </div>
 
       <div class="flex flex-col items-center gap-2">
         <p class="text-sm text-gray-600">
@@ -47,7 +45,6 @@
           <a class="text-blue-600 hover:underline" href="{% url 'register:register' %}">Register</a>
         </p>
       </div>
-    </div>
   </form>
 </div>
 {% endblock %}

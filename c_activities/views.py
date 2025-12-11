@@ -328,7 +328,7 @@ class EditActivityView(View):
         
         if not all([title, description, max_score, due_at_raw]):
             messages.error(request, "All fields are required")
-            return redirect(f"/a/edit-activity/{activity_id}/")
+            return redirect(f"/c/activity/{activity.activity_id}/?subject_id={activity.subject.subject_id}")
 
         due_at = None
         try:
@@ -337,11 +337,12 @@ class EditActivityView(View):
             
             if due_at <= timezone.now():
                 messages.error(request, "Due date must be in the future")
-                return redirect(f"/a/edit-activity/{activity_id}/")
+                return redirect(f"/c/activity/{activity.activity_id}/?subject_id={activity.subject.subject_id}")
+                
                 
         except ValueError:
             messages.error(request, "Invalid date format. Use YYYY-MM-DDTHH:MM")
-            return redirect(f"/a/edit-activity/{activity_id}/")
+            return redirect(f"/c/activity/{activity.activity_id}/?subject_id={activity.subject.subject_id}")
         
         if activity.type == "quiz" and max_attempt:
             activity.max_attempt = int(max_attempt)
@@ -349,6 +350,10 @@ class EditActivityView(View):
         activity.title = title
         activity.max_score = max_score
         activity.due_at = due_at
+
+        for act in activity.submissions.all():
+            act.status = "in_progress"
+            act.save()
 
         if description != activity.description:
             activity.description = description
