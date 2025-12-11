@@ -7,10 +7,11 @@
             {% for subject in subjects %}
                 <li>
                     <a href="{% url 'a_classroom:v' subject.subject_id %}?from={{ request.path }}">
-                        <div class="flex flex-col justify-center p-[50px] text-center transition border border-black rounded-lg hover:shadow-lg hover:bg-gray-100 shadow-xl">
+                        <div class="flex flex-col justify-center p-[50px] text-center transition rounded hover:bg-gray-600 shadow-xl
+                        border border-black">
                             <h1 class="text-lg font-bold">{{ subject.course_code }}</h1>
-                            <p>{{ subject.section.name }}</p>
-                            <p>{{ subject.instructor.get_full_name }}</p>
+                            <p class="">{{ subject.section.name }}</p>
+                            <p class="">{{ subject.instructor.get_full_name }}</p>
                         </div>
                     </a>
                 </li>

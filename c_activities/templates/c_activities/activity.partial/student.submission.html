@@ -7,28 +7,28 @@
 
 		<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
 			<span class="font-bold">Title</span>
-			<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
+			<span class="block mb-4 p-3 bg-gray-100 rounded max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
 				{{ activity.title }}
-			</div>
+			</span>
 		</div>
 
 		<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
 			<span class="font-bold">Instructions</span>
-			<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-32 overflow-y-auto" style="scrollbar-gutter: stable;">
+			<span class="block mb-4 p-3 bg-gray-100 rounded max-h-32 overflow-y-auto" style="scrollbar-gutter: stable;">
 				{{ activity.description }}
-			</div>
+			</span>
 		</div>
 
 		<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
 			<span class="font-bold">Max Score</span>
-			<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
+			<div class="mb-4 p-3 bg-gray-100 rounded max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
 				{{ activity.max_score }}
 			</div>
 		</div>
 
 		<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
 			<span class="font-bold">Language</span>
-			<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
+			<div class="mb-4 p-3 bg-gray-100 rounded max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
 				{{ activity.language }}
 			</div>
 		</div>
@@ -37,7 +37,7 @@
 		{% if activity.type == "quiz" %}
 			<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
 				<span class="font-bold">Max Attempt</span>
-				<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
+				<div class="mb-4 p-3 bg-gray-100 rounded max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
 					{{ activity.max_attempt }}
 				</div>
 			</div>
@@ -45,7 +45,7 @@
 
 		<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
 			<span class="font-bold">Due</span>
-			<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-16 overflow-y-auto" style="scrollbar-gutter: stable;">
+			<div class="mb-4 p-3 bg-gray-100 rounded max-h-16 overflow-y-auto" style="scrollbar-gutter: stable;">
 				{{ activity.due_at }}
 			</div>
 		</div>
@@ -68,20 +68,20 @@
 
 					<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
 						<span class="font-bold">Email Address</span>
-						<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
+						<div class="mb-4 p-3 bg-gray-100 rounded max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
 							{{ first_submission.student.email }}
 						</div>
 					</div>
 
 					<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
 						<span class="font-bold">Submitted Code</span>
-						<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-32 overflow-y-auto" style="scrollbar-gutter: stable;">{{ first_submission.submitted_code }}</div>
+						<span class="block mb-4 p-3 bg-gray-100 rounded max-h-32 overflow-y-auto" style="scrollbar-gutter: stable;">{{ first_submission.submitted_code }}</span>
 					</div>
 
 					<!-- Editable Feedback with scrollable content -->
 					<div id="feedback-{{ first_submission.id }}" class="text-left text-sm font-medium text-gray-800 sm:text-base">
 						<span class="font-bold">Feedback</span>
-						<div class="mb-4 p-3 bg-gray-100 rounded-lg max-h-32 overflow-y-auto" style="scrollbar-gutter: stable;">
+						<span class="block mb-4 p-3 bg-gray-100 rounded max-h-32 overflow-y-auto" style="scrollbar-gutter: stable;">
 							{{ first_submission.feedback }}
 							<button class="cursor-pointer py-1 px-2 text-white bg-gray-800 rounded hover:bg-gray-950 {% if first_submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
 								hx-get="{% url 'c_activities:edit-insight' first_submission.id %}"
@@ -89,13 +89,13 @@
 								hx-target="#feedback-{{ first_submission.id }}"
 								title="Click to edit feedback"
 								{% if first_submission.status == 'returned' %} disabled {% endif %}>Edit Feedback</button>
-						</div>
+						</span>
 					</div>
 
 					<!-- Editable Score -->
 					<div id="score-{{ first_submission.id }}" class="text-left text-sm font-medium text-gray-800 sm:text-base">
 						<span class="font-bold">Score</span>
-						<div class="p-3 bg-gray-100 rounded-lg max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;"> 
+						<div class="p-3 bg-gray-100 rounded max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;"> 
 							{{ first_submission.score }}
 							<button class="cursor-pointer py-1 px-2 text-white bg-gray-800 rounded hover:bg-gay-950 {% if first_submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
 								hx-get="{% url 'c_activities:edit-grade' first_submission.id %}" 

@@ -5,11 +5,11 @@
                 {% for subject in subjects %}
                     <li class="block w-full">
                         <a href="{% url 'a_classroom:v' subject.subject_id %}?from={{ request.path }}"
-                            class="block text-black text-sm font-medium text-gray-800 bg-gray-100 p-4 m-2 sm:text-base border border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
-                            <h1 class="text-base font-bold sm:text-lg md:text-xl">
+                            class="block text-white p-4 m-2 bg-gray-500 rounded hover:bg-gray-600">
+                            <h1 class="text-base font-bold text-white">
                                 {{ subject.course_code }}
                             </h1>
-                            <p class="text-sm font-medium text-gray-800 sm:text-base md:text-lg text-gray-600">{{ subject.section.name }}</p>
+                            <p class="text-white">{{ subject.section.name }}</p>
                         </a>
                     </li>
                 {% endfor %}
@@ -21,21 +21,21 @@
             <ul class="space-y-2">
                 <li>
                     <a href="{% url 'a_classroom:get-users' %}?from={{ request.path }}" 
-                       class="block p-3 text-black border border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
+                       class="block p-3 text-black border border-black rounded hover:bg-gray-300">
                         <h1 class="text-base font-bold">Users</h1>
                         <p class="text-sm text-gray-600">Manage all users</p>
                     </a>
                 </li>
                 <li>
                     <a href="{% url 'a_classroom:pending-users' %}?from={{ request.path }}" 
-                       class="block p-3 text-black border border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
+                       class="block p-3 text-black border border-black rounded hover:bg-gray-300">
                         <h1 class="text-base font-bold">Pending Users</h1>
                         <p class="text-sm text-gray-600">Approve pending accounts</p>
                     </a>
                 </li>
                 <li>
                     <a href="{% url 'a_classroom:get-subjects' %}?from={{ request.path }}" 
-                       class="block p-3 text-black border border-black rounded-lg hover:shadow-lg hover:bg-gray-300">
+                       class="block p-3 text-black border border-black rounded hover:bg-gray-300">
                         <h1 class="text-base font-bold">Subjects</h1>
                         <p class="text-sm text-gray-600">View and manage subjects</p>
                     </a>

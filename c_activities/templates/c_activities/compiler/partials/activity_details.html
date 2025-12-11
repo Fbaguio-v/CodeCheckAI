@@ -48,9 +48,9 @@
                 {% if activity_submissions.0.status == "returned" and activity.type == "quiz" %}
                     <div class="pb-2">
                         <h4 class="font-bold">Feedback</h4>
-                        <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto scrollbar-hidden">
+                        <span class="block bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto scrollbar-hidden">
                             {{ highest_feedback }}
-                        </div>
+                        </span>
                     </div>
                 {% endif %}
             {% endif %}
@@ -60,6 +60,12 @@
                     <h4 class="font-bold">Feedback</h4>
                     <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto">
                         {{ activity_submissions.0.feedback }}
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold">Score</h4>
+                    <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto">
+                        {{ activity_submissions.0.score }}
                     </div>
                 </div>
             {% endif %}

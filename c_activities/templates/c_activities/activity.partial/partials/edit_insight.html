@@ -10,7 +10,7 @@
   
   <textarea 
     name="new_insight"
-    class="mt-2 p-3 bg-gray-100 rounded-lg w-full h-32 resize-none overflow-y-auto"
+    class="border border-solid mt-2 p-3 bg-gray-100 rounded w-full h-32 resize-none overflow-y-auto"
     required
   >{{ submission.feedback }}</textarea>
   
@@ -19,7 +19,7 @@
       type="submit" 
       name="action" 
       value="confirm"
-      class="px-3 py-1 text-sm text-white bg-blue-600 rounded-lg shadow hover:bg-blue-800 transition-colors duration-200"
+      class="py-1 px-2 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950"
     >
       Confirm
     </button>
@@ -28,7 +28,7 @@
       type="submit" 
       name="action" 
       value="cancel"
-      class="px-3 py-1 text-sm text-white bg-red-600 rounded-lg shadow hover:bg-red-800 transition-colors duration-200"
+      class="py-1 px-2 text-white bg-red-600 cursor-pointer rounded hover:bg-red-800"
     >
       Cancel
     </button>

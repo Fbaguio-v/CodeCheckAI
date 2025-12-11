@@ -177,6 +177,7 @@ class CompilerView(View):
                                       <div class="bg-gray-800 font-medium text-gray-800 sm:text-base rounded-md p-3">
                                         <div class="flex items-center justify-between">
                                           <h3 class="text-sm font-medium text-white">📄 Program Output</h3>
+                                          <button class="text-sm font-medium text-white bg-gray-500 py-2 px-3 rounded cursor-pointer" id="copy-output">Copy Output</button>
                                         </div>
                                         <pre id="output-pre" class="mt-3 whitespace-pre-wrap text-sm bg-gray-900 text-green-300 font-medium sm:text-base rounded p-3 max-h-64 overflow-auto">{stdout or stderr or compile_output or message or status_description}</pre>
                                       </div>
@@ -202,6 +203,15 @@ class CompilerView(View):
                                 #output-pre {{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace; }}
                                 .copy-btn {{ cursor: pointer; }}
                               </style>
+                           <script>
+                                const outputPre = document.getElementById("output-pre");
+                                const copyOutput = document.getElementById("copy-output");
+                                copyOutput.addEventListener("click", (e) => {{
+                                    navigator.clipboard.writeText(outputPre.textContent).then(() => {{
+                                        e.target.textContent = "Copied!";
+                                    }});
+                                }});
+                              </script>
                             """
 
                         return HttpResponse(output, content_type="text/html")

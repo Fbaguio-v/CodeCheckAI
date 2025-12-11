@@ -3,9 +3,8 @@
 {% block content %}
     <div id="parent" class="flex flex-col lg:flex-row h-full w-full">
         <div class="flex-1">
-            {% csrf_token %}
-            <div class="rounded-lg overflow-hidden shadow-md border border-gray-100 h-full bg-white">
-                <div class="flex flex-row h-[350px] md:h-[500px] lg:h-[650px]">
+            <div class="flex flex-col gap-4 rounded overflow-hidden border border-gray-100 h-full bg-white">
+                <div class="flex flex-row flex-1">
                     <div class="hidden sm:flex flex-col px-2 py-2 w-12 overflow-y-auto font-mono text-sm text-right text-gray-200 bg-gray-100">
                         <pre id="div-number" class="h-full pt-1 pr-2 overflow-y-scroll font-mono text-sm leading-5 text-right text-gray-600 scrollbar-hidden"></pre>
                      </div>
@@ -19,34 +18,30 @@
                         style="resize: none; min-height: 250px; white-space: pre;"></textarea>
                 </div>
 
-                <div class="border-t border-gray-200 p-4">
-                    <div class="flex flex-col sm:flex-row items-center gap-3">
-                        <select name="language_id"
-                            id="language_id"
-                            class="w-full sm:w-[180px] px-4 py-2 text-black bg-gray-200 transition-colors border-grey-900 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base md:text-lg"
-                            required>
-                            <option value="71">Python</option>
-                            <option value="62">Java</option>
-                        </select>
+                <div class="flex flex-col sm:flex-row items-center gap-3">
+                    <select name="language_id"
+                        id="language_id"
+                        class="w-full sm:w-[180px] px-4 py-2 text-black bg-gray-200 transition-colors border-grey-900 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base md:text-lg"
+                        required>
+                        <option value="71">Python</option>
+                        <option value="62">Java</option>
+                    </select>
 
-                        <form class="w-full sm:w-auto">
-                            {% csrf_token %}
-                            <button name="action"
-                                value="run_code"
-                                hx-post="{% url 'd_compiler:index' %}?type=playground"
-                                hx-include="#compiler, #language_id"
-                                hx-target="#code-output"
-                                hx-swap="innerHTML"
-                                class="w-full sm:w-auto px-6 py-2 text-white transition-colors bg-black rounded-lg shadow-md hover:bg-gray-600 text-sm sm:text-base md:text-lg">Run Code</button>
-                        </form>
-                    </div>
+                    <form class="w-full sm:w-auto">
+                        {% csrf_token %}
+                        <button name="action"
+                            value="run_code"
+                            hx-post="{% url 'd_compiler:index' %}?type=playground"
+                            hx-include="#compiler, #language_id"
+                            hx-target="#code-output"
+                            hx-swap="innerHTML"
+                            class="w-full px-6 py-2 text-white transition-colors bg-black rounded hover:bg-gray-600 cursor-pointer">Run Code</button>
+                    </form>
                 </div>
             </div>
         </div>
 
-        <!-- Output Column -->
-        <div id="code-output" class="w-full lg:w-1/3 border border-solid rounded border-gray-300 bg-white overflow-auto h-full">
-            <!-- Judge0 output will go here -->
+        <div id="code-output" class="w-full lg:w-1/3 border-2 border-solid rounded bg-white overflow-auto h-full">
         </div>
     </div>
 
@@ -55,7 +50,6 @@
             const compiler = document.getElementById("compiler");
             const div = document.getElementById("div-number");
             const updateLineNumbers = () => {
-                // handle different newline styles (CRLF, CR, LF)
                 const lines = compiler.value.split(/\r\n|\r|\n/).length;
                 let lineNumbers = "";
                 for (let i = 1; i <= lines; i++) {
@@ -83,7 +77,6 @@
                     compiler.value =
                         compiler.value.substring(0, start) + indent + compiler.value.substring(end);
 
-                    // Move the cursor after the inserted indent
                     compiler.selectionStart = compiler.selectionEnd = start + indent.length;
 
                     updateLineNumbers();
