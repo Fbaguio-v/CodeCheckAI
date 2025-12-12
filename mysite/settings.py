@@ -34,7 +34,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'codechecksai.loan',
     'www.codechecksai.loan',
-    '3.106.60.140',
+    '43.207.3.184',
     'localhost',
     '127.0.0.1',
 ]
