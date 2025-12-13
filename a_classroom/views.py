@@ -403,7 +403,7 @@ Your account has been approved by the admin.
 You can now login into your account.
 
 Best regards,  
-Admin Team
+CodeCheckAI Team
 """
             try:
                 connection = get_connection()

@@ -1,54 +1,54 @@
 <div class="flex items-center justify-center h-full w-full">
     <div class="flex flex-col justify-start border border-gray-300 h-[100%] w-[100%] p-4 overflow-hidden">
-        <div class="h-full overflow-y-auto scrollbar-hidden pr-2 leading-5">
+        <div class="h-full overflow-y-auto pr-2 leading-5">
 
             <div class="pb-2">
 				<h4 class="font-bold">Title</h4>
-                <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-80 overflow-y-auto scrollbar-hidden">{{ activity.title }}</div>
+                <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-80 overflow-y-auto scrollbar-hidden">{{ activity.title }}</div>
             </div>
 
             <div class="pb-2">
                 <h4 class="font-bold">Instruction</h4>
-                <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-80 overflow-y-auto overflow-x-hidden text-justify">{{ activity.description }}</div>
+                <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-80 overflow-y-auto overflow-x-hidden text-justify">{{ activity.description }}</div>
             </div>
             
             <div class="pb-2">
                 <h4 class="font-bold">Max Score</h4>
-                <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ activity.max_score }}</div>
+                <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ activity.max_score }}</div>
             </div>
 
             <div class="pb-2">
                 <h4 class="font-bold">Language</h4>
-                <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ activity.language }}</div>
+                <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ activity.language }}</div>
             </div>
 
 
             <div class="pb-2">
                 <h4 class="font-bold">Due</h4>
-                <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ activity.due_at }}</div>
+                <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ activity.due_at }}</div>
             </div>
 
             {% if activity.type == "quiz" %}
 
                 <div class="pb-2">
                     <h4 class="font-bold">Max Attempt</h4>
-                    <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ activity.max_attempt }}</div>
+                    <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ activity.max_attempt }}</div>
                 </div>
 
                 <div class="pb-2">
                     <h4 class="font-bold">Attempt Number</h4>
-                    <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ submission_count }}</div>
+                    <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ submission_count }}</div>
                 </div>
 
                 <div class="pb-2">
                     <h4 class="font-bold">Highest Score</h4>
-                    <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ highest_score }}</div>
+                    <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ highest_score }}</div>
                 </div>
 
                 {% if activity_submissions.0.status == "returned" and activity.type == "quiz" %}
                     <div class="pb-2">
                         <h4 class="font-bold">Feedback</h4>
-                        <span class="block bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto scrollbar-hidden">
+                        <span class="block bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto scrollbar-hidden">
                             {{ highest_feedback }}
                         </span>
                     </div>
@@ -58,13 +58,13 @@
             {% if activity_submissions.0.status == "returned" and activity.type == "activity" %}
                 <div>
                     <h4 class="font-bold">Feedback</h4>
-                    <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto">
+                    <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto">
                         {{ activity_submissions.0.feedback }}
                     </div>
                 </div>
                 <div>
                     <h4 class="font-bold">Score</h4>
-                    <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto">
+                    <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-48 overflow-y-auto">
                         {{ activity_submissions.0.score }}
                     </div>
                 </div>
