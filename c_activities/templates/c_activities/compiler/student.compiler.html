@@ -19,7 +19,7 @@
             </div>
             <textarea id="compiler"
                 name="compiler"
-                class="w-full h-full p-2 overflow-y-scroll text-sm leading-5 border resize-none scrollbar-hidden focus:ring focus:ring-black font-medium text-gray-800 sm:text-base focus:bg-gray-200"
+                class="w-full h-full p-2 overflow-y-scroll text-sm leading-5 border resize-none scrollbar-hidden focus:ring focus:ring-black font-medium text-gray-800 sm:text-base bg-gray-200"
                 style="resize: none;"
                 {% if submission.status == "submitted" or submission.status == "returned" %}
                     readonly
@@ -31,9 +31,9 @@
 
                 {% if activity.type == "activity" %}
                     {% if activity_submissions.0.status == "returned" %}
-                        <button class="w-full sm:w-[150px] px-6 py-2 text-white bg-gray-500 rounded-lg shadow-md cursor-not-allowed opacity-60" 
+                        <button class="py-2 w-32 text-white bg-gray-800 cursor-not-allowed rounded hover:bg-gray-950" 
                                 disabled title="Grade has been returned - cannot unsubmit">
-                            Unsubmit (Grade Returned)
+                            Unsubmit
                         </button>
                     {% elif activity_submissions.0.status == "submitted" %}
                         <form>
@@ -41,7 +41,7 @@
                             <button name="action" value="unsubmit" 
                                     hx-post="{% url 'd_compiler:unsubmit' %}" 
                                     hx-include="input[name='submission_id'], input[name='activity_id'], input[name='subject_id']"
-                                    class="w-full sm:w-[150px] px-6 py-2 text-white bg-red-600 hover:bg-red-700 transition-colors rounded-lg shadow-md"
+                                    class="py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950"
                                     title="Unsubmit your work for editing">
                                 Unsubmit
                             </button>
@@ -53,7 +53,7 @@
                             <button name="action" value="turn_in"  
                                     hx-post="{% url 'd_compiler:turn_in' %}" 
                                     hx-include="#compiler, input[name='activity_id'], input[name='subject_id']"
-                                    class="w-full sm:w-[150px] px-6 py-2 text-white rounded-lg shadow-md {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
+                                    class="py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950 {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-950 transition-colors{% endif %}"
                                     {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}disabled title="Submission period has ended"{% else %}title="Submit your activity"{% endif %}>
                                 Submit
                             </button>
@@ -70,7 +70,7 @@
                             <button name="action" value="save_draft" 
                                     hx-post="{% url 'd_compiler:save_draft' %}" 
                                     hx-include="#compiler, input[name='activity_id'], input[name='subject_id']"
-                                    class="w-full sm:w-[150px] px-6 py-2 text-white rounded-lg shadow-md {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-blue-700 transition-colors{% endif %}"
+                                    class="py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950 {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-950 transition-colors{% endif %}"
                                     {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}disabled title="Submission period has ended"{% else %}title="Save your work as draft"{% endif %}>
                                 Save as Draft
                             </button>
@@ -82,7 +82,7 @@
                 {% if activity.type == "quiz" %}
                     {% with server_time=current_time|date:'Y-m-d H:i:s' %}
                     <select name="language_id" id="language_id"
-                        class="py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950 {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
+                        class="py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950 cursor-pointer {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
                         {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}disabled title="Quiz period has ended"{% else %}required title="Select programming language"{% endif %}>
                         <option value="71">Python</option>
                         <option value="62">Java</option>
@@ -104,7 +104,7 @@
             </div>
         </div>
 
-        <div id="code-output" class="border border-solid border-gray-300 bg-gray-100 text-sm font-mono overflow-auto h-auto">
+        <div id="code-output" class="border border-solid bg-gray-100 text-sm font-mono overflow-auto h-auto">
         </div>
     </div>
 </div>

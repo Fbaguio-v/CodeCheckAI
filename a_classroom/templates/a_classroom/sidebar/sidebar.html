@@ -5,11 +5,11 @@
                 {% for subject in subjects %}
                     <li class="block w-full">
                         <a href="{% url 'a_classroom:v' subject.subject_id %}?from={{ request.path }}"
-                            class="block text-white p-4 m-2 bg-gray-500 rounded hover:bg-gray-600">
-                            <h1 class="text-base font-bold text-white">
+                            class="block text-black p-4 m-2 rounded hover:bg-gray-300 border border-black">
+                            <h1 class="text-base font-bold">
                                 {{ subject.course_code }}
                             </h1>
-                            <p class="text-white">{{ subject.section.name }}</p>
+                            <p>{{ subject.section.name }}</p>
                         </a>
                     </li>
                 {% endfor %}

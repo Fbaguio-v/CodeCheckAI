@@ -2,7 +2,7 @@
 {% block title %} {{ activity.subject.course_code }} - {{ activity.title }} {% endblock %}
 {% block content %}
 
-<div class="flex flex-col h-full w-full overflow-auto student-submission">
+<div class="flex flex-col h-full w-full student-submission">
 	<div id="activity-output" class="border-r bg-gray-200 p-4">
 
 		<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
@@ -62,7 +62,7 @@
 	<!-- Right Panel: Submissions & Controls -->
 	<div id="output" class="flex flex-1 flex-col w-full bg-gray-200 p-4">
 
-		<div class="overflow-y-auto" style="scrollbar-gutter: stable;">
+		<div class="overflow-y-auto flex-1" style="scrollbar-gutter: stable;">
 			{% if activity_submissions %}
 				{% with first_submission=activity_submissions.first %}
 
@@ -110,7 +110,7 @@
 					<form hx-post="{% url 'c_activities:return-grade' first_submission.id %}" class="mt-2">
 						{% csrf_token %}
 						<button type="submit" name="action" value="return" 
-						class="py-2 w-32 text-white bg-gray-800 rounded hover:bg-gray-950 {% if first_submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% else %} cursor-pointer hover:bg-gray-950 {% endif %}" 
+						class="py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950 {% if first_submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% else %} cursor-pointer hover:bg-gray-950 {% endif %}" 
 						title="{% if first_submission.status == 'returned' %} Grade already returned {% else %} Click to return grade to student {% endif %}" 
 						{% if first_submission.status == 'returned' %}disabled onclick="return false;"{% endif %}>
 							Return Grade
