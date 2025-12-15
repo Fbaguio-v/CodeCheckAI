@@ -13,23 +13,17 @@ body {
     margin: 0.5rem;
     gap: 0.5rem;
 }
-.form-class {
+.div-form {
     display: flex;
     justify-content: center;
     align-items: center;
-
-    > form {
-        border: 0.2rem solid gray;
-        border-radius: 0.75rem;
-        margin: 0.5rem;
-        padding: 0.5rem;
-        height: auto;
-        width: auto;
-
-        .login-input {
-            width: 40rem;
-        }
-    }
+}
+.register-form {
+    height: auto;
+    width: 90%;
+    border: 0.2rem solid gray;
+    border-radius: 0.75rem;
+    padding: 1rem;
 }
 .after {
     position: relative;
@@ -50,12 +44,10 @@ dialog {
     top: 35%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: 600px;
-    width: auto;
     padding: 20px;
     border-radius: 5px;
-    border: 1px solid;
-    form {
+
+    > form {
         position: relative;
         h4 {
             border-bottom: 5px solid;
@@ -63,12 +55,15 @@ dialog {
         }
 
         > div {
-            border: 1px solid;
+            border: 2px solid;
             padding: 10px;
+            height: 50%;
+            width: 95%;
+            margin: auto;
         }
         
         button {
-            background-color: hsl(0, 0%, 75%);
+            background-color: black;
             padding: 10px 20px;
             cursor: pointer;
             position: absolute;
@@ -76,11 +71,6 @@ dialog {
             bottom: -60px;
             transform: translate(-50%);
             border-radius: 5px;
-
-            &:hover, &:focus {
-                background-color: black;
-                color: white;
-            }
         }
     }
 }
@@ -99,31 +89,62 @@ dialog {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+.dialog {
+    height: 50%;
+    width: 90%;
+    border: 0.15rem solid;
+}
+.myTerms, .myPrivacy {
+    height: 50%;
+    width: 95%;
+    margin: auto;
+}
+.dialogButton {
+    width: 75%;
+}
 @media screen and (min-width: 500px) and (max-width: 809px) {
     .class-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: auto;
     }
-    .form-class {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        > form {
-            border: 0.15rem solid gray;
-            border-radius: 0.5rem;
-            margin: 1rem;
-            padding: 1rem;
-            height: auto;
-            width: auto;
-        }
+    .register-form {
+        height: auto;
+        width: 70%;
+        border: 0.2rem solid gray;
+        border-radius: 0.75rem;
+        padding: 1rem;
     }
     .create-activity-form {
         width: 80%;
     }
     .people {
         width: 90%;
+    }
+    .dialog {
+        height: 50%;
+        width: 80%;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 50%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 40%;
+        }
+        
+        > div:nth-child(2) {
+            flex-grow: 1;
+        }
     }
 }
 @media screen and (min-width: 810px) and (max-width: 1023px) {
@@ -132,26 +153,47 @@ dialog {
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: auto;
     }
-
-    .form-class {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        > form {
-            border: 0.15rem solid gray;
-            border-radius: 0.5rem;
-            margin: 1rem;
-            padding: 1rem;
-            height: auto;
-            width: auto;
-        }
+    .register-form {
+        height: auto;
+        width: 70%;
+        border: 0.2rem solid gray;
+        border-radius: 0.75rem;
+        padding: 1rem;
     }
     .create-activity-form {
         width: 60%;
     }
     .people {
         width: 70%;
+    }
+    .dialog {
+        height: 50%;
+        width: 80%;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 50%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 40%;
+        }
+
+        > div:nth-child(2) {
+            flex-grow: 1;
+
+            .max-height {
+                max-height: 15rem;
+            }
+        }
     }
 }
 @media screen and (min-width: 1024px) and (max-width: 1439px) {
@@ -160,25 +202,47 @@ dialog {
         grid-template-columns: repeat(4, 1fr);
         grid-template-rows: auto;
     }
-    .form-class {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        > form {
-            border: 0.15rem solid gray;
-            border-radius: 0.5rem;
-            margin: 1rem;
-            padding: 1rem;
-            height: auto;
-            width: auto;
-        }
+    .register-form {
+        height: auto;
+        width: 60%;
+        border: 0.2rem solid gray;
+        border-radius: 0.75rem;
+        padding: 1rem;
     }
     .create-activity-form {
         width: 50%;
     }
     .people {
         width: 50%;
+    }
+    .dialog {
+        height: 50%;
+        width: 70%;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 40%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 40%;
+        }
+
+        > div:nth-child(2) {
+            flex-grow: 1;
+
+            .max-height {
+                max-height: 15rem;
+            }
+        }
     }
 }
 @media screen and (min-width: 1440px) and (max-width: 1749px) {
@@ -187,25 +251,47 @@ dialog {
         grid-template-columns: repeat(5, 1fr);
         grid-template-rows: auto;
     }
-    .form-class {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        > form {
-            border: 0.15rem solid gray;
-            border-radius: 0.5rem;
-            margin: 1rem;
-            padding: 1rem;
-            height: auto;
-            width: auto;
-        }
+    .register-form {
+        height: auto;
+        width: 50%;
+        border: 0.2rem solid gray;
+        border-radius: 0.75rem;
+        padding: 1rem;
     }
     .create-activity-form {
         width: 40%;
     }
     .people {
         width: 40%;
+    }
+    .dialog {
+        height: 50%;
+        width: 60%;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 40%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 50%;
+        }
+
+        > div:nth-child(2) {
+            flex-grow: 1;
+
+            .max-height {
+                max-height: 15rem;
+            }
+        }
     }
 }
 @media screen and (min-width: 1750px) and (max-width: 1949px) {
@@ -214,25 +300,47 @@ dialog {
         grid-template-columns: repeat(6, 1fr);
         grid-template-rows: auto;
     }
-    .form-class {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        > form {
-            border: 0.15rem solid gray;
-            border-radius: 0.5rem;
-            margin: 1rem;
-            padding: 1rem;
-            height: auto;
-            width: auto;
-        }
+    .register-form {
+        height: auto;
+        width: 40%;
+        border: 0.2rem solid gray;
+        border-radius: 0.75rem;
+        padding: 1rem;
     }
     .create-activity-form {
         width: 40%;
     }
     .people {
         width: 40%;
+    }
+    .dialog {
+        height: 50%;
+        width: 50%;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 30%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 50%;
+        }
+
+        > div:nth-child(2) {
+            flex-grow: 1;
+
+            .max-height {
+                max-height: 15rem;
+            }
+        }
     }
 }
 @media screen and (min-width: 1950px) and (max-width: 2149px) {
@@ -241,25 +349,47 @@ dialog {
         grid-template-columns: repeat(7, 1fr);
         grid-template-rows: auto;
     }
-    .form-class {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        > form {
-            border: 0.15rem solid gray;
-            border-radius: 0.5rem;
-            margin: 1rem;
-            padding: 1rem;
-            height: auto;
-            width: auto;
-        }
+    .register-form {
+        height: auto;
+        width: 30%;
+        border: 0.2rem solid gray;
+        border-radius: 0.75rem;
+        padding: 1rem;
     }
     .create-activity-form {
         width: 40%;
     }
     .people {
         width: 40%;
+    }
+    .dialog {
+        height: 50%;
+        width: 40%;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 250%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 50%;
+        }
+
+        > div:nth-child(2) {
+            flex-grow: 1;
+
+            .max-height {
+                max-height: 15rem;
+            }
+        }
     }
 }
 @media screen and (min-width: 2150px) and (max-width: 2349px) {
@@ -268,25 +398,47 @@ dialog {
         grid-template-columns: repeat(8, 1fr);
         grid-template-rows: auto;
     }
-    .form-class {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        > form {
-            border: 0.15rem solid gray;
-            border-radius: 0.5rem;
-            margin: 1rem;
-            padding: 1rem;
-            height: auto;
-            width: auto;
-        }
+    .register-form {
+        height: auto;
+        width: 20%;
+        border: 0.2rem solid gray;
+        border-radius: 0.75rem;
+        padding: 1rem;
     }
     .create-activity-form {
         width: 30%;
     }
     .people {
         width: 30%;
+    }
+    .dialog {
+        height: 50%;
+        width: 35%;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 20%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 50%;
+        }
+
+        > div:nth-child(2) {
+            flex-grow: 1;
+
+            .max-height {
+                max-height: 15rem;
+            }
+        }
     }
 }
 @media screen and (min-width: 2350px) and (max-width: 2549px) {
@@ -295,25 +447,47 @@ dialog {
         grid-template-columns: repeat(9, 1fr);
         grid-template-rows: auto;
     }
-    .form-class {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        > form {
-            border: 0.15rem solid gray;
-            border-radius: 0.5rem;
-            margin: 1rem;
-            padding: 1rem;
-            height: auto;
-            width: auto;
-        }
+    .register-form {
+        height: auto;
+        width: 20%;
+        border: 0.2rem solid gray;
+        border-radius: 0.75rem;
+        padding: 1rem;
     }
     .create-activity-form {
         width: 30%;
     }
     .people {
         width: 30%;
+    }
+    .dialog {
+        height: 50%;
+        width: 30%;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 20%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 50%;
+        }
+
+        > div:nth-child(2) {
+            flex-grow: 1;
+
+            .max-height {
+                max-height: 15rem;
+            }
+        }
     }
 }
 @media screen and (min-width: 2550px) and (max-width: 2749px) {
@@ -322,24 +496,46 @@ dialog {
         grid-template-columns: repeat(10, 1fr);
         grid-template-rows: auto;
     }
-    .form-class {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        > form {
-            border: 0.15rem solid gray;
-            border-radius: 0.5rem;
-            margin: 1rem;
-            padding: 1rem;
-            height: auto;
-            width: auto;
-        }
+    .register-form {
+        height: auto;
+        width: 20%;
+        border: 0.2rem solid gray;
+        border-radius: 0.75rem;
+        padding: 1rem;
     }
     .create-activity-form {
         width: 30%;
     }
     .people {
         width: 30%;
+    }
+        .dialog {
+        height: 50%;
+        width: 30%;
+        border: 0.15rem solid;
+    }
+    .myTerms, .myPrivacy {
+        height: 50%;
+        width: 95%;
+        margin: auto;
+    }
+    .dialogButton {
+        width: 20%;
+    }
+    .student-submission {
+        display: flex;
+        flex-direction: row;
+
+        > div:first-child {
+            width: 50%;
+        }
+
+        > div:nth-child(2) {
+            flex-grow: 1;
+
+            .max-height {
+                max-height: 15rem;
+            }
+        }
     }
 }

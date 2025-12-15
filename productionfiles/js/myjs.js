@@ -6,6 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
     registerToggle2 = document.getElementById('id-for-confirm'),
     registerInput1 = document.getElementById('id_password1'),
     registerInput2 = document.getElementById('id_password2'),
+    resetPasswordToggle = document.getElementById('id-for-reset-password'),
+    resetPasswordInput = document.getElementById('id_new_password1'),
+    resetConfirmPasswordToggle = document.getElementById('id-for-reset-password-confirm'),
+    resetConfirmPasswordInput = document.getElementById('id_new_password2'),
     terms = document.getElementById("terms"),
     privacy = document.getElementById("privacy"),
     termsDialog = document.getElementById("myTerms"),
@@ -32,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(usersContainer && prevBtn && nextBtn && pageIndicator && searchUser) {
 
         searchUser.addEventListener("keyup", (e) => {
-            filterTable("users-table", e.target.value, [1, 2, 3, 4]);
+            filterTable("users-table", e.target.value, [1, 2]);
         });
 
         let state = {
@@ -226,6 +230,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if(loginToggle && loginInput) {
         loginToggle.addEventListener("click", () => {
             showPassword(loginInput, loginInput.type, loginToggle);
+        });
+    }
+
+    if(resetPasswordToggle && resetPasswordInput && resetConfirmPasswordToggle && resetConfirmPasswordInput) {
+        resetPasswordToggle.addEventListener("click", () => {
+            showPassword(resetPasswordInput, resetPasswordInput.type, resetPasswordToggle);
+        });
+
+        resetConfirmPasswordToggle.addEventListener("click", () => {
+            showPassword(resetConfirmPasswordInput, resetConfirmPasswordInput.type, resetConfirmPasswordToggle);
         });
     }
 
