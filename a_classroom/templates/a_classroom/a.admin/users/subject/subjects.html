@@ -26,6 +26,14 @@
                         <td class="whitespace-nowrap overflow-hidden text-ellipsis">{{ subject.instructor.get_full_name }}</td>
                         <td class="whitespace-nowrap overflow-hidden text-ellipsis">{{ subject.activities.count }}</td>
                     </tr>
+                {% empty %}
+                    <tr class="grow text-center h-20">
+                        <td></td>
+                        <td></td>
+                        <td class="py-4 text-center">No subject available.</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>

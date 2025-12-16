@@ -17,6 +17,12 @@
                 <td class="whitespace-nowrap overflow-hidden text-ellipsis">{{ user.email }}</td>
                 <td class="whitespace-nowrap overflow-hidden text-ellipsis">{{ user.userprofile.role }}</td>
             </tr>
+        {% empty %}
+            <tr class="grow text-center h-20">
+                <td></td>
+                <td class="py-4 text-center">No user available.</td>
+                <td></td>
+            </tr>
         {% endfor %}
     </tbody>
 </table>

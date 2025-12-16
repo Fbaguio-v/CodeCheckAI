@@ -62,6 +62,11 @@
                         <li class="mr-2 sm:mr-4">
                             <a href="{% url 'a_classroom:index' %}" class="p-2 rounded-lg hover:bg-gray-500 whitespace-nowrap">Home</a>
                         </li>
+                        {% if request.user.is_staff %}
+                        <li class="mr-2 sm:mr-4">
+                            <a href="/admin/" class="p-2 rounded-lg hover:bg-gray-500 whitespace-nowrap">Admin</a>
+                        </li>
+                        {% endif %}
                         {% if request.user.userprofile.role == "Student" %}
                             <li class="mr-2 sm:mr-4">
                                 <a href="{% url 'd_compiler:index' %}" class="p-2 rounded-lg hover:bg-gray-500 whitespace-nowrap">Playground</a>

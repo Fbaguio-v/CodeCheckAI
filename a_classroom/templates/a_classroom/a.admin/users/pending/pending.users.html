@@ -40,6 +40,12 @@
                             </form>
                         </td>
                     </tr>
+                {% empty %}
+                    <tr class="grow text-center h-20">
+                        <td></td>
+                        <td class="py-4 text-center">No pending user available.</td>
+                        <td></td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>
