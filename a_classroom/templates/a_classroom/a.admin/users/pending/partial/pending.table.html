@@ -1,44 +1,42 @@
 <table id="pending-table" class="w-full table-fixed">
-    <thead class="bg-gray-800 text-white h-[60px] sticky top-0">
-        <tr class="text-left">
-            <th class="px-4 py-2">Full Name</th>
-            <th class="px-4 py-2">Email Address</th>
-            <th class="px-4 py-2">User Role</th>
-            <th class="px-4 py-2">Action</th>
+    <thead class="h-16 bg-gray-800 text-white">
+        <tr>
+            <th class="border-r border-solid">Email Address</th>
+            <th class="border-r border-solid">User Role</th>
+            <th class="border-r border-solid">Action</th>
         </tr>
     </thead>
-    <tbody class="w-full">
+    <tbody class="flex-1">
         {% for pending in pending_users %}
-            <tr class="h-[50px] border-b border-gray-300">
-                <td class="px-4 py-2">{{ pending.get_full_name }}</td>
-                <td class="px-4 py-2">{{ pending.email }}</td>
-                <td class="px-4 py-2">{{ pending.userprofile.role }}</td>
-                <td class="px-4 py-2">
-                    <div class="flex items-center gap-3">
-                        <form class="m-0">
-                            {% csrf_token %}
-                            <button class="border border-solid border-gray-300 cursor-pointer rounded-xl p-2 bg-black hover:bg-gray-200 text-white hover:text-black"
-                                    id="approve-button"
-                                    hx-post="{% url 'a_classroom:approve' pending.id %}"
-                                    hx-trigger="click"
-                                    hx-target="#pending-table"
-                                    hx-swap="innerHTML">Approve</button>
-                        </form>
+            <tr class="grow text-center h-20">
+                <td class="whitespace-nowrap overflow-hidden text-ellipsis">{{ pending.email }}</td>
+                <td class="whitespace-nowrap overflow-hidden text-ellipsis">{{ pending.userprofile.role }}</td>
+                <td class="flex flex-col gap-2 p-2">
+                    <form class="m-0">
+                        {% csrf_token %}
+                        <button class="cursor-pointer rounded h-10 w-20 bg-gray-800 hover:bg-gray-600 text-white"
+                                id="approve-button"
+                                hx-post="{% url 'a_classroom:approve' pending.id %}"
+                                hx-trigger="click"
+                                hx-target="#pending-table"
+                                hx-swap="innerHTML">Approve</button>
+                    </form>
 
-                        <form class="m-0">
-                            {% csrf_token %}
-                            <button class="border border-solid border-gray-300 cursor-pointer rounded-xl p-2 bg-red-600 hover:bg-red-500 text-black hover:text-black"
-                                    hx-post="{% url 'a_classroom:delete-pending' pending.id %}"
-                                    hx-trigger="click"
-                                    hx-target="#pending-table"
-                                    hx-swap="innerHTML">Delete</button>
-                        </form>
-                    </div>
+                    <form class="m-0">
+                        {% csrf_token %}
+                        <button class="cursor-pointer rounded h-10 w-20 bg-red-600 hover:bg-red-500 text-black"
+                                hx-post="{% url 'a_classroom:delete-pending' pending.id %}"
+                                hx-trigger="click"
+                                hx-target="#pending-table"
+                                hx-swap="innerHTML">Delete</button>
+                    </form>
                 </td>
             </tr>
         {% empty %}
-            <tr>
-                <td colspan="4" class="py-4 text-center">No pending user available.</td>
+            <tr class="grow text-center h-20">
+                <td></td>
+                <td class="py-4 text-center">No pending user available.</td>
+                <td></td>
             </tr>
         {% endfor %}
     </tbody>
