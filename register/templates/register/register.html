@@ -2,31 +2,50 @@
 {% block title %} Register {% endblock %}
 {% block content %}
 <div class="h-full w-full div-form">
-  <form action="{% url 'register:register' %}?next={{ request.path }}" method="post" class="flex flex-col gap-4 p-4 register-form" novalidate>
+  <form action="{% url 'register:register' %}?next={{ request.path }}" method="post" class="flex flex-col gap-4 p-4 register-form register">
     {% csrf_token %}
 
     <h1 class="text-center text-2xl font-semibold text-gray-900 after">Register to CodeCheckAI</h1>
 
       <div class="flex flex-row gap-1">
-        <div class="flex-1">
+        <div class="flex-1 relative">
           <label for="id_first_name">First Name</label>
           <input type="text" name="first_name" id="id_first_name"
-                  class="w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
-                  value="{{ form.first_name.value|default:'' }}" placeholder="First Name" required>
+                  class="w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                  value="{{ form.first_name.value|default:'' }}" placeholder="First Name"
+                  pattern="^([a-zA-ZÀ-ÿ]+)([ \.'\-]?)([a-zA-ZÀ-ÿ]+)?$"
+                  required>
+          <span></span>
+          <div class="pattern-text top">
+            <span class="text text-1">Only letters, spaces, hyphens and apostrophes are allowed</span>
+          </div>
         </div>
-        <div class="flex-1">
+        <div class="flex-1 relative">
           <label for="id_last_name">Last Name</label>
           <input type="text" name="last_name" id="id_last_name"
-                  class="w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
-                  value="{{ form.last_name.value|default:'' }}" placeholder="Last Name" required>
+                  class="w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                  value="{{ form.last_name.value|default:'' }}" placeholder="Last Name"
+                  pattern="^([a-zA-ZÀ-ÿ]+)([ \.'\-]?)([a-zA-ZÀ-ÿ]+)?$"
+                  required>
+          <span></span>
+          <div class="pattern-text left top">
+            <span class="text text-2">Only letters, spaces, hyphens and apostrophes are allowed</span>
+          </div>
         </div>
       </div>
 
       <div class="flex flex-col gap-1">
-        <label for="id_email">CCA Email Address</label>
-        <input type="email" name="email" id="id_email"
-                class="w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
-                value="{{ form.email.value|default:'' }}" placeholder="Email Address" autocomplete="off" required>
+        <div class="relative">
+          <label for="id_email">CCA Email Address</label>
+          <input type="email" name="email" id="id_email"
+                  class="w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                  value="{{ form.email.value|default:'' }}" placeholder="Email Address" 
+                  pattern="^[a-zA-Z]+[0-9]*(-[0-9]+)?@cca\.edu\.ph$" required>
+          <span></span>
+          <div class="pattern-text">
+            <span class="text text-3">You must use valid @cca.edu.ph google account</span>
+          </div>
+        </div>
       </div>
 
       <div class="gap-4 w-full flex flex-row">
@@ -34,9 +53,17 @@
           <label for="id_password1">Password</label>
           <div class="relative pb-4">
             <input type="password" name="password1" id="id_password1"
-                    class="w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black password-input"
-                    placeholder="Password" required>
+                    class="w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none password-input"
+                    placeholder="Password"
+                    pattern="^(?=.*[A-Z])(?=.*[0-9])([a-zA-Z0-9\\#\\_\-]{8,})$"
+                    required>
             <span id="id-for-password" style="position: absolute; top: 10px; right: -25px; transform: translate(-50%); border-left: 0.1rem solid; padding: 0 10px; cursor: pointer;" class="show">Show</span>
+            <div class="pattern-text">
+              <span class="text text-4">Atleast 8 characters long</span>
+              <span class="text text-5">Must include atleast one UPPERCASE letter</span>
+              <span class="text text-6">Must include atleast one DIGIT</span>
+              <span class="text text-7">Special characters are optional # _ - only</span>
+            </div>
           </div>
         </div>
 
@@ -44,9 +71,17 @@
           <label for="id_password2">Confirm Password</label>
           <div class="relative">
             <input type="password" name="password2" id="id_password2"
-                    class="w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black password-input"
-                    placeholder="Confirm Password" required>
+                    class="w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none password-input"
+                    placeholder="Confirm Password"
+                    pattern="^(?=.*[A-Z])(?=.*[0-9])([a-zA-Z0-9\\#\\_\-]{8,})$"
+                    required>
             <span id="id-for-confirm" style="position: absolute; top: 10px; right: -25px; transform: translate(-50%); border-left: 0.1rem solid; padding: 0 10px; cursor: pointer;" class="show">Show</span>
+            <div class="pattern-text left">
+              <span class="text text-8">Atleast 8 characters long</span>
+              <span class="text text-9">Must include atleast one UPPERCASE letter</span>
+              <span class="text text-10">Must include atleast one DIGIT</span>
+              <span class="text text-11">Special characters are optional # _ - only</span>
+            </div>
           </div>
         </div>
     </div>

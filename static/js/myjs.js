@@ -24,14 +24,95 @@ document.addEventListener("DOMContentLoaded", () => {
     prevBtn = document.getElementById("users-prev-btn"),
     nextBtn = document.getElementById("users-next-btn"),
     pageIndicator = document.getElementById("users-page-indicator"),
-    searchUser = document.getElementById("search_user");
+    searchUser = document.getElementById("search_user"),
+    firstName = document.getElementById("id_first_name"),
+    lastName = document.getElementById("id_last_name"),
+    emailAddress = document.getElementById("id_email"),
+    password1 = document.getElementById("id_password1"),
+    password2 = document.getElementById("id_password2");
 
-    // below is for subjects html in admin
-    // const tableId = 'subjects-table';
-    // const prevBtnSubject = document.getElementById('subjects-prev-btn');
-    // const nextBtnSubject = document.getElementById('subjects-next-btn');
-    // const pageIndicatorSubject = document.getElementById('subjects-page-indicator');
-    // const searchInput = document.getElementById('subjects-search');
+    let text, text1, text2, text3;
+
+    function validateInput(input, text) {
+        const regex = /^([a-zA-ZÀ-ÿ]+)([ \.'\-]?)([a-zA-ZÀ-ÿ]+)?$/gm;
+
+        if(!regex.test(input.value)) {
+            text.style.setProperty("--before-opacity", "1");
+            input.style.borderColor = "#ef4444";
+            text.style.setProperty("--after-opacity", "0");
+            return false;
+        }
+
+        text.style.setProperty("--before-opacity", "0");
+        input.style.borderColor = "#10b981";
+        text.style.setProperty("--after-opacity", "1");
+    }
+
+    function validateEmail(input, text) {
+        const regex = /^[a-zA-Z]+[0-9]*(-[0-9]+)?@cca\.edu\.ph$/gm;
+
+        if(!regex.test(input.value)) {
+            text.style.setProperty("--before-opacity", "1");
+            input.style.borderColor = "#ef4444";
+            text.style.setProperty("--after-opacity", "0");
+            return false;
+        }
+
+        text.style.setProperty("--before-opacity", "0");
+        input.style.borderColor = "#10b981";
+        text.style.setProperty("--after-opacity", "1");
+    }
+
+    function validatePassword(input, text, text1, text2, text3) {
+        const regex = /^(?=.*[A-Z])(?=.*\d)([a-zA-Z\d#_-]{8,})$/gm;
+        const eightChar = /([a-zA-Z\d#_-]{8,})/g;
+        const upperChar = /[A-Z]/g;
+        const digChar = /([0-9])/g;
+        const specialChar = /([#_-])/g;
+
+        if(upperChar.test(input.value)) {
+            text1.style.setProperty("--before-opacity", "0");
+            input.style.borderColor = "#10b981";
+            text1.style.setProperty("--after-opacity", "1");
+        } else {
+            text1.style.setProperty("--before-opacity", "1");
+            text1.style.setProperty("--after-opacity", "0");
+        }
+
+        if(eightChar.test(input.value)) {
+            text.style.setProperty("--before-opacity", "0");
+            input.style.borderColor = "#10b981";
+            text.style.setProperty("--after-opacity", "1");
+        } else {
+            text.style.setProperty("--before-opacity", "1");
+            text.style.setProperty("--after-opacity", "0");
+        }
+
+        if(digChar.test(input.value)) {
+            text2.style.setProperty("--before-opacity", "0");
+            input.style.borderColor = "#10b981";
+            text2.style.setProperty("--after-opacity", "1");
+        } else {
+            text2.style.setProperty("--before-opacity", "1");
+            text2.style.setProperty("--after-opacity", "0");
+        }
+
+        if(specialChar.test(input.value)) {
+            text3.style.setProperty("--before-opacity", "0");
+            input.style.borderColor = "#10b981";
+            text3.style.setProperty("--after-opacity", "1");
+        } else {
+            text3.style.setProperty("--before-opacity", "1");
+            text3.style.setProperty("--after-opacity", "0");
+        }
+
+        if(!regex.test(input.value)) {
+            input.style.borderColor = "#ef4444";
+            return false;
+        }
+        
+        input.style.borderColor = "#10b981";
+    }
 
     if(usersContainer && prevBtn && nextBtn && pageIndicator && searchUser) {
 
@@ -300,6 +381,40 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     }
+
+    if(firstName && lastName && emailAddress && password1 && password2) {
+        firstName.addEventListener("keyup", (e) => {
+            text = document.querySelector(".text-1");
+            validateInput(e.target, text);
+        });
+
+        lastName.addEventListener("keyup", (e) => {
+            text = document.querySelector(".text-2");
+            validateInput(e.target, text);
+        });
+
+        emailAddress.addEventListener("keyup", (e) => {
+            text = document.querySelector(".text-3");
+            validateEmail(e.target, text);
+        });
+
+        password1.addEventListener("keyup", (e) => {
+            text = document.querySelector(".text-4");
+            text1 = document.querySelector(".text-5");
+            text2 = document.querySelector(".text-6");
+            text3 = document.querySelector(".text-7")
+            validatePassword(e.target, text, text1, text2, text3);
+        });
+
+        password2.addEventListener("keyup", (e) => {
+            text = document.querySelector(".text-8");
+            text1 = document.querySelector(".text-9");
+            text2 = document.querySelector(".text-10");
+            text3 = document.querySelector(".text-11");
+            validatePassword(e.target, text, text1, text2, text3);
+        });
+    }
+
     
     setInterval(checkActivityAvailability, 30000);
     checkActivityAvailability();

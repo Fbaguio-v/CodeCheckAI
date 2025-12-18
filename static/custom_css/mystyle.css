@@ -1,4 +1,8 @@
 @import "tailwindcss";
+:root {
+    --before-opacity: 1;
+    --after-opacity: 0;
+}
 body {
     height: 100vh;
     height: 100dvh;
@@ -24,6 +28,66 @@ body {
     border: 0.2rem solid gray;
     border-radius: 0.75rem;
     padding: 1rem;
+
+    .pattern-text {
+        height: auto;
+        width: 20rem;
+        position: absolute;
+        border-radius: 0.3rem;
+        display: none;
+        justify-content: center;
+        align-items: left;
+        flex-direction: column;
+        margin-top: 0.5rem;
+
+        .text {
+            display: block;
+            padding: 0.5rem 3rem;
+            background-color: #E5E4E2;
+
+            &::before {
+                content: "";
+                background-image: url('/static/mysite_images/circle-xmark-solid-full.svg');
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-position: center;
+                height: 1rem;
+                width: 1rem;
+                position: absolute;
+                left: 5%;
+                opacity: var(--before-opacity);
+            }
+
+            &::after {
+                content: "";
+                background-image: url('/static/mysite_images/circle-check-solid-full.svg');
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-position: center;
+                height: 1rem;
+                width: 1rem;
+                position: absolute;
+                right: 5%;
+                opacity: var(--after-opacity);
+            }
+        }
+    }
+
+    .top {
+        top: -100%;
+    }
+
+    .left {
+        left: -95%;
+    }
+
+    input:not(:placeholder-shown) + span + .pattern-text {
+        display: block;
+    }
+
+    input:not(:focus) + span + .pattern-text {
+        display: none;
+    }
 }
 .after {
     position: relative;
@@ -114,6 +178,10 @@ dialog {
         border: 0.2rem solid gray;
         border-radius: 0.75rem;
         padding: 1rem;
+
+        .left {
+            left: -60%;
+        }
     }
     .create-activity-form {
         width: 80%;
@@ -159,6 +227,10 @@ dialog {
         border: 0.2rem solid gray;
         border-radius: 0.75rem;
         padding: 1rem;
+
+        .left {
+            left: -25%;
+        }
     }
     .create-activity-form {
         width: 60%;
@@ -208,6 +280,10 @@ dialog {
         border: 0.2rem solid gray;
         border-radius: 0.75rem;
         padding: 1rem;
+
+        .left {
+            left: -15%;
+        }
     }
     .create-activity-form {
         width: 50%;
@@ -257,6 +333,10 @@ dialog {
         border: 0.2rem solid gray;
         border-radius: 0.75rem;
         padding: 1rem;
+
+        .left {
+            left: 0;
+        }
     }
     .create-activity-form {
         width: 40%;
@@ -306,6 +386,10 @@ dialog {
         border: 0.2rem solid gray;
         border-radius: 0.75rem;
         padding: 1rem;
+
+        .left {
+            left: 0%;
+        }
     }
     .create-activity-form {
         width: 40%;
@@ -355,6 +439,10 @@ dialog {
         border: 0.2rem solid gray;
         border-radius: 0.75rem;
         padding: 1rem;
+
+        .left {
+            left: -20%;
+        }
     }
     .create-activity-form {
         width: 40%;
@@ -404,6 +492,10 @@ dialog {
         border: 0.2rem solid gray;
         border-radius: 0.75rem;
         padding: 1rem;
+
+        .left {
+            left: -20%;
+        }
     }
     .create-activity-form {
         width: 30%;
@@ -453,6 +545,10 @@ dialog {
         border: 0.2rem solid gray;
         border-radius: 0.75rem;
         padding: 1rem;
+
+        .left {
+            left: -20%;
+        }
     }
     .create-activity-form {
         width: 30%;
@@ -502,6 +598,10 @@ dialog {
         border: 0.2rem solid gray;
         border-radius: 0.75rem;
         padding: 1rem;
+
+        .left {
+            left: -20%;
+        }
     }
     .create-activity-form {
         width: 30%;
