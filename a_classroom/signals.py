@@ -11,21 +11,13 @@ from django.conf import settings
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         if instance.is_staff or instance.is_superuser:
-            role = Role.ADMIN
             instance.is_active = True
-        elif re.search(r'\d', instance.email):
-            role = Role.STUDENT
-            instance.is_active = False
         else:
-            role = Role.INSTRUCTOR
             instance.is_active = False
-
-        if not instance.has_usable_password():
-            instance.set_password("123")
 
         instance.save(update_fields=["is_active", "password"])
 
-        UserProfile.objects.create(user=instance, role=role, image=None)
+        UserProfile.objects.create(user=instance, image=None)
 
         if not instance.is_active:
             try:

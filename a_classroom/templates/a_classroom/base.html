@@ -67,15 +67,17 @@
                             <a href="/admin/" class="p-2 rounded-lg hover:bg-gray-500 whitespace-nowrap">Admin</a>
                         </li>
                         {% endif %}
-                        {% if request.user.userprofile.role == "Student" %}
+                        {% if request.user.userprofile.role == "Student" and not request.user.is_staff %}
                             <li class="mr-2 sm:mr-4">
                                 <a href="{% url 'd_compiler:index' %}" class="p-2 rounded-lg hover:bg-gray-500 whitespace-nowrap">Playground</a>
                             </li>
                         {% endif %}
                     {% else %}
-                        <li class="mr-2 sm:mr-4">
-                            <a href="{% url 'd_compiler:index' %}" class="p-2 rounded-lg hover:bg-gray-500 whitespace-nowrap">Playground</a>
-                        </li>
+                        {% if not request.user.is_staff %}
+                            <li class="mr-2 sm:mr-4">
+                                <a href="{% url 'd_compiler:index' %}" class="p-2 rounded-lg hover:bg-gray-500 whitespace-nowrap">Playground</a>
+                            </li>
+                        {% endif %}
                     {% endif %}
                 </ul>
 
@@ -109,21 +111,23 @@
                 </div>
 
                 <div id="sidebar-actions" class="p-2 h-16">
-                    {% if request.user.userprofile.role == "Instructor" %}
-                            <a href="{% url 'a_classroom:create-subject' %}">
-                                <button class="w-full h-12 text-white bg-gray-800 rounded hover:bg-gray-950 cursor-pointer">
-                                    Create Subject
+                    {% if not request.user.is_staff %}
+                        {% if request.user.userprofile.role == "Instructor" %}
+                                <a href="{% url 'a_classroom:create-subject' %}">
+                                    <button class="w-full h-12 text-white bg-gray-800 rounded hover:bg-gray-950 cursor-pointer">
+                                        Create Subject
+                                    </button>
+                                </a>
+                        {% elif request.user.userprofile.role == "Student" %}
+                                <button id="join-class"
+                                        hx-get="{% url 'b_enrollment:join-a-class' %}"
+                                        hx-trigger="click"
+                                        hx-target="#main-content"
+                                        hx-swap="innerHTML"
+                                        class="w-full h-12 text-white bg-gray-800 rounded hover:bg-gray-950 cursor-pointer">
+                                    Join Class
                                 </button>
-                            </a>
-                    {% elif request.user.userprofile.role == "Student" %}
-                            <button id="join-class"
-                                    hx-get="{% url 'b_enrollment:join-a-class' %}"
-                                    hx-trigger="click"
-                                    hx-target="#main-content"
-                                    hx-swap="innerHTML"
-                                    class="w-full h-12 text-white bg-gray-800 rounded hover:bg-gray-950 cursor-pointer">
-                                Join Class
-                            </button>
+                        {% endif %}
                     {% endif %}
                 </div>
 

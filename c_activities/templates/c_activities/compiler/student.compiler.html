@@ -29,7 +29,7 @@
         <div class="flex flex-row h-auto w-full">
             <div class="flex flex-row items-center justify-center w-full gap-4 p-4">
 
-                {% if activity.type == "activity" %}
+                {% if activity.type == "quiz" %}
                     {% if activity_submissions.0.status == "returned" %}
                         <button class="py-2 w-32 text-white bg-gray-800 cursor-not-allowed rounded hover:bg-gray-950" 
                                 disabled title="Grade has been returned - cannot unsubmit">
@@ -63,7 +63,7 @@
                 {% endif %}
 
                 {% if activity_submissions.0.status != "submitted" and activity_submissions.0.status != "returned" %}
-                    {% if activity.type == "activity" %}
+                    {% if activity.type == "quiz" %}
                         {% with server_time=current_time|date:'Y-m-d H:i:s' %}
                         <form>
                             {% csrf_token %}
@@ -79,7 +79,7 @@
                     {% endif %}
                 {% endif %}
 
-                {% if activity.type == "quiz" %}
+                {% if activity.type == "activity" %}
                     {% with server_time=current_time|date:'Y-m-d H:i:s' %}
                     <select name="language_id" id="language_id"
                         class="py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950 cursor-pointer {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
@@ -88,10 +88,10 @@
                         <option value="62">Java</option>
                     </select>
 
-                    <form>
+                    <form class="run-code">
                         {% csrf_token %}
                         <button name="action" value="run_code" 
-                                hx-post="{% url 'd_compiler:index' %}?type=quiz" 
+                                hx-post="{% url 'd_compiler:index' %}?type=activity" 
                                 hx-include="#compiler, #language_id, input[name='activity_id'], input[name='subject_id']" 
                                 hx-target="#code-output" hx-swap="innerHTML"
                                 class="py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950 {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
@@ -105,6 +105,10 @@
         </div>
 
         <div id="code-output" class="border border-solid bg-gray-100 text-sm font-mono overflow-auto h-auto">
+            <div class="gif-container">
+                <img src="/static/mysite_images/pixel-art-12601_512.gif" alt="AI is thinking...">
+                <h1>Please wait...</h1>
+            </div>
         </div>
     </div>
 </div>

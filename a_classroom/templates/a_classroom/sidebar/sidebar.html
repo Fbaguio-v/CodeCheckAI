@@ -15,7 +15,8 @@
                 {% endfor %}
             </ul>
         {% endif %}
-    {% elif request.user.userprofile.role == "Admin" %}
+    {% endif %}
+    {% if request.user.is_staff or request.user.userprofile.role == "Dean" %}
 
         <div class="mt-2 p-2">
             <ul class="space-y-2">
@@ -26,13 +27,24 @@
                         <p class="text-sm text-gray-600">Manage all users</p>
                     </a>
                 </li>
-                <li>
-                    <a href="{% url 'a_classroom:pending-users' %}?from={{ request.path }}" 
-                       class="block p-3 text-black border border-black rounded hover:bg-gray-300">
-                        <h1 class="text-base font-bold">Pending Users</h1>
-                        <p class="text-sm text-gray-600">Approve pending accounts</p>
-                    </a>
-                </li>
+                {% if request.user.is_staff %}
+                    <li>
+                        <a href="{% url 'a_classroom:pending-users' %}?from={{ request.path }}" 
+                        class="block p-3 text-black border border-black rounded hover:bg-gray-300">
+                            <h1 class="text-base font-bold">Pending Users</h1>
+                            <p class="text-sm text-gray-600">Approve pending accounts</p>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if request.user.userprofile.role == "Dean" %}
+                    <li>
+                        <a href="{% url 'a_classroom:activities' %}?from={{ request.path }}" 
+                        class="block p-3 text-black border border-black rounded hover:bg-gray-300">
+                            <h1 class="text-base font-bold">Activities</h1>
+                            <p class="text-sm text-gray-600">User Activity Scores</p>
+                        </a>
+                    </li>
+                {% endif %}
                 <li>
                     <a href="{% url 'a_classroom:get-subjects' %}?from={{ request.path }}" 
                        class="block p-3 text-black border border-black rounded hover:bg-gray-300">

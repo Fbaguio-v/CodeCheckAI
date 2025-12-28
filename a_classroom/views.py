@@ -19,6 +19,8 @@ from django.utils import timezone
 from django.db.models import Max
 from django.utils.timezone import localtime
 from django.core import serializers
+from django.db.models import Avg
+from django.db.models import Subquery, OuterRef
 import os
 # Create your views here.
 def select_user_related(user):
@@ -53,12 +55,12 @@ def index(request):
         messages.error(request, "Your account is incomplete. Please contact the administrator.")
         return redirect('register:login')
 
-    if request.user.userprofile.role == "Admin":
+    if request.user.is_staff or request.user.userprofile.role == "Dean":
         if request.headers.get("HX-Request") == "true":
             return render(request, 'a_classroom/sidebar/sidebar.html')
         return render(request, 'a_classroom/a.admin/admin.html')
 
-    elif request.user.userprofile.role == "Instructor":
+    if request.user.userprofile.role == "Instructor":
         subjects = Subject.objects.filter(instructor=request.user).order_by('-subject_id')
         if request.headers.get("HX-Request") == "true":
             return render(request, 'a_classroom/sidebar/sidebar.html', {"subjects": subjects})
@@ -71,6 +73,7 @@ def index(request):
             return render(request, 'a_classroom/sidebar/sidebar.html', {"subjects" : subjects})
 
         return render(request, 'a_classroom/c.student/student.html', {"subjects" : subjects})
+
 
     return render(request, 'a_classroom/index.html')
 
@@ -254,12 +257,6 @@ class ActivityView(View):
                 activity_submission = ActivitySubmission.objects.filter(activity=activity, student=request.user).first()
                 if activity_submission:
                     activity_submissions = [activity_submission]
-                
-            if activity.type == "quiz":
-                max_attempt = activity.max_attempt if activity.max_attempt is not None else 0
-                if submission_count >= max_attempt:
-                    submit = ActivitySubmission.objects.filter(activity=activity, student=request.user)
-                    submit.update(status="returned")
 
 
             if action_type == "activity_details":
@@ -326,7 +323,6 @@ class HtmxTemplateView(View):
     context_name = None
 
     def get_queryset(self):
-        """Override this method in subclasses"""
         if callable(self.queryset):
             return self.queryset()
         return self.queryset
@@ -366,6 +362,42 @@ class AdminDashboardView(HtmxTemplateView):
     htmx_trigger = 'all-user'
     context_name = 'all_users'
 
+def get_subject_activities(request):
+    activities = Activity.objects.all()
+    return render(request, 'a_classroom/a.admin/activities/activities.html', {"activities" : activities})
+
+def view_activity(request, activity_id):
+    activity = get_object_or_404(Activity, activity_id=activity_id)
+    
+    submissions = ActivitySubmission.objects.filter(activity=activity)
+    
+    students = User.objects.filter(
+        id__in=submissions.values('student').distinct()
+    )
+    
+    student_averages = []
+    for student in students:
+        student_submissions = submissions.filter(student=student)
+        avg_score = student_submissions.aggregate(avg_score=Avg('score'))['avg_score']
+        
+        latest_submission = student_submissions.order_by('-submitted_at').first()
+        
+        student_averages.append({
+            'student': student,
+            'avg_score': round(avg_score, 2) if avg_score else 0,
+            'latest_submission': latest_submission,
+            'submission_count': student_submissions.count()
+        })
+    
+    return render(request, 'a_classroom/a.admin/activities/view_activity.html', {
+        "activity": activity,
+        "student_averages": student_averages
+    })
+
+# def view_activity(request, activity_id):
+#     activity = get_object_or_404(Activity, activity_id = activity_id)
+#     submissions = ActivitySubmission.objects.filter(activity=activity).all()
+#     return render(request, 'a_classroom/a.admin/activities/view_activity.html', {"activity" : activity, "submissions" : submissions})
 # class PendingUsersView(HtmxTemplateView):
 #     def get_queryset(self):
 #         return User.objects.filter(is_active=False)

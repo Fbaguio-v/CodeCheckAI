@@ -50,7 +50,6 @@ class ActivitySubmission(models.Model):
     feedback = models.TextField(default="", null=True, blank=True)
     score = models.PositiveIntegerField(null=True, blank=True, default=None)
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='in_progress')
-    attempt = models.PositiveIntegerField(null=True, blank=True)  # only for quizzes
     evaluator = models.CharField(max_length=10, null=True, blank=True)
 
 class ActivityExample(models.Model):

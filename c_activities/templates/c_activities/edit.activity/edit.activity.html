@@ -21,13 +21,6 @@ class="flex flex-col gap-4 bg-gray-200 rounded-lg border border-gray-200 w-full 
       <label for="max_score" class="font-bold">Max score</label>
       <input class="border border-solid border-black w-full p-2 rounded bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200" type="number" name="max_score" id="max_score" value="{{ activity.max_score }}" required>
     </div>
-
-    {% if activity.type == "quiz" %}
-    <div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-      <label for="max_attempt" class="font-bold">Max attempt</label>
-      <input class="border border-solid border-black w-full p-2 rounded bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200" type="number" name="max_attempt" id="max_attempt" value="{{ activity.max_attempt }}" required>
-    </div>
-    {% endif %}
   </div>
 
   <div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">

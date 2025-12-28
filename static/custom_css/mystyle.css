@@ -166,6 +166,23 @@ dialog {
 .dialogButton {
     width: 75%;
 }
+.gif-container {
+    height: 100%;
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    > img {
+        height: 60%;
+        width: 50%;
+    }
+
+    > h1 {
+        font-size: 1rem;
+    }
+}
 @media screen and (min-width: 500px) and (max-width: 809px) {
     .class-grid {
         display: grid;

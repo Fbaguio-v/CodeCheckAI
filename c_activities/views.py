@@ -79,7 +79,11 @@ def evaluate_student_code_with_openai(code, language, instruction="", examples="
     - Format the output as:
     <grading>Grading: your_score_here
     Insight: your_insight_here
+    Provide the breakdown of score based on correctness, syntax and structure and explain how they got that score based on the code they provided also for example the student
+    got 15 out of {max_score} explain in the breakdown of score for example correctness 7/15 explanation here then syntax 2/15 exaplanation here then correctness 6/15 then explanation here
+    to in short breakdown the score that the user got in their code and up to {max_score} in each criteria.
     ALSO include what is wrong with the code compared to the instruction and how to improve it but do not give the whole code to solve the task at hand but instead give a hint of some sort just to help them improve it.
+    and LAST BUT NOT THE LEAST make sure you follow this format strictly.
     """
 
     response = client.chat.completions.create(
@@ -101,7 +105,32 @@ def evaluate_student_code_with_openai_for_playground(code):
     {code}
     Do not put acknowledgement into my command or anything just say something like Here's a structured review of the provided code or something.
     ALSO include what is wrong with the code and how to improve it but do not give the whole code to solve the task at hand but instead give a hint of some sort just to help them improve it.
-    Finally, Can you fix the format of your response.
+    Format your response exactly as follows:
+
+    Here's a structured review of the provided code:
+
+    ***Syntax Error***.
+    [Your sentence here.]
+
+    ***Completion of Code***.
+    [Your sentence here.]
+
+    ***Logic and Functionality***.
+    [Your sentence here.]
+
+    ***Code Readability and Structure***.
+    [Your sentence here.]
+
+    ***Best Practices and Suggestions***.
+    [Your sentence here.]
+
+    Rules:
+    1.  Start a new line immediately after each colon (`:`) for the main headers (e.g., "Here's a structured review...").
+    2.  Do not write any text on the same line after a colon for those main headers.
+    3.  Each category (like `***Syntax Error***`) must be on its own line.
+    4.  For each category, write only one sentence directly beneath it.
+    5.  Use only the specified category titles. Do not add numbers (1, 2, etc.) or markdown formatting like `###` or `'''`.
+    6.  Do not add any other sections, comments, or concluding remarks outside this structure.
     """
 
     response = client.chat.completions.create(
@@ -239,12 +268,6 @@ class CreateActivityView(View):
                 messages.error(request, "Missing required fields")
                 return redirect(f"/a/?action=create-activity&subject_id={subject_id}")
 
-            if activity_type == "quiz":
-                raw_attempt = request.POST.get("id_max_attempt")
-                max_attempt = int(raw_attempt) if raw_attempt else 3
-            else:
-                max_attempt = None
-
             subject = select_subject_by_id(subject_id)
             if not subject:
                 messages.error(request, "Subject not found")
@@ -256,7 +279,6 @@ class CreateActivityView(View):
                 description=description or "",
                 language=language_type,
                 max_score=float(max_score) if max_score else 0.0,
-                max_attempt=max_attempt,
                 due_at=due_at,
                 type=activity_type,
             )
@@ -323,7 +345,6 @@ class EditActivityView(View):
         title = request.POST.get("title")
         description = request.POST.get("description")
         max_score = request.POST.get("max_score")
-        max_attempt = request.POST.get("max_attempt")
         due_at_raw = request.POST.get("due_at")
         
         if not all([title, description, max_score, due_at_raw]):
@@ -343,9 +364,6 @@ class EditActivityView(View):
         except ValueError:
             messages.error(request, "Invalid date format. Use YYYY-MM-DDTHH:MM")
             return redirect(f"/c/activity/{activity.activity_id}/?subject_id={activity.subject.subject_id}")
-        
-        if activity.type == "quiz" and max_attempt:
-            activity.max_attempt = int(max_attempt)
             
         activity.title = title
         activity.max_score = max_score

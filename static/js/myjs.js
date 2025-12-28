@@ -31,7 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
     password1 = document.getElementById("id_password1"),
     password2 = document.getElementById("id_password2");
 
-    let text, text1, text2, text3;
+    let text, text1, text2, text3, runCodeForm, showGif;
+    runCodeForm = document.querySelector(".run-code");
 
     function validateInput(input, text) {
         const regex = /^([a-zA-ZÀ-ÿ]+)([ \.'\-]?)([a-zA-ZÀ-ÿ]+)?$/gm;
@@ -412,6 +413,13 @@ document.addEventListener("DOMContentLoaded", () => {
             text2 = document.querySelector(".text-10");
             text3 = document.querySelector(".text-11");
             validatePassword(e.target, text, text1, text2, text3);
+        });
+    }
+
+    if(runCodeForm) {
+        runCodeForm.addEventListener("click", (e) => {
+            showGif = document.querySelector(".gif-container");
+            showGif.style.display = "flex";
         });
     }
 
