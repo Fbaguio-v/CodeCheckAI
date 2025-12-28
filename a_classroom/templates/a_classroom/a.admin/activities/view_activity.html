@@ -1,0 +1,151 @@
+{% extends 'a_classroom/base.html' %}
+{% block content %}
+<div class="h-full w-full flex flex-col p-4">
+    <div class="flex-1 mb-3 overflow-auto">
+        <input id="activities-search" type="text"
+                name="search_subject"
+                placeholder="Search subjects..."
+                class="w-full h-10 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                onkeyup="filterTable('activities-table', this.value, [0, 1, 2])">
+        <table id="activities-table" class="w-full border border-solid table-fixed">
+            <thead class="h-16 bg-gray-800 text-white"> 
+                <tr>
+                    <th class="border-r border-solid">Email Address</th>
+                    <th class="border-r border-solid">Submitted Code</th>
+                    <th class="border-r border-solid">Submitted At</th>
+                    <th class="border-r border-solid">Score</th>
+                </tr>
+            </thead>
+            <tbody class="flex-1">
+                {% for student_avg in student_averages %}
+                    <tr class="grow text-center border border-solid h-20">
+                        <td class="whitespace-nowrap overflow-hidden text-ellipsis">
+                            {{ student_avg.student.email }}
+                        </td>
+                        <td class="whitespace-nowrap overflow-hidden text-ellipsis">
+                            {{ student_avg.latest_submission.submitted_code|default:"No code" }}
+                        </td>
+                        <td class="whitespace-nowrap overflow-hidden text-ellipsis">
+                            {{ student_avg.latest_submission.submitted_at|default:"No submission" }}
+                        </td>   
+                        <td class="whitespace-nowrap overflow-hidden text-ellipsis">
+                            {{ student_avg.avg_score }}
+                            <span class="text-xs text-gray-500">
+                                ({{ student_avg.submission_count }} submission{{ student_avg.submission_count|pluralize }})
+                            </span>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr class="grow text-center h-20">
+                        <td></td>
+                        <td class="py-4 text-center">No subject available.</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="subjects-pagination" class="flex items-center justify-between mt-3">
+        <button id="activities-prev-btn" class="py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950" disabled>
+            Previous
+        </button>
+        <div id="activities-page-indicator" class="text-sm text-gray-600">Page 1</div>
+        <button id="activities-next-btn" class="py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950" disabled>
+            Next
+        </button>
+    </div>
+</div>
+
+<script>
+(function(){
+    const pageSizeDefault = 10;
+    const tableId = 'activities-table';
+    const prevBtn = document.getElementById('activities-prev-btn');
+    const nextBtn = document.getElementById('activities-next-btn');
+    const pageIndicator = document.getElementById('activities-page-indicator');
+    const searchInput = document.getElementById('activities-search');
+
+    let state = { pageSize: pageSizeDefault, currentPage: 1, rows: [] };
+
+    function init() {
+        const table = document.getElementById(tableId);
+        if (!table) return;
+        const tbody = table.querySelector('tbody');
+        if (!tbody) return;
+
+        state.rows = Array.from(tbody.querySelectorAll('tr'));
+        state.rows.forEach(r => r.dataset.matches = '1');
+        state.currentPage = 1;
+        renderPage();
+
+        prevBtn.onclick = () => { if (state.currentPage > 1) { state.currentPage--; renderPage(); } };
+        nextBtn.onclick = () => { const totalPages = Math.max(1, Math.ceil(getMatchedRows().length / state.pageSize)); if (state.currentPage < totalPages) { state.currentPage++; renderPage(); } };
+
+        if (searchInput) {
+            searchInput.onkeyup = (e) => { filterTable(tableId, e.target.value, [0,1,2]); };
+        }
+    }
+
+    function getMatchedRows() { return state.rows.filter(r => r.dataset.matches !== '0'); }
+
+    function renderPage() {
+        const matched = getMatchedRows();
+        const totalPages = Math.max(1, Math.ceil(matched.length / state.pageSize));
+        if (state.currentPage > totalPages) state.currentPage = totalPages;
+
+        state.rows.forEach(r => r.style.display = 'none');
+
+        const start = (state.currentPage - 1) * state.pageSize;
+        const end = start + state.pageSize;
+        const pageRows = matched.slice(start, end);
+        pageRows.forEach(r => r.style.display = '');
+
+        pageIndicator.textContent = `Page ${state.currentPage} of ${totalPages}`;
+        prevBtn.disabled = state.currentPage <= 1;
+        nextBtn.disabled = state.currentPage >= totalPages;
+        prevBtn.classList.toggle('opacity-50', prevBtn.disabled);
+        nextBtn.classList.toggle('opacity-50', nextBtn.disabled);
+        prevBtn.classList.toggle('cursor-not-allowed', prevBtn.disabled);
+        nextBtn.classList.toggle('cursor-not-allowed', nextBtn.disabled);
+    }
+
+    window.filterTable = function(tableId, searchText, searchColumns) {
+        const table = document.getElementById(tableId);
+        if (!table) return;
+        const tbody = table.getElementsByTagName('tbody')[0];
+        const rows = Array.from(tbody.getElementsByTagName('tr'));
+        const searchLower = (searchText || '').toLowerCase();
+
+        rows.forEach(row => {
+            if (!searchLower) {
+                row.dataset.matches = '1';
+            } else {
+                let found = false;
+                for (let colIndex of searchColumns) {
+                    const cell = row.cells[colIndex];
+                    if (cell && cell.textContent.toLowerCase().includes(searchLower)) {
+                        found = true;
+                        break;
+                    }
+                }
+                row.dataset.matches = found ? '1' : '0';
+            }
+        });
+
+        state.currentPage = 1;
+        renderPage();
+    };
+
+    const container = document.querySelector('#' + tableId) ? document.getElementById(tableId).parentElement : null;
+    if (container) {
+        const observer = new MutationObserver((mutations) => { setTimeout(init, 50); });
+        observer.observe(container, { childList: true, subtree: true });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => setTimeout(init, 100));
+    setTimeout(init, 150);
+})();
+</script>
+{% endblock %}

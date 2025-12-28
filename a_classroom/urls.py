@@ -16,6 +16,8 @@ urlpatterns = [
     path("users/", views.AdminDashboardView.as_view(), name="get-users"),
     path("pending/", views.get_pending_users, name="pending-users"),
     path("subjects/", views.get_subject_list, name="get-subjects"),
+    path("activity/", views.get_subject_activities, name="activities"),
+    path("activity/view/<str:activity_id>/", views.view_activity, name="activity-view"),
     path("show/", views.prev_or_next_view, name="prev_or_next"),
     path("delete/<int:user_id>/", views.delete_account_creation, name="delete-pending")
 ]

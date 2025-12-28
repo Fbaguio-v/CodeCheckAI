@@ -28,24 +28,14 @@
                 <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ activity.due_at }}</div>
             </div>
 
-            {% if activity.type == "quiz" %}
-
-                <div class="pb-2">
-                    <h4 class="font-bold">Max Attempt</h4>
-                    <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ activity.max_attempt }}</div>
-                </div>
-
-                <div class="pb-2">
-                    <h4 class="font-bold">Attempt Number</h4>
-                    <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ submission_count }}</div>
-                </div>
+            {% if activity.type == "activity" %}
 
                 <div class="pb-2">
                     <h4 class="font-bold">Highest Score</h4>
                     <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ highest_score }}</div>
                 </div>
 
-                {% if activity_submissions.0.status == "returned" and activity.type == "quiz" %}
+                {% if activity_submissions.0.status == "returned" and activity.type == "activity" %}
                     <div class="pb-2">
                         <h4 class="font-bold">Feedback</h4>
                         <span class="block bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto scrollbar-hidden">
@@ -55,17 +45,17 @@
                 {% endif %}
             {% endif %}
             
-            {% if activity_submissions.0.status == "returned" and activity.type == "activity" %}
-                <div>
-                    <h4 class="font-bold">Feedback</h4>
-                    <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto">
-                        {{ activity_submissions.0.feedback }}
-                    </div>
-                </div>
+            {% if activity_submissions.0.status == "returned" and activity.type == "quiz" %}
                 <div>
                     <h4 class="font-bold">Score</h4>
                     <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-48 overflow-y-auto">
                         {{ activity_submissions.0.score }}
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold">Feedback</h4>
+                    <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto">
+                        {{ activity_submissions.0.feedback }}
                     </div>
                 </div>
             {% endif %}

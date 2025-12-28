@@ -63,23 +63,18 @@ class CompilerView(View):
                     "stdin": "",
                 }
 
-                if a_type == "quiz":
+                if a_type == "activity":
                     if code.strip() == "":
                         response = HttpResponse()
                         response["HX-Redirect"] = f"/c/activity/{activity_id}/?subject_id={subject_id}&type=activity"
                         return response
-
-                    submission_count = ActivitySubmission.objects.filter(student=student, activity=activity).count()
-                    if submission_count >= activity.max_attempt:
-                        return HttpResponse("You have reached the maximum number of attempts", status=400)
 
                     submission = ActivitySubmission.objects.create(
                         student=student,
                         activity=activity,
                         submitted_code=code,
                         saved_code="",
-                        attempt=submission_count + 1,
-                        status="in_progress"
+                        status="submitted"
                     )
                 
                 try:
@@ -103,6 +98,7 @@ class CompilerView(View):
                             time.sleep(1)
                             continue
 
+
                         stdout = result_data.get("stdout", "")
                         stderr = result_data.get("stderr", "")
                         compile_output = result_data.get("compile_output", "")
@@ -111,7 +107,7 @@ class CompilerView(View):
 
                         exec_time = result_data.get("time", "0")
 
-                        if a_type == "quiz":
+                        if a_type == "activity":
                             instruction = activity.description
                             examples = get_activity_examples(activity)
                             criterias = get_activity_criterias(activity)
@@ -165,7 +161,7 @@ class CompilerView(View):
                                 #quiz-output-pre {{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace; }}
                                 .copy-btn {{ cursor: pointer; }}
                               </style>
-                            """
+                            """.replace(".", "<br>").replace("-", "<br>")
                         else:
                             ai_feedback = evaluate_student_code_with_openai_for_playground(code=code)
 
@@ -212,7 +208,7 @@ class CompilerView(View):
                                     }});
                                 }});
                               </script>
-                            """
+                            """.replace(":", "<br>").replace(".", "<br>")
 
                         return HttpResponse(output, content_type="text/html")
 

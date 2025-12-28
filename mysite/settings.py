@@ -86,6 +86,7 @@ MIDDLEWARE = [
     'a_classroom.middleware.AdminOnlyMiddleware',
     'a_classroom.middleware.A_ClassroomMiddleware',
     'a_classroom.middleware.SuperAdminOnlyMiddleware',
+    'a_classroom.middleware.DeanNotAllowedMiddleware',
     # below is middlware for b_enrollment
     'b_enrollment.middleware.B_EnrollmentMiddleware',
     'b_enrollment.middleware.StudentOnlyMiddleware',

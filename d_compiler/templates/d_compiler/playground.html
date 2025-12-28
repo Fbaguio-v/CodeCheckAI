@@ -1,7 +1,7 @@
 {% extends 'a_classroom/base.html' %}
 {% block title %} Playground {% endblock %}
 {% block content %}
-    <div id="parent" class="flex flex-col lg:flex-row h-full w-full">
+    <div id="parent" class="flex flex-col lg:flex-row h-full w-full relative">
         <div class="flex-1">
             <div class="flex flex-col gap-4 rounded overflow-hidden border border-gray-100 h-full bg-white">
                 <div class="flex flex-row flex-1">
@@ -27,7 +27,7 @@
                         <option value="62">Java</option>
                     </select>
 
-                    <form class="w-full sm:w-auto">
+                    <form class="w-full sm:w-auto run-code">
                         {% csrf_token %}
                         <button name="action"
                             value="run_code"
@@ -41,7 +41,11 @@
             </div>
         </div>
 
-        <div id="code-output" class="w-full lg:w-1/3 border-2 border-solid rounded bg-white overflow-auto h-full">
+        <div id="code-output" class="w-full lg:w-1/3 border-2 border-solid rounded text-sm bg-white font-mono overflow-auto h-full">
+            <div class="gif-container">
+                <img src="/static/mysite_images/pixel-art-12601_512.gif" alt="AI is thinking...">
+                <h1>Please wait...</h1>
+            </div>
         </div>
     </div>
 

@@ -68,9 +68,7 @@ class InstructorOnlyMiddleware:
 
 class AdminOnlyMiddleware:
     restricted_urls = [
-        "approve",
         "get-users",
-        "pending-users",
         "get-subjects",
     ]
 
@@ -91,10 +89,36 @@ class AdminOnlyMiddleware:
 
             try:
                 profile = user.userprofile
-                if profile.role != "Admin":
+                if profile.role != "Admin" and profile.role != "Dean" and not request.user.is_staff:
                     return redirect(reverse("a_classroom:index"))
             except UserProfile.DoesNotExist:
                 return redirect(reverse("register:login"))
+
+        return None
+
+class DeanNotAllowedMiddleware:
+    restricted_urls = [
+        "approve",
+        "pending-users",
+    ]
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        return self.get_response(request)
+
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        resolver_match = resolve(request.path_info)
+
+        if resolver_match.url_name in self.restricted_urls:
+            user = request.user
+
+            if not user.is_authenticated:
+                return redirect(reverse("register:login"))
+
+            if not request.user.is_staff:
+                return redirect(reverse("a_classroom:index"))
 
         return None
 

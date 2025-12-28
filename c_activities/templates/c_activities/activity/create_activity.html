@@ -1,128 +1,252 @@
+<style>
+	.container-preset {
+		position: absolute;
+		height: auto;
+		width: auto;
+		padding: 0.5rem;
+		top: -11rem;
+		left: 3%;
+		display: none;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+		> span {
+			padding: 0.5rem 1rem;
+			background-color: white;
+			border: 0.1rem solid;
+			border-radius: 0.3rem;
+			width: 100%;
+		}
+	}
+
+	.preset-checkbox:checked + .container-preset {
+		display: flex;
+	}
+
+</style>
 <div class="flex flex-col items-center justify-center h-[80%] w-[80%]">
-    	<form class="h-[80%] w-[80%] flex flex-col justify-center border-2 border-black p-6 rounded-lg create-activity-form" method="post" action="{% url 'c_activities:create-activity' %}"
-			hx-post="{% url 'c_activities:create-activity' %}"
-			hx-target="#create_activity"
-			hx-swap="innerHTML">
-    		{% csrf_token %}
-    		<input id="subject_id" name="subject_id" hidden value="{{ subject_id }}">
-			
-			<div style="display: flex; gap: 10px;">
-				<div style="width: 50%;" class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">			
-					<label for="id_type" class="block font-bold">Type</label>
-					<select id="id_type" name="type" class="w-full border border-gray-500 rounded bg-gray-100 px-3 py-2 focus:outline-none focus:ring focus:bg-gray-200" required>
-						<option value="" disabled selected>Select type</option>
-						<option value="activity">Activity</option>
-						<option value="quiz">Quiz</option>
-					</select>
-				</div>
-				<div style="width: 50%;" class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-					<label for="id_language" class="block font-bold">Language</label>
-					<select id="id_language" name="language" class="w-full border border-gray-500 rounded bg-gray-100 px-3 py-2 focus:outline-none focus:ring focus:bg-gray-200" required>
-						<option value="" disabled selected>Select Language</option>
-						<option value="Python">Python</option>
-						<option value="Java">Java</option>
-					</select>
-				</div>
+	<form class="h-[80%] w-[80%] flex flex-col justify-center border-2 border-black p-6 rounded-lg create-activity-form" method="post" action="{% url 'c_activities:create-activity' %}"
+		hx-post="{% url 'c_activities:create-activity' %}"
+		hx-target="#create_activity"
+		hx-swap="innerHTML">
+		{% csrf_token %}
+		<input id="subject_id" name="subject_id" hidden value="{{ subject_id }}">
+		
+		<div style="display: flex; gap: 10px;">
+			<div style="width: 50%;" class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">			
+				<label for="id_type" class="block font-bold">Type</label>
+				<select id="id_type" name="type" class="w-full border border-gray-500 rounded bg-gray-100 px-3 py-2 focus:outline-none focus:ring focus:bg-gray-200" required>
+					<option value="" disabled selected>Select type</option>
+					<option value="activity">Activity</option>
+					<option value="quiz">Quiz</option>
+				</select>
 			</div>
-
-			<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base"> 
-				<label for="id_title" class="block font-bold">Title</label>
-				<textarea 
-					id="id_title" 
-					name="id_title" 
-					placeholder="Activity or Quiz Title" 
-					rows="2"
-					style="resize: none;"
-					class="border border-solid w-full p-2 rounded h-20 text-sm font-medium text-gray-800 sm:text-base border-black bg-gray-100 focus:bg-gray-200" 
-					required></textarea>
+			<div style="width: 50%;" class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
+				<label for="id_language" class="block font-bold">Language</label>
+				<select id="id_language" name="language" class="w-full border border-gray-500 rounded bg-gray-100 px-3 py-2 focus:outline-none focus:ring focus:bg-gray-200" required>
+					<option value="" disabled selected>Select Language</option>
+					<option value="Python">Python</option>
+					<option value="Java">Java</option>
+				</select>
 			</div>
+		</div>
 
-			<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-				<label for="id_description" class="block font-bold">Description</label>
-				<textarea 
-					id="id_description" 
-					name="id_description" 
-					placeholder="Description" 
-					rows="4"
-					style="resize: none;"
-					class="border border-solid w-full p-2 rounded h-20 text-sm font-medium text-gray-800 sm:text-base border-black bg-gray-100 focus:bg-gray-200" 
-					required></textarea>
-			</div>
+		<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base"> 
+			<label for="id_title" class="block font-bold">Title</label>
+			<textarea 
+				id="id_title" 
+				name="id_title" 
+				placeholder="Activity or Quiz Title" 
+				rows="2"
+				style="resize: none;"
+				class="border border-solid w-full p-2 rounded h-20 text-sm font-medium text-gray-800 sm:text-base border-black bg-gray-100 focus:bg-gray-200" 
+				required></textarea>
+		</div>
 
-			<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
+		<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
+			<label for="id_description" class="block font-bold">Description</label>
+			<textarea 
+				id="id_description" 
+				name="id_description" 
+				placeholder="Description" 
+				rows="4"
+				style="resize: none;"
+				class="border border-solid w-full p-2 rounded h-20 text-sm font-medium text-gray-800 sm:text-base border-black bg-gray-100 focus:bg-gray-200" 
+				required></textarea>
+		</div>
+
+		<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base flex justify-evenly gap-2">
+			<div>
 				<label for="id_max_score" class="block font-bold">Max Score</label>
-            	<input id="id_max_score" name="id_max_score" type="number" min="1" placeholder="Maximum Score" class="border border-solid border-black w-full p-2 rounded bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200" required>
+				<input id="id_max_score" name="id_max_score" type="number" min="1" placeholder="Maximum Score" class="border border-solid border-black w-full p-2 rounded bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200" required>
 			</div>
-
-			<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
-    			<label for="id_max_attempt" class="block font-bold">(Quiz Only) Max Attempt</label>
-    			<input id="id_max_attempt" name="id_max_attempt" value="3" type="number" min="1" placeholder="Maximum Attempt" class="border border-solid border-black w-full p-2 rounded bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200">
-			</div>
-
-			<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base">
+			<div>
 				<label for="id_due_at" class="block font-bold">Due</label>
-            	<input id="id_due_at" name="id_due_at" type="datetime-local" class="border border-solid border-black w-full p-2 rounded bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200" min="{% now 'Y-m-d\TH:i' %}" required>
+				<input id="id_due_at" name="id_due_at" type="datetime-local" class="border border-solid border-black w-full p-2 rounded bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200" min="{% now 'Y-m-d\TH:i' %}" required>
 			</div>
-			<div class="mb-4">
-				<h5 class="text-lg font-semibold mb-2">
-					Evaluation Criteria (up to 100%)
-				</h5>
-	            <table class="w-full table-fixed border border-gray-300">
-	                <thead>
-	                    <tr class="bg-gray-100">
-	                        <th class="border px-2 py-1">Correctness</th>
-	                        <th class="border px-2 py-1">Syntax</th>
-	                        <th class="border px-2 py-1">Structure</th>
-	                    </tr>
-	                </thead>
-	                <tbody>
-						<tr>
-							<td class="text-center border px-2 py-1">
-								<input name="criteria" 
-										hx-post="{% url 'c_activities:check-criteria' %}" 
-										class="border border-solid border-black w-full p-2 rounded text-center bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200 criteria-input" 
-										type="number" 
-										min="1"
-										hx-trigger="keyup changed delay:500ms"
-										hx-target="#criteria-total"
-										hx-include=".criteria-input"
-										required>%</input>
-							</td>
-							<td class="text-center border px-2 py-1">
-								<input name="criteria"
-										hx-post="{% url 'c_activities:check-criteria' %}"  
-										class="border border-solid border-black w-full p-2 rounded text-center bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200 criteria-input" 
-										type="number" 
-										min="1"
-										hx-trigger="keyup changed delay:500ms"
-										hx-target="#criteria-total"
-										hx-include=".criteria-input"
-										required>%</input>
-							</td>
-							<td class="text-center border px-2 py-1">
-								<input name="criteria"
-										hx-post="{% url 'c_activities:check-criteria' %}"  
-										class="border border-solid border-black w-full p-2 rounded text-center bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200 criteria-input" 
-										type="number" 
-										min="1"
-										hx-trigger="keyup changed delay:500ms"
-										hx-target="#criteria-total"
-										hx-include=".criteria-input"
-										required>%</input>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="3" class="text-center border px-2 py-1">
-								<div id="criteria-total">
-									Total: <span class="font-bold">0%</span>
-								</div>
-							</td>
-						</tr>
-	                </tbody>
-	            </table>
-	    	</div>
-			
-			<button type="submit" id="create_activity" name="action" value="create_activity" style="margin: auto;" class="flex items-center justify-center py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950">Create</button>
+		</div>
 
-    	</form>
+		<div class="preset-div relative">
+			<input type="checkbox" name="preset-checkbox" class="preset-checkbox" id="preset-checkbox">
+			use preset
+			<div class="container-preset">
+				<span>
+					<input type="checkbox" class="container-year first-year">
+					1st Year
+					Correctness: 35%
+					Syntax: 50%
+					Structure: 15%
+				</span>
+				<span>
+					<input type="checkbox" class="container-year first-year-1">
+					1st Year
+					Correctness: 50%
+					Syntax: 40%
+					Structure: 10%
+				</span>
+				<span>
+					<input type="checkbox" class="container-year first-year-2">
+					1st Year
+					Correctness: 20%
+					Syntax: 40%
+					Structure: 30%
+				</span>
+				<span>
+					<input type="checkbox" class="container-year second-year">
+					2nd Year
+					Correctness: 30%
+					Syntax: 50%
+					Structure: 20%
+				</span>
+				<span>
+					<input type="checkbox" class="container-year second-year-1">
+					2nd Year
+					Correctness: 30%
+					Syntax: 50%
+					Structure: 20%
+				</span>
+			</div>
+		</div>
+
+		<div class="mb-4">
+			<h5 class="text-lg font-semibold mb-2">
+				Evaluation Criteria (up to 100%)
+			</h5>
+			<table class="w-full table-fixed border border-gray-300">
+				<thead>
+					<tr class="bg-gray-100">
+						<th class="border px-2 py-1">Correctness</th>
+						<th class="border px-2 py-1">Syntax</th>
+						<th class="border px-2 py-1">Structure</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="text-center border px-2 py-1">
+							<input name="criteria" 
+									hx-post="{% url 'c_activities:check-criteria' %}" 
+									class="border border-solid border-black w-full p-2 rounded text-center bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200 criteria-input correctness" 
+									type="number" 
+									min="1"
+									hx-trigger="keyup changed delay:500ms"
+									hx-target="#criteria-total"
+									hx-include=".criteria-input"
+									required>%</input>
+						</td>
+						<td class="text-center border px-2 py-1">
+							<input name="criteria"
+									hx-post="{% url 'c_activities:check-criteria' %}"  
+									class="border border-solid border-black w-full p-2 rounded text-center bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200 criteria-input syntax" 
+									type="number" 
+									min="1"
+									hx-trigger="keyup changed delay:500ms"
+									hx-target="#criteria-total"
+									hx-include=".criteria-input"
+									required>%</input>
+						</td>
+						<td class="text-center border px-2 py-1">
+							<input name="criteria"
+									hx-post="{% url 'c_activities:check-criteria' %}"  
+									class="border border-solid border-black w-full p-2 rounded text-center bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200 criteria-input structure" 
+									type="number" 
+									min="1"
+									hx-trigger="keyup changed delay:500ms"
+									hx-target="#criteria-total"
+									hx-include=".criteria-input"
+									required>%</input>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3" class="text-center border px-2 py-1">
+							<div id="criteria-total">
+								Total: <span class="font-bold">0%</span>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<button type="submit" id="create_activity" name="action" value="create_activity" style="margin: auto;" class="flex items-center justify-center py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950">Create</button>
+
+	</form>
 </div>
+<script>
+		const containerDiv = document.querySelector(".container-preset");
+		let firstYear, firstYear1, firstYear2, secondYear, secondYear1, correctness, syntax, structure;1
+
+		firstYear = document.querySelector(".first-year");
+		firstYear1 = document.querySelector(".first-year-1");
+		firstYear2 = document.querySelector(".first-year-2");
+		secondYear = document.querySelector(".second-year");
+		secondYear1 = document.querySelector(".second-year-1")
+		correctness = document.querySelector(".correctness");
+		syntax = document.querySelector(".syntax");
+		structure = document.querySelector(".structure");
+
+		firstYear.addEventListener("change", (e) => {
+			if(e.target.checked) {
+				containerDiv.style.display = "none";
+				correctness.value = 35;
+				syntax.value = 50;
+				structure.value = 15;
+			}
+		});
+
+		firstYear1.addEventListener("change", (e) => {
+			if(e.target.checked) {
+				containerDiv.style.display = "none";
+				correctness.value = 50;
+				syntax.value = 40;
+				structure.value = 10;
+			}
+		});
+
+		firstYear2.addEventListener("change", (e) => {
+			if(e.target.checked) {
+				containerDiv.style.display = "none";
+				correctness.value = 20;
+				syntax.value = 40;
+				structure.value = 30;
+			}
+		});
+
+		secondYear.addEventListener("change", (e) => {
+			if(e.target.checked) {
+				containerDiv.style.display = "none";
+				correctness.value = 30;
+				syntax.value = 50;
+				structure.value = 20;
+			}
+		});
+
+		secondYear1.addEventListener("change", (e) => {
+			if(e.target.checked) {
+				containerDiv.style.display = "none";
+				correctness.value = 30;
+				syntax.value = 50;
+				structure.value = 20;
+			}
+		});
+</script>

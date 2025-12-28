@@ -32,16 +32,6 @@
 				{{ activity.language }}
 			</div>
 		</div>
-		
-		
-		{% if activity.type == "quiz" %}
-			<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
-				<span class="font-bold">Max Attempt</span>
-				<div class="mb-4 p-3 bg-gray-100 rounded max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;">
-					{{ activity.max_attempt }}
-				</div>
-			</div>
-		{% endif %}
 
 		<div class="text-left text-sm font-medium text-gray-800 sm:text-base">
 			<span class="font-bold">Due</span>
@@ -62,7 +52,7 @@
 	<!-- Right Panel: Submissions & Controls -->
 	<div id="output" class="flex flex-1 flex-col w-full bg-gray-200 p-4">
 
-		<div class="overflow-y-auto flex-1" style="scrollbar-gutter: stable;">
+		<div class="overflow-y-auto" style="scrollbar-gutter: stable;">
 			{% if activity_submissions %}
 				{% with first_submission=activity_submissions.first %}
 

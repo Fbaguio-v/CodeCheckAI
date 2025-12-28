@@ -7,6 +7,7 @@ class Role(models.TextChoices):
     ADMIN = 'Admin', 'Admin'
     INSTRUCTOR = 'Instructor', 'Instructor'
     STUDENT = 'Student', 'Student'
+    DEAN = 'Dean', 'Dean'
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete = models.CASCADE)
