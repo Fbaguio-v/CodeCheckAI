@@ -1,26 +1,31 @@
 <style>
+	.preset-button {
+		background-color: hsl(0, 0%, 95%);
+	}
 	.container-preset {
 		position: absolute;
 		height: auto;
 		width: auto;
 		padding: 0.5rem;
-		top: -11rem;
-		left: 3%;
+		top: -13rem;
+		right: 2%;
 		display: none;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		border: 0.1rem solid;
+		background-color: hsl(0, 0%, 95%);
+		border-radius: 0.3rem;
 
 		> span {
 			padding: 0.5rem 1rem;
 			background-color: white;
 			border: 0.1rem solid;
-			border-radius: 0.3rem;
 			width: 100%;
 		}
 	}
 
-	.preset-checkbox:checked + .container-preset {
+	.preset-button:hover .container-preset, .preset-button:focus .container-preset {
 		display: flex;
 	}
 
@@ -88,44 +93,44 @@
 		</div>
 
 		<div class="preset-div relative">
-			<input type="checkbox" name="preset-checkbox" class="preset-checkbox" id="preset-checkbox">
-			use preset
-			<div class="container-preset">
-				<span>
-					<input type="checkbox" class="container-year first-year">
-					1st Year
-					Correctness: 35%
-					Syntax: 50%
-					Structure: 15%
-				</span>
-				<span>
-					<input type="checkbox" class="container-year first-year-1">
-					1st Year
-					Correctness: 50%
-					Syntax: 40%
-					Structure: 10%
-				</span>
-				<span>
-					<input type="checkbox" class="container-year first-year-2">
-					1st Year
-					Correctness: 20%
-					Syntax: 40%
-					Structure: 30%
-				</span>
-				<span>
-					<input type="checkbox" class="container-year second-year">
-					2nd Year
-					Correctness: 30%
-					Syntax: 50%
-					Structure: 20%
-				</span>
-				<span>
-					<input type="checkbox" class="container-year second-year-1">
-					2nd Year
-					Correctness: 30%
-					Syntax: 50%
-					Structure: 20%
-				</span>
+			<div class="preset-button" tabindex="0">Use Preset
+				<div class="container-preset">
+					<span>
+						<input type="checkbox" class="container-year first-year">
+						1st Year
+						Correctness: 35%
+						Syntax: 50%
+						Structure: 15%
+					</span>
+					<span>
+						<input type="checkbox" class="container-year first-year-1">
+						1st Year
+						Correctness: 50%
+						Syntax: 40%
+						Structure: 10%
+					</span>
+					<span>
+						<input type="checkbox" class="container-year first-year-2">
+						1st Year
+						Correctness: 20%
+						Syntax: 40%
+						Structure: 30%
+					</span>
+					<span>
+						<input type="checkbox" class="container-year second-year">
+						2nd Year
+						Correctness: 30%
+						Syntax: 50%
+						Structure: 20%
+					</span>
+					<span>
+						<input type="checkbox" class="container-year second-year-1">
+						2nd Year
+						Correctness: 30%
+						Syntax: 50%
+						Structure: 20%
+					</span>
+				</div>
 			</div>
 		</div>
 

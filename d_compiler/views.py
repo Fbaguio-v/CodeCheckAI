@@ -24,14 +24,31 @@ class CompilerView(View):
         if user_agent.is_mobile or user_agent.is_tablet:
             messages.warning(request, "This platform is optimized for desktop and laptop computers. Please use a PC or laptop for the best coding experience.")
         return render(request, 'd_compiler/playground.html')
-
+    
     def post(self, request):
-        a_type = request.GET.get("type")
+        a_type = request.POST.get("type")
         action_type = request.POST.get("action")
         code = request.POST.get("compiler")
         subject_id = request.POST.get("subject_id")
         activity_id = request.POST.get("activity_id")
         submission_id = request.POST.get("submission_id")
+
+        print(f"Action Type : {a_type}")
+
+        if not request.POST.get("processing"):
+            return render(request, 'd_compiler/progress_bar.html')
+        else:
+            return self.process_run_code(request)
+
+    def process_run_code(self, request):
+        a_type = request.POST.get("type")
+        action_type = request.POST.get("action")
+        code = request.POST.get("compiler")
+        subject_id = request.POST.get("subject_id")
+        activity_id = request.POST.get("activity_id")
+        submission_id = request.POST.get("submission_id")
+
+        print(f"Type : {a_type}")
 
         subject = None
         activity = None
@@ -74,7 +91,7 @@ class CompilerView(View):
                         activity=activity,
                         submitted_code=code,
                         saved_code="",
-                        status="submitted"
+                        status="In Progress"
                     )
                 
                 try:
@@ -97,7 +114,6 @@ class CompilerView(View):
                         if result_data["status"]["id"] in [1, 2]:
                             time.sleep(1)
                             continue
-
 
                         stdout = result_data.get("stdout", "")
                         stderr = result_data.get("stderr", "")
@@ -173,13 +189,12 @@ class CompilerView(View):
                                       <div class="bg-gray-800 font-medium text-gray-800 sm:text-base rounded-md p-3">
                                         <div class="flex items-center justify-between">
                                           <h3 class="text-sm font-medium text-white">📄 Program Output</h3>
-                                          <button class="text-sm font-medium text-white bg-gray-500 py-2 px-3 rounded cursor-pointer" id="copy-output">Copy Output</button>
                                         </div>
                                         <pre id="output-pre" class="mt-3 whitespace-pre-wrap text-sm bg-gray-900 text-green-300 font-medium sm:text-base rounded p-3 max-h-64 overflow-auto">{stdout or stderr or compile_output or message or status_description}</pre>
                                       </div>
 
                                       <div class="mt-3 flex items-center justify-between text-sm font-medium text-gray-800 sm:text-base">
-                                        <div>⏱️ <span class="font-medium text-gray-800 sm:text-base">Run Time:</span> <span class="ml-1">{exec_time}</span></div>
+                                        <div>⏱️ <span class="font-medium text-gray-800 sm:text-base">Run Time:</span> <span class="ml-1 inline-block">{exec_time}</span></div>
                                         <div class="text-right">Status: <span class="font-medium text-gray-800 sm:text-base">{status_description}</span></div>
                                       </div>
                                     </div>
@@ -199,15 +214,6 @@ class CompilerView(View):
                                 #output-pre {{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace; }}
                                 .copy-btn {{ cursor: pointer; }}
                               </style>
-                           <script>
-                                const outputPre = document.getElementById("output-pre");
-                                const copyOutput = document.getElementById("copy-output");
-                                copyOutput.addEventListener("click", (e) => {{
-                                    navigator.clipboard.writeText(outputPre.textContent).then(() => {{
-                                        e.target.textContent = "Copied!";
-                                    }});
-                                }});
-                              </script>
                             """.replace(":", "<br>").replace(".", "<br>")
 
                         return HttpResponse(output, content_type="text/html")

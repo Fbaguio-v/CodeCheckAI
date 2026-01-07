@@ -1,7 +1,6 @@
 {% extends 'a_classroom/base.html' %}
 {% block title %} {{ activity.subject.course_code }} - {{ activity.title }} {% endblock %}
 {% block content %}
-
 <div id="parent" class="flex flex-col w-full h-full overflow-auto student-submission">
     <div id="activity-details"></div>
     <div hx-get="{% url 'a_classroom:view-activity' activity.activity_id %}?subject_id={{ subject_id }}&type=activity&action=activity_details" 
@@ -90,9 +89,10 @@
 
                     <form class="run-code">
                         {% csrf_token %}
+                        <input type="hidden" name="type" id="type" value="activity">
                         <button name="action" value="run_code" 
-                                hx-post="{% url 'd_compiler:index' %}?type=activity" 
-                                hx-include="#compiler, #language_id, input[name='activity_id'], input[name='subject_id']" 
+                                hx-post="{% url 'd_compiler:index' %}" 
+                                hx-include="#compiler, #language_id, input[name='activity_id'], input[name='subject_id'], #type" 
                                 hx-target="#code-output" hx-swap="innerHTML"
                                 class="py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950 {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}bg-gray-500 cursor-not-allowed opacity-60{% else %}bg-black hover:bg-gray-500 transition-colors{% endif %}"
                                 {% if activity.due_at and server_time > activity.due_at|date:'Y-m-d H:i:s' %}disabled title="Quiz period has ended"{% else %}title="Run your code"{% endif %}>
@@ -105,10 +105,6 @@
         </div>
 
         <div id="code-output" class="border border-solid bg-gray-100 text-sm font-mono overflow-auto h-auto">
-            <div class="gif-container">
-                <img src="/static/mysite_images/pixel-art-12601_512.gif" alt="AI is thinking...">
-                <h1>Please wait...</h1>
-            </div>
         </div>
     </div>
 </div>

@@ -1,0 +1,22 @@
+<div hx-post="{% url 'd_compiler:index' %}"
+     hx-trigger="load delay:0.5s"
+     hx-target="this"
+     hx-swap="outerHTML"
+     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+     hx-include="#compiler, #language_id, #type, input[name='activity_id'], input[name='subject_id']"
+     hx-vals='{"processing": "true", "action": "run_code"}'
+     class="relative h-full w-full">
+
+    <div id="progress">
+        <img src="/static/mysite_images/pixel-art-12601_512.gif" alt="AI is thinking...">
+        <div>Please wait...</div>
+    </div>
+</div>
+<style>
+    #progress {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+</style>

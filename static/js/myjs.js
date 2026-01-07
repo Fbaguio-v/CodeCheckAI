@@ -29,10 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
     lastName = document.getElementById("id_last_name"),
     emailAddress = document.getElementById("id_email"),
     password1 = document.getElementById("id_password1"),
-    password2 = document.getElementById("id_password2");
+    password2 = document.getElementById("id_password2"),
+    outputPage = document.getElementById("output-pre");
 
-    let text, text1, text2, text3, runCodeForm, showGif;
-    runCodeForm = document.querySelector(".run-code");
+    let text, text1, text2, text3;
 
     function validateInput(input, text) {
         const regex = /^([a-zA-ZÀ-ÿ]+)([ \.'\-]?)([a-zA-ZÀ-ÿ]+)?$/gm;
@@ -415,14 +415,6 @@ document.addEventListener("DOMContentLoaded", () => {
             validatePassword(e.target, text, text1, text2, text3);
         });
     }
-
-    if(runCodeForm) {
-        runCodeForm.addEventListener("click", (e) => {
-            showGif = document.querySelector(".gif-container");
-            showGif.style.display = "flex";
-        });
-    }
-
     
     setInterval(checkActivityAvailability, 30000);
     checkActivityAvailability();
