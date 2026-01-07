@@ -217,7 +217,7 @@ class ActivityView(View):
         if user_profile.role == "Instructor":
             filters = {"activity": activity}
             if activity.type == "activity":
-                filters["status__in"] = ["submitted", "returned"]
+                filters["status__in"] = ["submitted", "returned", "In Progress"]
 
             activity_submissions = ActivitySubmission.objects.filter(**filters).select_related("student")
             return render(request, 'c_activities/activity.partial/student.submission.html', {
@@ -294,7 +294,7 @@ def prev_or_next_view(request):
 
     filters = {"activity": activity}
     if activity.type == "activity":
-        filters["status__in"] = ["submitted", "returned"]
+        filters["status__in"] = ["submitted", "returned", "In Progress"]
 
     activity_submissions = ActivitySubmission.objects.filter(**filters).select_related("student")
     total = activity_submissions.count()
