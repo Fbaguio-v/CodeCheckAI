@@ -29,8 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     lastName = document.getElementById("id_last_name"),
     emailAddress = document.getElementById("id_email"),
     password1 = document.getElementById("id_password1"),
-    password2 = document.getElementById("id_password2"),
-    outputPage = document.getElementById("output-pre");
+    password2 = document.getElementById("id_password2");
 
     let text, text1, text2, text3;
 

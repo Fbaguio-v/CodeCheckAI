@@ -22,7 +22,7 @@
                 style="resize: none;"
                 {% if submission.status == "submitted" or submission.status == "returned" %}
                     readonly
-                {% endif %}>{% if submission %}{% if submission.status == "in_progress" %}{{ submission.saved_code }}{% elif submission.status == "submitted" or submission.status == "returned" %}{{ submission.submitted_code }}{% endif %}{% endif %}</textarea>
+                {% endif %}>{% if submission %}{% if submission.status == "in_progress" %}{{ submission.saved_code }}{% elif submission.status == "submitted" or submission.status == "returned" or submission.status == "In Progress" %}{{ submission.submitted_code }}{% endif %}{% endif %}</textarea>
         </div>
 
         <div class="flex flex-row h-auto w-full">
@@ -104,7 +104,7 @@
             </div>
         </div>
 
-        <div id="code-output" class="border border-solid bg-gray-100 text-sm font-mono overflow-auto h-auto">
+        <div id="code-output" class="border-2 border-solid rounded bg-white text-sm font-mono overflow-auto h-auto">
         </div>
     </div>
 </div>

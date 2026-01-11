@@ -56,34 +56,53 @@ def evaluate_student_code_with_openai(code, language, instruction="", examples="
         criterias = [0, 0, 0]
 
     prompt = f"""
-    Evaluate the following student code according to these criteria and weights:
-    Criteria and Weights:
-    - Correctness (logical accuracy and whether the code performs the intended task): {criterias[0]}%
-    - Syntax (syntax errors, formatting issues): {criterias[1]}%
-    - Structure (organization, readability, code design): {criterias[2]}%
+    ## TASK
+    Evaluate student code using these criteria weights:
+    - Correctness: {criterias[0]}%
+    - Syntax: {criterias[1]}%
+    - Structure: {criterias[2]}%
 
-    Instruction: {instruction if instruction.strip() != "" else "No additional instructions provided."}
+    ## INPUTS
+    **Instruction:** {instruction if instruction.strip() != "" else "No additional instructions provided."}
+    **Language:** {language}
+    **Max Score:** {max_score}
+    **Examples:** {examples if examples else "None"}
 
-    Code to evaluate:
+    **Code:**
     {code}
 
-    Also consider the language of the instruction and the language of the code of the user before giving a score or grade.
-    Language: {language}
+    ## REQUIREMENTS
+    1. Calculate final score (1-{max_score}) using weighted criteria
+    2. Include criteria percentages in response
+    3. Provide score breakdown per criterion
+    4. Compare code to instructions and identify issues
+    5. Give improvement hints (not full solutions)
+    6. Consider language context
 
-    Example solutions for reference:
-    {examples if examples else "No example solutions provided."}
+    ## OUTPUT FORMAT (STRICT)
+    <grading>
+    Grading: [score]/{max_score}
+    Insight: [1-2 sentence insight]
 
-    Please:
-    - Use the weights above to calculate a final grade between 1 and {max_score}.
-    - Provide a short insightful evaluation comment.
-    - Format the output as:
-    <grading>Grading: your_score_here
-    Insight: your_insight_here
-    Provide the breakdown of score based on correctness, syntax and structure and explain how they got that score based on the code they provided also for example the student
-    got 15 out of {max_score} explain in the breakdown of score for example correctness 7/15 explanation here then syntax 2/15 exaplanation here then correctness 6/15 then explanation here
-    to in short breakdown the score that the user got in their code and up to {max_score} in each criteria.
-    ALSO include what is wrong with the code compared to the instruction and how to improve it but do not give the whole code to solve the task at hand but instead give a hint of some sort just to help them improve it.
-    and LAST BUT NOT THE LEAST make sure you follow this format strictly.
+    **Correctness ({criterias[0]}%):** [x]/{max_score}
+    • Explanation: [Why this score? What's working/not working?]
+
+    **Syntax ({criterias[1]}%):** [y]/{max_score}
+    • Explanation: [Syntax issues found]
+
+    **Structure ({criterias[2]}%):** [z]/{max_score}
+    • Explanation: [Structure/readability issues]
+
+    **Total:** [total]/{max_score}
+
+    **Main Issues vs Instructions:**
+    • [Issue 1]
+    • [Issue 2]
+
+    **Improvement Hints:**
+    • [Hint 1 - specific guidance]
+    • [Hint 2 - focused suggestion]
+    </grading>
     """
 
     response = client.chat.completions.create(

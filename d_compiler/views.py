@@ -155,29 +155,52 @@ class CompilerView(View):
                                 submission.save()
 
                             output = f"""
-                              <div class="bg-white border border-gray-200 rounded-lg shadow overflow-hidden">
-                                <div class="p-4">
-                                  <div class="flex items-center justify-between mb-3">
-                                    <h3 class="text-sm font-medium text-gray-800 sm:text-base">🏆 Quiz Result</h3>
-                                    <div class="text-sm font-medium text-gray-800 sm:text-base">Score: <span class="font-medium">{score}</span></div>
-                                  </div>
-                                  <div class="bg-gray-800 text-gray-100 rounded-md p-3">
-                                    <h4 class="text-sm font-medium text-gray-800 sm:text-base">📄 Program Output</h4>
-                                    <pre id="quiz-output-pre" class="mt-2 whitespace-pre-wrap text-sm bg-gray-900 text-green-300 font-medium sm:text-base rounded p-3 max-h-48 overflow-auto">{stdout or stderr or compile_output or message or status_description}</pre>
-                                    <div class="mt-2 text-xs font-medium text-gray-800 sm:text-base">⏱️ Run Time: <span class="font-medium">{exec_time}</span></div>
-                                  </div>
-                                  <div class="mt-3 bg-gradient-to-br from-white to-gray-50 border border-gray-100 rounded-md p-3">
-                                    <h4 class="text-sm font-semibold">🤖 AI Feedback</h4>
-                                    <div class="mt-2 text-sm font-medium text-gray-800 sm:text-base leading-relaxed" id="quiz-ai-feedback">{feedback_section.replace('-', '<br>')}</div>
-                                  </div>
+                            <div class="bg-white border border-gray-200 rounded-lg shadow overflow-hidden">
+                                <div class="p-4 md:p-6">
+                                    <div class="flex items-center justify-between mb-6">
+                                        <h3 class="text-lg font-medium text-gray-800">🏆 Quiz Result</h3>
+                                        <div class="text-lg font-medium text-gray-800">
+                                            Score: <span class="font-bold text-blue-600">{score}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-gray-800 text-gray-100 rounded-lg p-4 mb-4">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <h4 class="text-sm font-medium text-white">📄 Program Output</h4>
+                                        </div>
+                                        <pre id="quiz-output-pre" class="mt-3 whitespace-pre-wrap text-sm bg-gray-900 text-green-300 font-medium sm:text-base rounded p-3 max-h-64 overflow-auto">{stdout or stderr or compile_output or message or status_description}</pre>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between text-sm text-gray-600 mb-4">
+                                        <div class="flex items-center">
+                                            <span class="mr-1">⏱️</span>
+                                            <span class="font-medium">Run Time:</span>
+                                            <span class="ml-1 font-semibold text-gray-800">{exec_time}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-gradient-to-br from-white to-gray-50 border border-gray-100 rounded-lg p-4">
+                                        <h4 class="text-sm font-semibold text-gray-800 mb-2">🤖 AI Feedback</h4>
+                                        <div class="text-sm text-gray-700 leading-relaxed" id="quiz-ai-feedback">
+                                            {feedback_section.replace('-', '<br>').replace('. ', '.<br>')}
+                                        </div>
+                                    </div>
                                 </div>
-                              </div>
+                            </div>
 
-                              <style>
-                                #quiz-output-pre {{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace; }}
-                                .copy-btn {{ cursor: pointer; }}
-                              </style>
-                            """.replace(".", "<br>").replace("-", "<br>")
+                            <style>
+                                #quiz-output-pre {{
+                                    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+                                    font-size: 0.875rem;
+                                    line-height: 1.5;
+                                }}
+                                #quiz-ai-feedback br {{
+                                    margin-bottom: 0.5rem;
+                                    display: block;
+                                    content: "";
+                                }}
+                            </style>
+                            """
                         else:
                             ai_feedback = evaluate_student_code_with_openai_for_playground(code=code)
 
