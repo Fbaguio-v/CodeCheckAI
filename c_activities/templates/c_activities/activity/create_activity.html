@@ -1,19 +1,24 @@
 <style>
+	.preset-div {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 	.preset-button {
 		background-color: hsl(0, 0%, 95%);
+		border: 1px solid;
 	}
 	.container-preset {
 		position: absolute;
 		height: auto;
 		width: auto;
-		padding: 0.5rem;
-		top: -13rem;
-		right: 2%;
+		top: -12rem;
+		right: 5%;
 		display: none;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		border: 0.1rem solid;
+		border: 1px solid gray;
 		background-color: hsl(0, 0%, 95%);
 		border-radius: 0.3rem;
 
@@ -81,7 +86,7 @@
 				required></textarea>
 		</div>
 
-		<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base flex justify-evenly gap-2">
+		<div class="pb-3 text-left text-sm font-medium text-gray-800 sm:text-base flex flex-row justify-between gap-2 relative">
 			<div>
 				<label for="id_max_score" class="block font-bold">Max Score</label>
 				<input id="id_max_score" name="id_max_score" type="number" min="1" placeholder="Maximum Score" class="border border-solid border-black w-full p-2 rounded bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200" required>
@@ -90,54 +95,76 @@
 				<label for="id_due_at" class="block font-bold">Due</label>
 				<input id="id_due_at" name="id_due_at" type="datetime-local" class="border border-solid border-black w-full p-2 rounded bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200" min="{% now 'Y-m-d\TH:i' %}" required>
 			</div>
-		</div>
-
-		<div class="preset-div relative">
-			<div class="preset-button" tabindex="0">Use Preset
-				<div class="container-preset">
-					<span>
-						<input type="checkbox" class="container-year first-year">
-						1st Year
-						Correctness: 35%
-						Syntax: 50%
-						Structure: 15%
-					</span>
-					<span>
-						<input type="checkbox" class="container-year first-year-1">
-						1st Year
-						Correctness: 50%
-						Syntax: 40%
-						Structure: 10%
-					</span>
-					<span>
-						<input type="checkbox" class="container-year first-year-2">
-						1st Year
-						Correctness: 20%
-						Syntax: 40%
-						Structure: 30%
-					</span>
-					<span>
-						<input type="checkbox" class="container-year second-year">
-						2nd Year
-						Correctness: 30%
-						Syntax: 50%
-						Structure: 20%
-					</span>
-					<span>
-						<input type="checkbox" class="container-year second-year-1">
-						2nd Year
-						Correctness: 30%
-						Syntax: 50%
-						Structure: 20%
-					</span>
+			<div class="preset-div flex flex-col">
+				<label style="opacity: 0;" class="block font-bold">Presets</label>
+				<div class="preset-button" tabindex="0">Use Preset
+					<div class="container-preset">
+						<span>
+							<input type="radio" name="preset" class="container-year first-year"
+							hx-post="{% url 'c_activities:check-criteria' %}"
+							hx-trigger="change"
+							hx-target="#criteria-total"
+							hx-include=".criteria-input">
+							1st Year
+							Correctness: 35%
+							Syntax: 50%
+							Structure: 15%
+						</span>
+						<span>
+							<input type="radio" name="preset" class="container-year first-year-1"
+							hx-post="{% url 'c_activities:check-criteria' %}"
+							hx-trigger="change"
+							hx-target="#criteria-total"
+							hx-include=".criteria-input">
+							1st Year
+							Correctness: 50%
+							Syntax: 40%
+							Structure: 10%
+						</span>
+						<span>
+							<input type="radio" name="preset" class="container-year first-year-2"
+							hx-post="{% url 'c_activities:check-criteria' %}"
+							hx-trigger="change"
+							hx-target="#criteria-total"
+							hx-include=".criteria-input">
+							1st Year
+							Correctness: 20%
+							Syntax: 40%
+							Structure: 40%
+						</span>
+						<span>
+							<input type="radio" name="preset" class="container-year second-year"
+							hx-post="{% url 'c_activities:check-criteria' %}"
+							hx-trigger="change"
+							hx-target="#criteria-total"
+							hx-include=".criteria-input">
+							2nd Year
+							Correctness: 30%
+							Syntax: 50%
+							Structure: 20%
+						</span>
+						<span>
+							<input type="radio" name="preset" class="container-year second-year-1"
+							hx-post="{% url 'c_activities:check-criteria' %}"
+							hx-trigger="change"
+							hx-target="#criteria-total"
+							hx-include=".criteria-input">
+							2nd Year
+							Correctness: 25%
+							Syntax: 50%
+							Structure: 25%
+						</span>
+					</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="mb-4">
-			<h5 class="text-lg font-semibold mb-2">
-				Evaluation Criteria (up to 100%)
-			</h5>
+			<div>
+				<h5 class="text-lg font-semibold mb-2">
+					Evaluation Criteria (up to 100%)
+				</h5>
+			</div>
 			<table class="w-full table-fixed border border-gray-300">
 				<thead>
 					<tr class="bg-gray-100">
@@ -198,7 +225,6 @@
 	</form>
 </div>
 <script>
-		const containerDiv = document.querySelector(".container-preset");
 		let firstYear, firstYear1, firstYear2, secondYear, secondYear1, correctness, syntax, structure;1
 
 		firstYear = document.querySelector(".first-year");
@@ -212,7 +238,6 @@
 
 		firstYear.addEventListener("change", (e) => {
 			if(e.target.checked) {
-				containerDiv.style.display = "none";
 				correctness.value = 35;
 				syntax.value = 50;
 				structure.value = 15;
@@ -221,7 +246,6 @@
 
 		firstYear1.addEventListener("change", (e) => {
 			if(e.target.checked) {
-				containerDiv.style.display = "none";
 				correctness.value = 50;
 				syntax.value = 40;
 				structure.value = 10;
@@ -230,16 +254,14 @@
 
 		firstYear2.addEventListener("change", (e) => {
 			if(e.target.checked) {
-				containerDiv.style.display = "none";
 				correctness.value = 20;
 				syntax.value = 40;
-				structure.value = 30;
+				structure.value = 40;
 			}
 		});
 
 		secondYear.addEventListener("change", (e) => {
 			if(e.target.checked) {
-				containerDiv.style.display = "none";
 				correctness.value = 30;
 				syntax.value = 50;
 				structure.value = 20;
@@ -248,10 +270,9 @@
 
 		secondYear1.addEventListener("change", (e) => {
 			if(e.target.checked) {
-				containerDiv.style.display = "none";
-				correctness.value = 30;
+				correctness.value = 25;
 				syntax.value = 50;
-				structure.value = 20;
+				structure.value = 25;
 			}
 		});
 </script>
