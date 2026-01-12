@@ -1,46 +1,135 @@
 {% extends 'a_classroom/base.html' %}
 {% block content %}
 <div class="h-full w-full flex flex-col p-4">
+    <!-- Statistics Summary -->
+    <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white p-4 rounded-lg shadow border border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Overall Statistics</h3>
+            <div class="space-y-2">
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Average (Latest Scores):</span>
+                    <span class="font-bold text-blue-600">{{ overall_average }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Average (All Submissions):</span>
+                    <span class="font-bold text-green-600">{{ average_all_submissions }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Total Students:</span>
+                    <span class="font-bold text-gray-800">{{ total_students }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Total Submissions:</span>
+                    <span class="font-bold text-gray-800">{{ total_submissions }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow border border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Activity Info</h3>
+            <div class="space-y-2">
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Title:</span>
+                    <span class="font-medium text-gray-800">{{ activity.title|truncatechars:30 }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Language:</span>
+                    <span class="font-medium text-gray-800">{{ activity.language }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Max Score:</span>
+                    <span class="font-medium text-gray-800">{{ activity.max_score }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow border border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Due Date</h3>
+            <div class="space-y-2">
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Due At:</span>
+                    <span class="font-medium text-gray-800">{{ activity.due_at|date:"Y-m-d H:i" }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Status:</span>
+                    {% now "Y-m-d H:i" as current_time %}
+                    {% if activity.due_at|date:"Y-m-d H:i" > current_time %}
+                        <span class="font-medium text-green-600">Active</span>
+                    {% else %}
+                        <span class="font-medium text-red-600">Closed</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="flex-1 mb-3 overflow-auto">
         <input id="activities-search" type="text"
                 name="search_subject"
-                placeholder="Search subjects..."
+                placeholder="Search students by email..."
                 class="w-full h-10 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                 onkeyup="filterTable('activities-table', this.value, [0, 1, 2])">
+        
         <table id="activities-table" class="w-full border border-solid table-fixed">
             <thead class="h-16 bg-gray-800 text-white"> 
                 <tr>
                     <th class="border-r border-solid">Email Address</th>
-                    <th class="border-r border-solid">Submitted Code</th>
+                    <th class="border-r border-solid">Latest Submitted Code</th>
                     <th class="border-r border-solid">Submitted At</th>
-                    <th class="border-r border-solid">Score</th>
+                    <th class="border-r border-solid">Latest Score</th>
+                    <th class="border-r border-solid">Status</th>
                 </tr>
             </thead>
             <tbody class="flex-1">
-                {% for student_avg in student_averages %}
+                {% for data in student_data %}
                     <tr class="grow text-center border border-solid h-20">
-                        <td class="whitespace-nowrap overflow-hidden text-ellipsis">
-                            {{ student_avg.student.email }}
+                        <td class="whitespace-nowrap overflow-hidden text-ellipsis px-2">
+                            {{ data.student.email }}
                         </td>
-                        <td class="whitespace-nowrap overflow-hidden text-ellipsis">
-                            {{ student_avg.latest_submission.submitted_code|default:"No code" }}
+                        <td class="whitespace-nowrap overflow-hidden text-ellipsis px-2">
+                            {% if data.latest_submission and data.latest_submission.submitted_code %}
+                                <span title="{{ data.latest_submission.submitted_code|truncatechars:100 }}">
+                                    {{ data.latest_submission.submitted_code|truncatechars:30 }}
+                                </span>
+                            {% else %}
+                                <span class="text-gray-500">No code</span>
+                            {% endif %}
                         </td>
-                        <td class="whitespace-nowrap overflow-hidden text-ellipsis">
-                            {{ student_avg.latest_submission.submitted_at|default:"No submission" }}
+                        <td class="whitespace-nowrap overflow-hidden text-ellipsis px-2">
+                            {% if data.submitted_at %}
+                                {{ data.submitted_at|date:"Y-m-d H:i" }}
+                            {% else %}
+                                <span class="text-gray-500">No submission</span>
+                            {% endif %}
                         </td>   
-                        <td class="whitespace-nowrap overflow-hidden text-ellipsis">
-                            {{ student_avg.avg_score }}
-                            <span class="text-xs text-gray-500">
-                                ({{ student_avg.submission_count }} submission{{ student_avg.submission_count|pluralize }})
-                            </span>
+                        <td class="whitespace-nowrap overflow-hidden text-ellipsis px-2">
+                            {% if data.latest_score is not None %}
+                                <span class="font-bold {% if data.latest_score >= activity.max_score|add:"-10" %}text-green-600{% elif data.latest_score >= activity.max_score|add:"-20" %}text-yellow-600{% else %}text-red-600{% endif %}">
+                                    {{ data.latest_score }}
+                                </span>
+                                <span class="text-xs text-gray-500">
+                                    /{{ activity.max_score }}
+                                </span>
+                            {% else %}
+                                <span class="text-gray-500">Not graded</span>
+                            {% endif %}
+                        </td>
+                        <td class="whitespace-nowrap overflow-hidden text-ellipsis px-2">
+                            {% if data.latest_submission %}
+                                <span class="px-2 py-1 rounded text-xs font-medium 
+                                    {% if data.latest_submission.status == 'returned' %}bg-green-100 text-green-800
+                                    {% elif data.latest_submission.status == 'In Progress' %}bg-yellow-100 text-yellow-800
+                                    {% else %}bg-blue-100 text-blue-800{% endif %}">
+                                    {{ data.latest_submission.status|default:"Submitted" }}
+                                </span>
+                            {% else %}
+                                <span class="text-gray-500">No submission</span>
+                            {% endif %}
                         </td>
                     </tr>
                 {% empty %}
                     <tr class="grow text-center h-20">
-                        <td></td>
-                        <td class="py-4 text-center">No subject available.</td>
-                        <td></td>
-                        <td></td>
+                        <td colspan="6" class="py-4 text-center text-gray-500">
+                            No students have submitted to this activity yet.
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -84,7 +173,7 @@
         nextBtn.onclick = () => { const totalPages = Math.max(1, Math.ceil(getMatchedRows().length / state.pageSize)); if (state.currentPage < totalPages) { state.currentPage++; renderPage(); } };
 
         if (searchInput) {
-            searchInput.onkeyup = (e) => { filterTable(tableId, e.target.value, [0,1,2]); };
+            searchInput.onkeyup = (e) => { filterTable(tableId, e.target.value, [0, 1, 2]); };
         }
     }
 

@@ -366,33 +366,33 @@ def get_subject_activities(request):
     activities = Activity.objects.all()
     return render(request, 'a_classroom/a.admin/activities/activities.html', {"activities" : activities})
 
-def view_activity(request, activity_id):
-    activity = get_object_or_404(Activity, activity_id=activity_id)
+# def view_activity(request, activity_id):
+#     activity = get_object_or_404(Activity, activity_id=activity_id)
     
-    submissions = ActivitySubmission.objects.filter(activity=activity)
+#     submissions = ActivitySubmission.objects.filter(activity=activity)
     
-    students = User.objects.filter(
-        id__in=submissions.values('student').distinct()
-    )
+#     students = User.objects.filter(
+#         id__in=submissions.values('student').distinct()
+#     )
     
-    student_averages = []
-    for student in students:
-        student_submissions = submissions.filter(student=student)
-        avg_score = student_submissions.aggregate(avg_score=Avg('score'))['avg_score']
+#     student_averages = []
+#     for student in students:
+#         student_submissions = submissions.filter(student=student)
+#         avg_score = student_submissions.aggregate(avg_score=Avg('score'))['avg_score']
         
-        latest_submission = student_submissions.order_by('-submitted_at').first()
+#         latest_submission = student_submissions.order_by('-submitted_at').first()
         
-        student_averages.append({
-            'student': student,
-            'avg_score': round(avg_score, 2) if avg_score else 0,
-            'latest_submission': latest_submission,
-            'submission_count': student_submissions.count()
-        })
+#         student_averages.append({
+#             'student': student,
+#             'avg_score': round(avg_score, 2) if avg_score else 0,
+#             'latest_submission': latest_submission,
+#             'submission_count': student_submissions.count()
+#         })
     
-    return render(request, 'a_classroom/a.admin/activities/view_activity.html', {
-        "activity": activity,
-        "student_averages": student_averages
-    })
+#     return render(request, 'a_classroom/a.admin/activities/view_activity.html', {
+#         "activity": activity,
+#         "student_averages": student_averages
+#     })
 
 # def view_activity(request, activity_id):
 #     activity = get_object_or_404(Activity, activity_id = activity_id)
@@ -415,6 +415,68 @@ def view_activity(request, activity_id):
 #     htmx_template = 'a_classroom/a.admin/users/subject/subjects.html'
 #     htmx_trigger = 'subjects'
 #     context_name = 'subjects'
+
+def view_activity(request, activity_id):
+    activity = get_object_or_404(Activity, activity_id=activity_id)
+    
+    # Get all students who have submitted to this activity using the correct related name
+    students_with_submissions = User.objects.filter(
+        activity_submissions__activity=activity  # Changed from activitysubmission__ to activity_submissions__
+    ).distinct()
+    
+    # Calculate latest score per student and overall average
+    student_scores = []
+    all_scores = []
+    
+    for student in students_with_submissions:
+        # Get latest submission for this student
+        latest_submission = ActivitySubmission.objects.filter(
+            activity=activity,
+            student=student
+        ).order_by('-submitted_at').first()
+        
+        if latest_submission:
+            if latest_submission.score is not None:
+                latest_score = latest_submission.score
+                all_scores.append(latest_score)
+            
+            student_scores.append({
+                'student': student,
+                'latest_score': latest_submission.score,
+                'latest_submission': latest_submission,
+                'submitted_at': latest_submission.submitted_at,
+            })
+        else:
+            # This shouldn't happen since we filtered by activity_submissions__activity
+            # but keeping it for safety
+            student_scores.append({
+                'student': student,
+                'latest_score': None,
+                'latest_submission': None,
+                'submitted_at': None,
+            })
+    
+    # Calculate overall average of latest scores
+    overall_average = sum(all_scores) / len(all_scores) if all_scores else 0
+    
+    # Get average of ALL submissions (not just latest per student)
+    all_submissions_scores = ActivitySubmission.objects.filter(
+        activity=activity
+    ).exclude(score=None).values_list('score', flat=True)
+    
+    average_all_submissions = sum(all_submissions_scores) / len(all_submissions_scores) if all_submissions_scores else 0
+    
+    # Count total submissions
+    total_submissions = ActivitySubmission.objects.filter(activity=activity).count()
+    
+    return render(request, 'a_classroom/a.admin/activities/view_activity.html', {
+        "activity": activity,
+        "student_data": student_scores,  # Changed from student_scores to student_data to match template
+        "overall_average": round(overall_average, 2),
+        "average_all_submissions": round(average_all_submissions, 2),
+        "total_students": len(student_scores),
+        "total_submissions": total_submissions,
+    })
 
 class ApproveUserAdminView(View):
     def post(self, request, user_id):
