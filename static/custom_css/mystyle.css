@@ -41,6 +41,7 @@ body {
         margin-top: 0.5rem;
         background-color: gray;
         padding: 0.1rem;
+        z-index: 1000;
 
         .text {
             display: block;

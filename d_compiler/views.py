@@ -74,6 +74,26 @@ class CompilerView(View):
                     response["HX-Redirect"] = reverse('a_classroom:v', args=[subject_id])
                     return response
 
+                if language_id == 62:
+                    code = re.sub(r'^\s*package\s+.*;?\s*$', '', code, flags=re.MULTILINE)
+                    
+                    public_class_match = re.search(r'public\s+class\s+(\w+)', code)
+                    if public_class_match and public_class_match.group(1) != 'Main':
+                        old_class_name = public_class_match.group(1)
+                        code = code.replace(f'public class {old_class_name}', 'public class Main')
+                        code = code.replace(f'new {old_class_name}()', 'new Main()')
+                    
+                    if 'public static void main' not in code:
+                        if 'class ' in code:
+                            lines = code.split('\n')
+                            for i, line in enumerate(lines):
+                                if 'class ' in line and '{' in line:
+                                    lines.insert(i + 1, '    public static void main(String[] args) {')
+                                    lines.insert(i + 2, '        // Your code here')
+                                    lines.insert(i + 3, '    }')
+                                    code = '\n'.join(lines)
+                                    break
+
                 judge_payload = {
                     "source_code": code,
                     "language_id": language_id,
