@@ -7,13 +7,14 @@
 	.preset-button {
 		background-color: hsl(0, 0%, 95%);
 		border: 1px solid;
+		margin-bottom: 5px;
 	}
 	.container-preset {
 		position: absolute;
 		height: auto;
 		width: auto;
-		top: -12rem;
-		right: 5%;
+		top: -21rem;
+		right: 15%;
 		display: none;
 		flex-direction: column;
 		justify-content: center;
@@ -95,75 +96,74 @@
 				<label for="id_due_at" class="block font-bold">Due</label>
 				<input id="id_due_at" name="id_due_at" type="datetime-local" class="border border-solid border-black w-full p-2 rounded bg-gray-100 text-sm font-medium text-gray-800 sm:text-base focus:bg-gray-200" min="{% now 'Y-m-d\TH:i' %}" required>
 			</div>
-			<div class="preset-div flex flex-col">
-				<label style="opacity: 0;" class="block font-bold">Presets</label>
-				<div class="preset-button" tabindex="0">Use Preset
-					<div class="container-preset">
-						<span>
-							<input type="radio" name="preset" class="container-year first-year"
-							hx-post="{% url 'c_activities:check-criteria' %}"
-							hx-trigger="change"
-							hx-target="#criteria-total"
-							hx-include=".criteria-input">
-							1st Year
-							Correctness: 35%
-							Syntax: 50%
-							Structure: 15%
-						</span>
-						<span>
-							<input type="radio" name="preset" class="container-year first-year-1"
-							hx-post="{% url 'c_activities:check-criteria' %}"
-							hx-trigger="change"
-							hx-target="#criteria-total"
-							hx-include=".criteria-input">
-							1st Year
-							Correctness: 50%
-							Syntax: 40%
-							Structure: 10%
-						</span>
-						<span>
-							<input type="radio" name="preset" class="container-year first-year-2"
-							hx-post="{% url 'c_activities:check-criteria' %}"
-							hx-trigger="change"
-							hx-target="#criteria-total"
-							hx-include=".criteria-input">
-							1st Year
-							Correctness: 20%
-							Syntax: 40%
-							Structure: 40%
-						</span>
-						<span>
-							<input type="radio" name="preset" class="container-year second-year"
-							hx-post="{% url 'c_activities:check-criteria' %}"
-							hx-trigger="change"
-							hx-target="#criteria-total"
-							hx-include=".criteria-input">
-							2nd Year
-							Correctness: 30%
-							Syntax: 50%
-							Structure: 20%
-						</span>
-						<span>
-							<input type="radio" name="preset" class="container-year second-year-1"
-							hx-post="{% url 'c_activities:check-criteria' %}"
-							hx-trigger="change"
-							hx-target="#criteria-total"
-							hx-include=".criteria-input">
-							2nd Year
-							Correctness: 25%
-							Syntax: 50%
-							Structure: 25%
-						</span>
-					</div>
-				</div>
-			</div>
 		</div>
 
 		<div class="mb-4">
-			<div>
+			<div class="flex justify-between items-center relative">
 				<h5 class="text-lg font-semibold mb-2">
 					Evaluation Criteria (up to 100%)
 				</h5>
+				<div class="preset-div flex flex-col">
+					<div class="preset-button" tabindex="0">Use Preset
+						<div class="container-preset">
+							<span>
+								<input type="radio" name="preset" class="container-year first-year"
+								hx-post="{% url 'c_activities:check-criteria' %}"
+								hx-trigger="change"
+								hx-target="#criteria-total"
+								hx-include=".criteria-input">
+								1st Year
+								Correctness: 35%
+								Syntax: 50%
+								Structure: 15%
+							</span>
+							<span>
+								<input type="radio" name="preset" class="container-year first-year-1"
+								hx-post="{% url 'c_activities:check-criteria' %}"
+								hx-trigger="change"
+								hx-target="#criteria-total"
+								hx-include=".criteria-input">
+								1st Year
+								Correctness: 50%
+								Syntax: 40%
+								Structure: 10%
+							</span>
+							<span>
+								<input type="radio" name="preset" class="container-year first-year-2"
+								hx-post="{% url 'c_activities:check-criteria' %}"
+								hx-trigger="change"
+								hx-target="#criteria-total"
+								hx-include=".criteria-input">
+								1st Year
+								Correctness: 20%
+								Syntax: 40%
+								Structure: 40%
+							</span>
+							<span>
+								<input type="radio" name="preset" class="container-year second-year"
+								hx-post="{% url 'c_activities:check-criteria' %}"
+								hx-trigger="change"
+								hx-target="#criteria-total"
+								hx-include=".criteria-input">
+								2nd Year
+								Correctness: 30%
+								Syntax: 50%
+								Structure: 20%
+							</span>
+							<span>
+								<input type="radio" name="preset" class="container-year second-year-1"
+								hx-post="{% url 'c_activities:check-criteria' %}"
+								hx-trigger="change"
+								hx-target="#criteria-total"
+								hx-include=".criteria-input">
+								2nd Year
+								Correctness: 25%
+								Syntax: 50%
+								Structure: 25%
+							</span>
+						</div>
+					</div>
+				</div>
 			</div>
 			<table class="w-full table-fixed border border-gray-300">
 				<thead>

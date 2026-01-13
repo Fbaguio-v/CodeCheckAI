@@ -20,7 +20,7 @@ from django.db.models import Max
 from django.utils.timezone import localtime
 from django.core import serializers
 from django.db.models import Avg
-from django.db.models import Subquery, OuterRef
+from django.db.models import Max, Subquery, OuterRef
 import os
 # Create your views here.
 def select_user_related(user):
@@ -215,15 +215,43 @@ class ActivityView(View):
         activity = get_object_or_404(Activity, subject=subject, activity_id=activity_id)
 
         if user_profile.role == "Instructor":
-            filters = {"activity": activity}
+            highest_score_subquery = ActivitySubmission.objects.filter(
+                activity=activity,
+                student=OuterRef('student')
+            ).order_by('-score').values('score')[:1]
+            
+            highest_submissions = ActivitySubmission.objects.filter(
+                activity=activity,
+                student__in=activity.submissions.values('student').distinct(),
+                score=Subquery(highest_score_subquery)
+            ).select_related("student").order_by('student__username', '-submitted_at')
+            
+            unique_highest_submissions = []
+            seen_students = set()
+            for submission in highest_submissions:
+                if submission.student.id not in seen_students:
+                    unique_highest_submissions.append(submission)
+                    seen_students.add(submission.student.id)
+            
             if activity.type == "activity":
-                filters["status__in"] = ["submitted", "returned", "In Progress"]
-
-            activity_submissions = ActivitySubmission.objects.filter(**filters).select_related("student")
+                unique_highest_submissions = [
+                    sub for sub in unique_highest_submissions 
+                    if sub.status in ["submitted", "returned", "In Progress"]
+                ]
+            
+            index = int(request.GET.get('index', 0))
+            
+            current_submission = None
+            if unique_highest_submissions and 0 <= index < len(unique_highest_submissions):
+                current_submission = unique_highest_submissions[index]
+            
             return render(request, 'c_activities/activity.partial/student.submission.html', {
-                "activity" : activity,
+                "activity": activity,
                 "user_profile": user_profile,
-                "activity_submissions": activity_submissions,
+                "activity_submissions": unique_highest_submissions,
+                "current_submission": current_submission,
+                "index": index,
+                "total_submissions": len(unique_highest_submissions),
                 "subject_id": subject_id,
             })
 
@@ -236,82 +264,118 @@ class ActivityView(View):
 
             submission_count = submissions.count()
 
+            # Get the highest score
             highest_score = ActivitySubmission.objects.filter(
                 student=request.user,
                 activity=activity
             ).aggregate(Max('score'))['score__max'] or 0
 
-
+            # Get the highest-scoring submission that has been returned
+            highest_returned_submission = None
             highest_feedback = None
-            if highest_score is not None:
-                top_submission = ActivitySubmission.objects.filter(
+            
+            if highest_score is not None and highest_score > 0:
+                # First try to get a returned submission with the highest score
+                highest_returned_submission = ActivitySubmission.objects.filter(
                     student=request.user,
                     activity=activity,
-                    score=highest_score
-                ).first()
-                highest_feedback = top_submission.feedback if top_submission else None
+                    score=highest_score,
+                    status="returned"  # Only get returned submissions
+                ).order_by('-submitted_at').first()
+                
+                if highest_returned_submission:
+                    highest_feedback = highest_returned_submission.feedback
+                else:
+                    # If no returned submission with highest score, get any submission with highest score
+                    top_submission = ActivitySubmission.objects.filter(
+                        student=request.user,
+                        activity=activity,
+                        score=highest_score
+                    ).order_by('-submitted_at').first()
+                    highest_feedback = top_submission.feedback if top_submission else None
 
-            activity_submissions = []
-            
-            if activity:
-                activity_submission = ActivitySubmission.objects.filter(activity=activity, student=request.user).first()
-                if activity_submission:
-                    activity_submissions = [activity_submission]
-
+            # Get all submissions for this activity (for the activity_submissions list)
+            activity_submissions = ActivitySubmission.objects.filter(
+                activity=activity, 
+                student=request.user
+            ).order_by('-submitted_at')
 
             if action_type == "activity_details":
                 return render(request, "c_activities/compiler/partials/activity_details.html", {
-                    "activity" : activity,
-                    "activity_submissions" : activity_submissions,
-                    "submission_count" : submission_count,
-                    "highest_score" : highest_score,
-                    "highest_feedback" : highest_feedback
+                    "activity": activity,
+                    "activity_submissions": activity_submissions,
+                    "submission_count": submission_count,
+                    "highest_score": highest_score,
+                    "highest_feedback": highest_feedback,
+                    "highest_returned_submission": highest_returned_submission,  # Add this
                 })
-
 
             return render(request, 'c_activities/compiler/student.compiler.html', {
                 "activity": activity,
-                "submission" : submission,
+                "submission": submission,
                 "activity_submissions": activity_submissions,
                 "user_profile": user_profile,
                 "subject_id": subject_id,
                 "subject": subject,
-                "submission_count" : submission_count,
-                "current_time" : localtime(timezone.now()),
+                "submission_count": submission_count,
+                "highest_score": highest_score,
+                "highest_feedback": highest_feedback,
+                "highest_returned_submission": highest_returned_submission,  # Add this
+                "current_time": localtime(timezone.now()),
                 "server_time": timezone.now().isoformat(),
             })
-
-        return HttpResponse("Unhandled request case.", status=400)
 
 def prev_or_next_view(request):
     button_type = request.GET.get("action")
     activity_id = request.GET.get("activity_id")
+    subject_id = request.GET.get("subject_id")
     current_index = int(request.GET.get("index", 0))
 
     activity = select_activity_by_id(activity_id)
     if not activity:
         return redirect("a_classroom:index")
 
-    filters = {"activity": activity}
-    if activity.type == "activity":
-        filters["status__in"] = ["submitted", "returned", "In Progress"]
+    highest_score_subquery = ActivitySubmission.objects.filter(
+        activity=activity,
+        student=OuterRef('student')
+    ).order_by('-score').values('score')[:1]
+    
+    activity_submissions = ActivitySubmission.objects.filter(
+        activity=activity,
+        student__in=activity.submissions.values('student').distinct(),
+        score=Subquery(highest_score_subquery)
+    ).select_related("student").order_by('student__username', '-submitted_at')
 
-    activity_submissions = ActivitySubmission.objects.filter(**filters).select_related("student")
-    total = activity_submissions.count()
+    unique_highest_submissions = []
+    seen_students = set()
+    for submission in activity_submissions:
+        if submission.student.id not in seen_students:
+            unique_highest_submissions.append(submission)
+            seen_students.add(submission.student.id)
+    
+    if activity.type == "activity":
+        unique_highest_submissions = [
+            sub for sub in unique_highest_submissions 
+            if sub.status in ["submitted", "returned", "In Progress"]
+        ]
+    
+    total = len(unique_highest_submissions)
 
     if button_type == "next":
         current_index += 1
     elif button_type == "previous":
         current_index -= 1
 
-    current_index = max(0, min(current_index, total - 1))
+    current_index = max(0, min(current_index, total - 1 if total > 0 else 0))
 
-    submission = activity_submissions[current_index] if total > 0 else None
+    submission = unique_highest_submissions[current_index] if total > 0 and current_index < total else None
 
     return render(request, 'c_activities/activity.partial/partials/submission.partial.html', {
         "index": current_index,
         "submission": submission,
         "activity": activity,
+        "total_submissions": total,
+        "subject_id": subject_id,
         "now": timezone.now(),
     })
 

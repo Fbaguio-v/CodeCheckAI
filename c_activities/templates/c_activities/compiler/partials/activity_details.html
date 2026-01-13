@@ -3,7 +3,7 @@
         <div class="h-full overflow-y-auto pr-2 leading-5">
 
             <div class="pb-2">
-				<h4 class="font-bold">Title</h4>
+                <h4 class="font-bold">Title</h4>
                 <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-80 overflow-y-auto scrollbar-hidden">{{ activity.title }}</div>
             </div>
 
@@ -22,42 +22,27 @@
                 <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ activity.language }}</div>
             </div>
 
-
             <div class="pb-2">
                 <h4 class="font-bold">Due</h4>
                 <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ activity.due_at }}</div>
             </div>
 
             {% if activity.type == "activity" %}
-
                 <div class="pb-2">
                     <h4 class="font-bold">Highest Score</h4>
-                    <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">{{ highest_score }}</div>
+                    <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-32 overflow-y-auto scrollbar-hidden">
+                        {{ highest_score }}
+                    </div>
                 </div>
 
-                {% if activity_submissions.0.status == "returned" and activity.type == "activity" %}
+                {% if highest_returned_submission and highest_feedback %}
                     <div class="pb-2">
-                        <h4 class="font-bold">Feedback</h4>
-                        <span class="block bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto scrollbar-hidden">
+                        <h4 class="font-bold">Feedback on Highest Score</h4>
+                        <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto scrollbar-hidden">
                             {{ highest_feedback }}
-                        </span>
+                        </div>
                     </div>
                 {% endif %}
-            {% endif %}
-            
-            {% if activity_submissions.0.status == "returned" and activity.type == "quiz" %}
-                <div>
-                    <h4 class="font-bold">Score</h4>
-                    <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base max-h-48 overflow-y-auto">
-                        {{ activity_submissions.0.score }}
-                    </div>
-                </div>
-                <div>
-                    <h4 class="font-bold">Feedback</h4>
-                    <div class="bg-white border-2 border-solid rounded p-3 text-sm font-medium text-gray-800 sm:text-base min-h-48 max-h-80 overflow-y-auto">
-                        {{ activity_submissions.0.feedback }}
-                    </div>
-                </div>
             {% endif %}
         </div>
     </div>

@@ -19,14 +19,14 @@
                 <pre class="block mb-4 p-3 bg-gray-100 rounded max-h-32 overflow-y-auto whitespace-pre-wrap" style="scrollbar-gutter: stable; white-space: pre-line;">
                     {{ submission.feedback }}
                 </pre>
-                    <button class="cursor-pointer py-1 px-2 text-white bg-gray-800 rounded hover:bg-gray-950 {% if first_submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
-                        hx-get="{% url 'c_activities:edit-insight' submission.id %}"
-                        hx-swap="outerHTML"
-                        hx-target="#feedback-{{ submission.id }}"
-                        title="Click to edit feedback"
-                        {% if submission.status == 'returned' %} disabled {% endif %}>
-                        Edit Feedback
-                    </button>
+                <button class="cursor-pointer py-1 px-2 text-white bg-gray-800 rounded hover:bg-gray-950 {% if submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
+                    hx-get="{% url 'c_activities:edit-insight' submission.id %}"
+                    hx-swap="outerHTML"
+                    hx-target="#feedback-{{ submission.id }}"
+                    title="Click to edit feedback"
+                    {% if submission.status == 'returned' %} disabled {% endif %}>
+                    Edit Feedback
+                </button>
             </div>
 
             <div id="score-{{ submission.id }}" class="text-left text-sm font-medium text-gray-800 sm:text-base">
@@ -34,12 +34,14 @@
                 <div class="p-3 bg-gray-100 rounded max-h-20 overflow-y-auto" style="scrollbar-gutter: stable;"> 
                     {{ submission.score }}
                 </div>
-                        <button class="cursor-pointer py-1 px-2 text-white bg-gray-800 rounded hover:bg-gay-950 {% if submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
-                        hx-get="{% url 'c_activities:edit-grade' submission.id %}" 
-                        hx-swap="outerHTML" 
-                        hx-target="#score-{{ submission.id }}" 
-                        title="Click to edit grade"
-                        {% if submission.status == 'returned' %} disabled {% endif %}>Edit Grade</button>
+                <button class="cursor-pointer py-1 px-2 text-white bg-gray-800 rounded hover:bg-gray-950 {% if submission.status == 'returned' %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
+                    hx-get="{% url 'c_activities:edit-grade' submission.id %}" 
+                    hx-swap="outerHTML" 
+                    hx-target="#score-{{ submission.id }}" 
+                    title="Click to edit grade"
+                    {% if submission.status == 'returned' %} disabled {% endif %}>
+                    Edit Grade
+                </button>
             </div>
 
             <form hx-post="{% url 'c_activities:return-grade' submission.id %}" class="mt-2">
@@ -52,7 +54,13 @@
                 </button>
             </form>
         {% else %}
-            <p class="text-center text-sm font-medium text-gray-800 sm:text-base">No submission.</p>
+            <p class="text-center text-sm font-medium text-gray-800 sm:text-base">
+                {% if total_submissions > 0 %}
+                    No submissions match the current filter. Showing {{ total_submissions }} highest score submissions.
+                {% else %}
+                    No submissions yet.
+                {% endif %}
+            </p>
         {% endif %}
     </div>
 </div>
@@ -60,16 +68,32 @@
 <div class="flex justify-between items-center border-solid h-auto w-full bg-gray-200 text-sm font-medium text-gray-800 sm:text-base">
     <form hx-get="{% url 'a_classroom:prev_or_next' %}" hx-target="#output" hx-swap="innerHTML" class="w-full flex justify-center py-3">
         <input type="hidden" name="activity_id" value="{{ activity.activity_id }}">
+        <input type="hidden" name="subject_id" value="{{ subject_id }}">
         <input type="hidden" name="index" value="{{ index }}">
         <button type="submit" name="action" value="previous" 
-        class="flex items-center justify-center py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950"
-            hx-target="#output" hx-swap="innerHTML" title="Go to previous page">Previous</button> 
+        class="flex cursor-pointer items-center justify-center py-2 w-32 text-white bg-gray-800 rounded hover:bg-gray-950 {% if index <= 0 %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
+        title="Go to previous student"
+        {% if index <= 0 %}disabled{% endif %}>
+            Previous
+        </button> 
     </form>
+    
+    <!-- Add position indicator -->
+    <div class="text-center text-sm text-gray-600">
+        {% if total_submissions > 0 %}
+            {{ index|add:1 }} / {{ total_submissions }}
+        {% endif %}
+    </div>
+    
     <form hx-get="{% url 'a_classroom:prev_or_next' %}" hx-target="#output" hx-swap="innerHTML" class="w-full flex justify-center py-3">
         <input type="hidden" name="activity_id" value="{{ activity.activity_id }}">
+        <input type="hidden" name="subject_id" value="{{ subject_id }}">
         <input type="hidden" name="index" value="{{ index }}">
         <button type="submit" name="action" value="next" 
-        class="flex items-center justify-center py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950"
-            hx-target="#output" hx-swap="innerHTML" title="Go to next page">Next</button> 
+        class="flex cursor-pointer items-center justify-center py-2 w-32 text-white bg-gray-800 rounded hover:bg-gray-950 {% if index >= total_submissions|add:-1 %} opacity-50 cursor-not-allowed bg-gray-500 {% endif %}"
+        title="Go to next student"
+        {% if index >= total_submissions|add:-1 %}disabled{% endif %}>
+            Next
+        </button> 
     </form>
 </div>

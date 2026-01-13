@@ -14,7 +14,7 @@
 <body>
 
     {% if messages %}
-    <div style="position: absolute; top: 1rem; right: 50%; z-index: 999;">
+    <div id="messages-toast" style="position: absolute; top: 1rem; right: 50%; z-index: 999;">
         {% for message in messages %}
         <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative shadow-md w-[300px] text-center" role="alert">
             <span class="block sm:inline">{{ message }}</span>
