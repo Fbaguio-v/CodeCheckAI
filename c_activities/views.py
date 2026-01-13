@@ -388,10 +388,6 @@ class EditActivityView(View):
         activity.max_score = max_score
         activity.due_at = due_at
 
-        for act in activity.submissions.all():
-            act.status = "in_progress"
-            act.save()
-
         if description != activity.description:
             activity.description = description
             activity.save()

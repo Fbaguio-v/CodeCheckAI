@@ -3,13 +3,8 @@
 <div class="h-full w-full flex flex-col p-4">
     <!-- Statistics Summary -->
     <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-white p-4 rounded-lg shadow border border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">Overall Statistics</h3>
+        <div class="bg-white p-4 rounded-lg shadow border border-solid">
             <div class="space-y-2">
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Average (Latest Scores):</span>
-                    <span class="font-bold text-blue-600">{{ overall_average }}</span>
-                </div>
                 <div class="flex justify-between">
                     <span class="text-gray-600">Average (All Submissions):</span>
                     <span class="font-bold text-green-600">{{ average_all_submissions }}</span>
@@ -24,7 +19,7 @@
                 </div>
             </div>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow border border-gray-200">
+        <div class="bg-white p-4 rounded-lg shadow border border-solid">
             <h3 class="text-lg font-semibold text-gray-700 mb-2">Activity Info</h3>
             <div class="space-y-2">
                 <div class="flex justify-between">
@@ -41,7 +36,7 @@
                 </div>
             </div>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow border border-gray-200">
+        <div class="bg-white p-4 rounded-lg shadow border border-solid">
             <h3 class="text-lg font-semibold text-gray-700 mb-2">Due Date</h3>
             <div class="space-y-2">
                 <div class="flex justify-between">
@@ -134,16 +129,6 @@
                 {% endfor %}
             </tbody>
         </table>
-    </div>
-
-    <div id="subjects-pagination" class="flex items-center justify-between mt-3">
-        <button id="activities-prev-btn" class="py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950" disabled>
-            Previous
-        </button>
-        <div id="activities-page-indicator" class="text-sm text-gray-600">Page 1</div>
-        <button id="activities-next-btn" class="py-2 w-32 text-white bg-gray-800 cursor-pointer rounded hover:bg-gray-950" disabled>
-            Next
-        </button>
     </div>
 </div>
 

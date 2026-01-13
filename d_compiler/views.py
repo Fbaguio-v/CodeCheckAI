@@ -33,8 +33,6 @@ class CompilerView(View):
         activity_id = request.POST.get("activity_id")
         submission_id = request.POST.get("submission_id")
 
-        print(f"Action Type : {a_type}")
-
         if not request.POST.get("processing"):
             return render(request, 'd_compiler/progress_bar.html')
         else:
@@ -47,8 +45,6 @@ class CompilerView(View):
         subject_id = request.POST.get("subject_id")
         activity_id = request.POST.get("activity_id")
         submission_id = request.POST.get("submission_id")
-
-        print(f"Type : {a_type}")
 
         subject = None
         activity = None
@@ -178,29 +174,28 @@ class CompilerView(View):
                             <div class="bg-white border border-gray-200 rounded-lg shadow overflow-hidden">
                                 <div class="p-4 md:p-6">
                                     <div class="flex items-center justify-between mb-6">
-                                        <h3 class="text-lg font-medium text-gray-800">🏆 Quiz Result</h3>
-                                        <div class="text-lg font-medium text-gray-800">
-                                            Score: <span class="font-bold text-blue-600">{score}</span>
+                                        <h3 class="text-sm text-gray-800">Activity Result</h3>
+                                        <div class="text-sm text-gray-800">
+                                            Score: <span class="text-sm text-blue-600">{score}</span>
                                         </div>
                                     </div>
                                     
                                     <div class="bg-gray-800 text-gray-100 rounded-lg p-4 mb-4">
                                         <div class="flex items-center justify-between mb-2">
-                                            <h4 class="text-sm font-medium text-white">📄 Program Output</h4>
+                                            <h4 class="text-sm font-medium text-white">Program Output</h4>
                                         </div>
                                         <pre id="quiz-output-pre" class="mt-3 whitespace-pre-wrap text-sm bg-gray-900 text-green-300 font-medium sm:text-base rounded p-3 max-h-64 overflow-auto">{stdout or stderr or compile_output or message or status_description}</pre>
                                     </div>
                                     
                                     <div class="flex items-center justify-between text-sm text-gray-600 mb-4">
                                         <div class="flex items-center">
-                                            <span class="mr-1">⏱️</span>
                                             <span class="font-medium">Run Time:</span>
                                             <span class="ml-1 font-semibold text-gray-800">{exec_time}</span>
                                         </div>
                                     </div>
                                     
                                     <div class="bg-gradient-to-br from-white to-gray-50 border border-gray-100 rounded-lg p-4">
-                                        <h4 class="text-sm font-semibold text-gray-800 mb-2">🤖 AI Feedback</h4>
+                                        <h4 class="text-sm font-semibold text-gray-800 mb-2">AI Feedback</h4>
                                         <div class="text-sm text-gray-700 leading-relaxed" id="quiz-ai-feedback">
                                             {feedback_section.replace('-', '<br>').replace('. ', '.<br>')}
                                         </div>
@@ -220,6 +215,11 @@ class CompilerView(View):
                                     content: "";
                                 }}
                             </style>
+                            <script>
+                                setTimeout(() => {{
+                                    window.alert("You submitted an activity");
+                                }}, 1000);
+                            </script>
                             """
                         else:
                             ai_feedback = evaluate_student_code_with_openai_for_playground(code=code)
@@ -231,20 +231,20 @@ class CompilerView(View):
                                     <div class="w-full">
                                       <div class="bg-gray-800 font-medium text-gray-800 sm:text-base rounded-md p-3">
                                         <div class="flex items-center justify-between">
-                                          <h3 class="text-sm font-medium text-white">📄 Program Output</h3>
+                                          <h3 class="text-sm font-medium text-white">Program Output</h3>
                                         </div>
                                         <pre id="output-pre" class="mt-3 whitespace-pre-wrap text-sm bg-gray-900 text-green-300 font-medium sm:text-base rounded p-3 max-h-64 overflow-auto">{stdout or stderr or compile_output or message or status_description}</pre>
                                       </div>
 
                                       <div class="mt-3 flex items-center justify-between text-sm font-medium text-gray-800 sm:text-base">
-                                        <div>⏱️ <span class="font-medium text-gray-800 sm:text-base">Run Time:</span> <span class="ml-1 inline-block">{exec_time}</span></div>
+                                        <div>⏱<span class="font-medium text-gray-800 sm:text-base">Run Time:</span> <span class="ml-1 inline-block">{exec_time}</span></div>
                                         <div class="text-right">Status: <span class="font-medium text-gray-800 sm:text-base">{status_description}</span></div>
                                       </div>
                                     </div>
 
                                     <div class="w-full">
                                       <div class="h-full bg-gradient-to-br from-white to-gray-50 border border-gray-100 rounded-md p-3">
-                                        <h3 class="text-sm font-medium text-gray-800 sm:text-base">🤖 AI Feedback</h3>
+                                        <h3 class="text-sm font-medium text-gray-800 sm:text-base">AI Feedback</h3>
                                         <div class="mt-2 text-sm font-medium text-gray-800 sm:text-base space-y-2 leading-relaxed" id="ai-feedback">{ai_feedback.replace('-', '<br>')}</div>
                                       </div>
                                     </div>
@@ -258,6 +258,7 @@ class CompilerView(View):
                                 .copy-btn {{ cursor: pointer; }}
                               </style>
                             """.replace(":", "<br>").replace(".", "<br>")
+                        
 
                         return HttpResponse(output, content_type="text/html")
 
