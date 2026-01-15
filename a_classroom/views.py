@@ -262,31 +262,35 @@ class ActivityView(View):
             if not submission:
                 submission = submissions.first()
 
+            return_quiz_submission = submissions.filter(status="returned", student=request.user).first()
+
             submission_count = submissions.count()
 
-            # Get the highest score
             highest_score = ActivitySubmission.objects.filter(
                 student=request.user,
                 activity=activity
             ).aggregate(Max('score'))['score__max'] or 0
 
-            # Get the highest-scoring submission that has been returned
             highest_returned_submission = None
             highest_feedback = None
+
+            quiz_score = None
+            quiz_feedback = None
+            if return_quiz_submission:
+                quiz_score = return_quiz_submission.score
+                quiz_feedback = return_quiz_submission.feedback
             
             if highest_score is not None and highest_score > 0:
-                # First try to get a returned submission with the highest score
                 highest_returned_submission = ActivitySubmission.objects.filter(
                     student=request.user,
                     activity=activity,
                     score=highest_score,
-                    status="returned"  # Only get returned submissions
+                    status="returned"
                 ).order_by('-submitted_at').first()
                 
                 if highest_returned_submission:
                     highest_feedback = highest_returned_submission.feedback
                 else:
-                    # If no returned submission with highest score, get any submission with highest score
                     top_submission = ActivitySubmission.objects.filter(
                         student=request.user,
                         activity=activity,
@@ -294,7 +298,6 @@ class ActivityView(View):
                     ).order_by('-submitted_at').first()
                     highest_feedback = top_submission.feedback if top_submission else None
 
-            # Get all submissions for this activity (for the activity_submissions list)
             activity_submissions = ActivitySubmission.objects.filter(
                 activity=activity, 
                 student=request.user
@@ -307,7 +310,9 @@ class ActivityView(View):
                     "submission_count": submission_count,
                     "highest_score": highest_score,
                     "highest_feedback": highest_feedback,
-                    "highest_returned_submission": highest_returned_submission,  # Add this
+                    "highest_returned_submission": highest_returned_submission,
+                    "quiz_score": quiz_score,
+                    "quiz_feedback": quiz_feedback,
                 })
 
             return render(request, 'c_activities/compiler/student.compiler.html', {
@@ -414,7 +419,7 @@ def get_pending_users(request):
     return render(request, 'a_classroom/a.admin/users/pending/pending.users.html', {"pending_users": pending_users})
 
 def get_subject_list(request):
-    subjects = Subject.objects.all()[0:10]
+    subjects = Subject.objects.all().order_by('-id')[0:10]
     return render(request, 'a_classroom/a.admin/users/subject/subjects.html', {"subjects": subjects})
 
 class AdminDashboardView(HtmxTemplateView):
@@ -427,7 +432,7 @@ class AdminDashboardView(HtmxTemplateView):
     context_name = 'all_users'
 
 def get_subject_activities(request):
-    activities = Activity.objects.all()
+    activities = Activity.objects.all().order_by('-id')[0:10]
     return render(request, 'a_classroom/a.admin/activities/activities.html', {"activities" : activities})
 
 # def view_activity(request, activity_id):
