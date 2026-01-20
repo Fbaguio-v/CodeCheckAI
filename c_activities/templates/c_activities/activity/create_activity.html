@@ -134,9 +134,9 @@
 								hx-target="#criteria-total"
 								hx-include=".criteria-input">
 								1st Year
-								Correctness: 35%
-								Syntax: 50%
-								Structure: 15%
+								Correctness: 38%
+								Syntax: 37%
+								Structure: 25%
 							</span>
 							<span>
 								<input type="radio" name="preset" class="container-year first-year-1"
@@ -156,9 +156,9 @@
 								hx-target="#criteria-total"
 								hx-include=".criteria-input">
 								1st Year
-								Correctness: 20%
-								Syntax: 40%
-								Structure: 40%
+								Correctness: 70%
+								Syntax: 20%
+								Structure: 10%
 							</span>
 							<span>
 								<input type="radio" name="preset" class="container-year second-year"
@@ -167,9 +167,9 @@
 								hx-target="#criteria-total"
 								hx-include=".criteria-input">
 								2nd Year
-								Correctness: 30%
-								Syntax: 50%
-								Structure: 20%
+								Correctness: 38%
+								Syntax: 37%
+								Structure: 25%
 							</span>
 							<span>
 								<input type="radio" name="preset" class="container-year second-year-1"
@@ -178,9 +178,20 @@
 								hx-target="#criteria-total"
 								hx-include=".criteria-input">
 								2nd Year
-								Correctness: 25%
-								Syntax: 50%
-								Structure: 25%
+								Correctness: 50%
+								Syntax: 35%
+								Structure: 15%
+							</span>
+							<span>
+								<input type="radio" name="preset" class="container-year second-year-2"
+								hx-post="{% url 'c_activities:check-criteria' %}"
+								hx-trigger="change"
+								hx-target="#criteria-total"
+								hx-include=".criteria-input">
+								2nd Year
+								Correctness: 50%
+								Syntax: 30%
+								Structure: 20%
 							</span>
 						</div>
 					</div>
@@ -252,16 +263,17 @@
 		firstYear1 = document.querySelector(".first-year-1");
 		firstYear2 = document.querySelector(".first-year-2");
 		secondYear = document.querySelector(".second-year");
-		secondYear1 = document.querySelector(".second-year-1")
+		secondYear1 = document.querySelector(".second-year-1");
+		secondYear2 = document.querySelector(".second-year-2");
 		correctness = document.querySelector(".correctness");
 		syntax = document.querySelector(".syntax");
 		structure = document.querySelector(".structure");
 
 		firstYear.addEventListener("change", (e) => {
 			if(e.target.checked) {
-				correctness.value = 35;
-				syntax.value = 50;
-				structure.value = 15;
+				correctness.value = 38;
+				syntax.value = 37;
+				structure.value = 25;
 			}
 		});
 
@@ -275,25 +287,33 @@
 
 		firstYear2.addEventListener("change", (e) => {
 			if(e.target.checked) {
-				correctness.value = 20;
-				syntax.value = 40;
-				structure.value = 40;
+				correctness.value = 70;
+				syntax.value = 20;
+				structure.value = 10;
 			}
 		});
 
 		secondYear.addEventListener("change", (e) => {
 			if(e.target.checked) {
-				correctness.value = 30;
-				syntax.value = 50;
-				structure.value = 20;
+				correctness.value = 38;
+				syntax.value = 37;
+				structure.value = 25;
 			}
 		});
 
 		secondYear1.addEventListener("change", (e) => {
 			if(e.target.checked) {
-				correctness.value = 25;
-				syntax.value = 50;
-				structure.value = 25;
+				correctness.value = 50;
+				syntax.value = 35;
+				structure.value = 15;
+			}
+		});
+
+		secondYear2.addEventListener("change", (e) => {
+			if(e.target.checked) {
+				correctness.value = 50;
+				syntax.value = 30;
+				structure.value = 20;
 			}
 		});
 </script>
